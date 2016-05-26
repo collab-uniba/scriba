@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <textarea id="msgArea"></textarea>
+        <script type="text/javascript" src="http://localhost:80/socket.io/socket.io.js"></script>
+
+        <script type="text/javascript">
+
+            //Il client si connetterà all’indirizzo localhost
+            var socket = io.connect('http://localhost:80');
+
+            /*socket.on consente di ricevere I messaggi dal server */
+
+            socket.on('server_message', function (data) {
+
+                /* istruzione che consente di visualizzare sulla pagina html,
+                 
+                 nell’area denominata “msgArea”, il messaggio del server*/
+
+                document.getElementById("msgArea").innerHTML += (data.text);
+
+            });
+
+            /* socket.emit consente l’invio dei messaggi dal client al
+             
+             server*/
+
+            //socket.emit('client_message', {text: "Ciao"});  
+
+        </script>
+    </body>
+</html>
