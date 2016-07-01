@@ -1,0 +1,46 @@
+<ion-toolbar>
+    <ion-title>
+        Register
+    </ion-title>
+</ion-toolbar>
+<form [ngFormModel]="regForm" (ngSubmit)="onSubmit(regForm.value)">
+    <ion-item [class.error]="!name.valid && name.touched">
+        <ion-label floating>First Name</ion-label>
+        <ion-input type="text" class="form-control" [ngFormControl]="name" required></ion-input>
+    </ion-item>
+    <div *ngIf="name.hasError('checkFirstCharacterValidator') && name.touched" 
+        class="error-box">* First Name cant't start with a number!</div>     
+
+    <ion-item [class.error]="!surname.valid && surname.touched">
+        <ion-label floating>Last Name</ion-label>
+        <ion-input type="text" class="form-control" [ngFormControl]="surname" required></ion-input>
+    </ion-item>
+    <div *ngIf="surname.hasError('checkFirstCharacterValidator') && surname.touched" 
+        class="error-box">* Last Name cant't start with a number!</div>     
+
+    <ion-item [class.error]="!username.valid && username.touched">
+        <ion-label floating>Username</ion-label>
+        <ion-input type="text" class="form-control" [ngFormControl]="username" required></ion-input>
+    </ion-item>
+    <div *ngIf="username.hasError('minlength') && username.touched" 
+        class="error-box">* Minimum username length is 4!</div>            
+    <div *ngIf="username.hasError('checkFirstCharacterValidator') && username.touched" 
+        class="error-box">* Username cant't start with a number!</div>     
+    
+    <ion-item [class.error]="!password.valid && password.touched">
+        <ion-label floating>Password</ion-label>
+        <ion-input type="password" class="form-control" [ngFormControl]="password" required></ion-input>
+    </ion-item>
+    <div *ngIf="password.hasError('minlength') && password.touched" 
+        class="error-box">* Minimum password length is 8!</div>            
+    
+    <ion-item [class.error]="!email.valid && email.touched">
+        <ion-label floating>e-Mail</ion-label>
+        <ion-input type="email" class="form-control" [ngFormControl]="email"></ion-input>
+    </ion-item>
+    
+    <ion-item>
+        <button type="submit" [disabled]="!regForm.valid" class="btn btn-standard">Register</button>
+        <button type="reset" (click)="close()">Cancel</button>
+    </ion-item>
+</form>
