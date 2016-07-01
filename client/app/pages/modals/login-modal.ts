@@ -35,6 +35,9 @@ export class LoginPage {
                     .subscribe( (data) =>  { 
                         console.log(data);
                         if(data.success){
+                            window.localStorage.setItem("token", data.token);
+                            console.log(data.token);
+                            this.us.isLoggedin=true;
                             this.nav.setRoot(PersonalPage);//.push(PersonalPage) ha lo stesso effetto ... non so perchè!!!
                         }else{
                             alert("Authentication Failed!")
