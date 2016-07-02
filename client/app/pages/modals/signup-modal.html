@@ -5,14 +5,14 @@
 </ion-toolbar>
 <form [ngFormModel]="regForm" (ngSubmit)="onSubmit(regForm.value)">
     <ion-item [class.error]="!name.valid && name.touched">
-        <ion-label floating>First Name</ion-label>
+        <ion-label floating>Nome</ion-label>
         <ion-input type="text" class="form-control" [ngFormControl]="name" required></ion-input>
     </ion-item>
     <div *ngIf="name.hasError('checkFirstCharacterValidator') && name.touched" 
         class="error-box">* First Name cant't start with a number!</div>     
 
     <ion-item [class.error]="!surname.valid && surname.touched">
-        <ion-label floating>Last Name</ion-label>
+        <ion-label floating>Cognome</ion-label>
         <ion-input type="text" class="form-control" [ngFormControl]="surname" required></ion-input>
     </ion-item>
     <div *ngIf="surname.hasError('checkFirstCharacterValidator') && surname.touched" 

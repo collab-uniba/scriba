@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {Platform, ionicBootstrap} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {TabsPage} from './pages/tabs/tabs';
+import {PersonalPage} from './pages/personal-page/personal-page';
 
 @Component({
   template: '<ion-nav [root]="rootPage"></ion-nav>'
@@ -12,7 +13,11 @@ export class MyApp {
   private rootPage:any;
 
   constructor(private platform:Platform) {
-    this.rootPage = TabsPage;
+    if(window.localStorage.getItem("token")){
+      this.rootPage = PersonalPage;
+    }else{
+      this.rootPage = TabsPage;
+    }
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.

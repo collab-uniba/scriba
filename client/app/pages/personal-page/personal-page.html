@@ -3,7 +3,11 @@
     <ion-title>
       Scriba
     </ion-title>
-
+    <ion-buttons begin>
+      <button class="solid" (click)="userData()">
+        <ion-icon name="person" > {{user.name}} {{user.surname}}</ion-icon>
+      </button>
+    </ion-buttons>
     <ion-buttons end>
       <button class="solid" (click)="logout()">
         <ion-icon name="log-out" > LogOut</ion-icon>

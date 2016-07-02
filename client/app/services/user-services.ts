@@ -34,11 +34,18 @@ export class UserService {
         let options = new RequestOptions({ headers: headers });
         return this.http.post(this.ServerWithApiUrl + '/signup', body, options);      
     }
-    
+
+    getUserData(): Observable<Response>{
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        let result = this.http.get(this.ServerWithApiUrl + '/memberinfo', options);
+        return result;
+    }
+
     logout() {
         console.log(window.localStorage.getItem("token"));
         this.isLoggedin = false;
         window.localStorage.clear();
     }
-
 }
