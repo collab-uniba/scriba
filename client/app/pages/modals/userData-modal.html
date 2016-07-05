@@ -3,49 +3,77 @@
         <ion-icon name="person"> Il Mio Profilo</ion-icon> 
     </ion-title>
 </ion-toolbar>
-<form [ngFormModel]="updateForm" (ngSubmit)="onSubmit(updateForm.value)">
-    <ion-item [class.error]="!name.valid && name.touched">
+<form [ngFormModel]="updateForm" (ngSubmit)="onSubmit()">
+    <ion-item *ngIf="!editing.name">
         <ion-label inline>Nome:</ion-label>
-        <ion-input type="text" class="form-control" [ngFormControl]="name" value={{user.name}} required [disabled]="!editing.name">{{user.name}}</ion-input>
-        <ion-icon *ngIf="!editing.name" name="create" (click)="editing.name=!editing.name" item-right ></ion-icon>
-        <ion-icon *ngIf="editing.name" name="checkmark-circle" (click)="updateName()" item-right ></ion-icon>
-        <ion-icon *ngIf="editing.name" name="close" (click)="editing.name=!editing.name" item-right ></ion-icon>
+        <ion-input type="text" value={{user.name}} disabled></ion-input>
+        <ion-icon name="create" (click)="editing.name=!editing.name" item-right ></ion-icon>
+    </ion-item>
+    <ion-item *ngIf="editing.name" [class.error]="!name.valid && name.touched">
+        <ion-label inline>Nome:</ion-label>
+        <ion-input type="text" class="form-control" [ngFormControl]="name" required></ion-input>
+        <ion-icon *ngIf="name.valid" name="checkmark-circle" (click)="updateStatus('name')" item-right ></ion-icon>
+        <ion-icon  name="close" (click)="editing.name=!editing.name" item-right ></ion-icon>
     </ion-item>
     <div *ngIf="name.hasError('checkFirstCharacterValidator') && name.touched" 
         class="error-box">* First Name cant't start with a number!</div>     
 
-    <ion-item [class.error]="!surname.valid && surname.touched">
+    <ion-item *ngIf="!editing.surname">
         <ion-label inline>Cognome:</ion-label>
-        <ion-input type="text" class="form-control" [ngFormControl]="surname" value={{user.surname}} required [disabled]="!editing.surname"></ion-input>
-        <ion-icon *ngIf="!editing.surname" name="create" (click)="editing.surname=!editing.surname" item-right ></ion-icon>
-        <ion-icon *ngIf="editing.surname" name="checkmark-circle" (click)="updateName()" item-right ></ion-icon>
-        <ion-icon *ngIf="editing.surname" name="close" (click)="editing.surname=!editing.surname" item-right ></ion-icon>
+        <ion-input type="text" value={{user.surname}} disabled></ion-input>
+        <ion-icon name="create" (click)="editing.surname=!editing.surname" item-right ></ion-icon>
+    </ion-item>
+    <ion-item *ngIf="editing.surname" [class.error]="!surname.valid && surname.touched">
+        <ion-label inline>Cognome:</ion-label>
+        <ion-input type="text" class="form-control" [ngFormControl]="surname" required></ion-input>
+        <ion-icon *ngIf="surname.valid" name="checkmark-circle" (click)="updateStatus('surname')" item-right ></ion-icon>
+        <ion-icon  name="close" (click)="editing.surname=!editing.surname" item-right ></ion-icon>
     </ion-item>
     <div *ngIf="surname.hasError('checkFirstCharacterValidator') && surname.touched" 
         class="error-box">* Last Name cant't start with a number!</div>     
-
-    <ion-item [class.error]="!username.valid && username.touched">
-        <ion-label inline>Username:</ion-label>
-        <ion-input type="text" class="form-control" [ngFormControl]="username" value={{user.username}} required [disabled]="!editing.username"></ion-input>
-        <ion-icon *ngIf="!editing.username" name="create" (click)="editing.username=!editing.username" item-right ></ion-icon>
-        <ion-icon *ngIf="editing.username" name="checkmark-circle" (click)="updateName()" item-right ></ion-icon>
-        <ion-icon *ngIf="editing.username" name="close" (click)="editing.username=!editing.username" item-right ></ion-icon>
-    </ion-item>
-    <div *ngIf="username.hasError('minlength') && username.touched" 
-        class="error-box">* Minimum username length is 4!</div>            
-    <div *ngIf="username.hasError('checkFirstCharacterValidator') && username.touched" 
-        class="error-box">* Username cant't start with a number!</div>         
-    
-    <ion-item [class.error]="!email.valid && email.touched">
+        
+    <ion-item *ngIf="!editing.email">
         <ion-label inline>e-Mail:</ion-label>
-        <ion-input type="email" class="form-control" [ngFormControl]="email" value={{user.email}} [disabled]="!editing.email"></ion-input>
-        <ion-icon *ngIf="!editing.email" name="create" (click)="editing.email=!editing.email" item-right ></ion-icon>
-        <ion-icon *ngIf="editing.email" name="checkmark-circle" (click)="updateName()" item-right ></ion-icon>
-        <ion-icon *ngIf="editing.email" name="close" (click)="editing.email=!editing.email" item-right ></ion-icon>
+        <ion-input type="email" value={{user.email}} disabled></ion-input>
+        <ion-icon name="create" (click)="editing.email=!editing.email" item-right ></ion-icon>
+    </ion-item>
+    <ion-item *ngIf="editing.email" [class.error]="!email.valid && email.touched">
+        <ion-label inline>e-Mail:</ion-label>
+        <ion-input type="email" class="form-control" [ngFormControl]="email"></ion-input>
+        <ion-icon *ngIf="email.valid" name="checkmark-circle" (click)="updateStatus('email')" item-right ></ion-icon>
+        <ion-icon  name="close" (click)="editing.email=!editing.email" item-right ></ion-icon>
     </ion-item>
     
     <ion-item>
+        <button type="submit" class="btn btn-standard" [disabled]="editing.name || editing.surname || editing.username || editing.email">Salva</button>
+        <button type="reset" (click)="close()">Cancel</button>
+    </ion-item>
+</form>
+
+<form [ngFormModel]="passwordForm" (ngSubmit)="onSubmitPassword(passwordForm.value)">
+    <div *ngIf="passwordForm.hasError('confirmError') && confirmPassword.touched" class="error-box">Le nuove password non coincidono</div>
+    <div *ngIf="passwordForm.hasError('oldEqualsNew') && newPassword.touched" class="error-box">Non puoi usare la vecchia Password</div>
+    <ion-item [class.error]="!oldPassword.valid && oldPassword.touched">
+        <ion-label inline>Vecchia Password:</ion-label>
+        <ion-input type="password" class="form-control" [ngFormControl]="oldPassword" required></ion-input>
+    </ion-item>
+    <div *ngIf="oldPassword.hasError('minlength') && oldPassword.touched" class="error-box">* Minimum password length is 8!</div>            
+
+    <ion-item [class.error]="!newPassword.valid && newPassword.touched">
+        <ion-label inline>Nuova Password:</ion-label>
+        <ion-input type="password" class="form-control" [ngFormControl]="newPassword" required></ion-input>
+    </ion-item>
+    <div *ngIf="newPassword.hasError('minlength') && newPassword.touched" class="error-box">* Minimum password length is 8!</div>            
+
+    <ion-item [class.error]="!confirmPassword.valid && confirmPassword.touched">
+        <ion-label inline>Conferma Password:</ion-label>
+        <ion-input type="password" class="form-control" [ngFormControl]="confirmPassword" required></ion-input>
+    </ion-item>
+    <div *ngIf="confirmPassword.hasError('minlength') && confirmPassword.touched" class="error-box">* Minimum password length is 8!</div>            
+    
+    <ion-item>
         <button type="submit" class="btn btn-standard">Salva</button>
+        {{passwordForm.valid}}
         <button type="reset" (click)="close()">Cancel</button>
     </ion-item>
 </form>

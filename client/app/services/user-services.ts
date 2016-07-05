@@ -42,6 +42,23 @@ export class UserService {
         let result = this.http.get(this.ServerWithApiUrl + '/memberinfo', options);
         return result;
     }
+    updateUser(user: User): Observable<Response>{
+        let body = "name="+ user.name + "&surname="+  user.surname + "&email=" + user.email;
+        console.log(body);
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/updateuser', body, options);      
+    }
+
+    changePassword(oldPassword: string, newPassword: string): Observable<Response>{
+        let body = "oldPassword=" + oldPassword +"&newPassword=" + newPassword;
+        console.log(body);
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/updatepassword', body, options);
+    }
 
     logout() {
         console.log(window.localStorage.getItem("token"));

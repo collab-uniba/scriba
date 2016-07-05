@@ -8,7 +8,8 @@ var config      = require('./config/database'); // get db config file
 var User        = require('./app/models/user'); // get the mongoose model
 var port        = process.env.PORT || 8080;
 var jwt         = require('jwt-simple');
-
+var Event = require('./app/models/event');
+var bcryptjs = require('bcryptjs');
 // Add headers
 app.use(function (req, res, next) {
 
@@ -121,7 +122,6 @@ apiRoutes.post('/authenticate', function(req, res) {
  
 // route to a restricted info (GET http://localhost:8080/api/memberinfo)
 apiRoutes.get('/memberinfo', passport.authenticate('jwt', { session: false}), function(req, res) {
-    console.log("Eccomi");
   var token = getToken(req.headers);
   if (token) {
     var decoded = jwt.decode(token, config.secret);
@@ -155,7 +155,7 @@ getToken = function (headers) {
 };
 
 //NEW 
-var Event = require('./app/models/event');
+
 apiRoutes.get('/publicevents', function(req, res) {
     Event.find({
       public: true
@@ -165,8 +165,88 @@ apiRoutes.get('/publicevents', function(req, res) {
         if (!result) {
           return res.status(403).send({success: false, msg: 'Authentication failed. Public Events not found.'});
         } else {
-            console.log(result[0].date)
           res.json({success: true, data: result});
         }
     });
+});
+
+apiRoutes.post('/updateuser', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        var decoded = jwt.decode(token, config.secret);
+        User.update({
+          _id: decoded._id
+        },{ $set: { 
+            name: req.body.name,
+            surname: req.body.surname,
+            email: req.body.email
+        }}, {multi: false}, function(err, result) {
+            if (err) throw err;
+
+            if (!result) {
+              return res.status(403).send({success: false, msg: 'Update Failed'});
+                console.log(res);
+            } else {
+              res.json({success: true, msg: "User Updated"});
+            }
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'No token provided.'});
+    }
+});
+
+apiRoutes.post('/updatepassword', passport.authenticate('jwt', { session: false}), function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+    var decoded = jwt.decode(token, config.secret);
+        User.findOne({
+            _id: decoded._id
+        }, function(err, user) {
+            if (err) throw err;
+            
+            if (!user) {
+              return res.send({success: false, msg: 'User not found.'});
+            } else {
+                bcryptjs.compare(req.body.oldPassword, user.password, function (err, isMatch) {
+                    if (err) {
+                        return res.send({success: false, msg: 'Comparation Error'}); 
+                    }
+                    if(isMatch){
+                        var newPassword;
+                        bcryptjs.genSalt(10, function (err, salt) {
+                            if (err) {
+                                return (err);
+                            }
+                            bcryptjs.hash(req.body.newPassword, salt, function (err, hash) {
+
+                                if (err) {
+                                    return (err);
+                                }
+                                newPassword = hash;
+                                console.log("ECCOLA NUOVA "+newPassword)
+                                User.update({
+                                  _id: decoded._id
+                                },{ $set: { 
+                                    password: newPassword,
+                                }}, {multi: false}, function(err, result) {
+                                    if (err) throw err;
+
+                                    if (!result) {
+                                      return res.send({success: false, msg: 'Update Failed'});
+                                    } else {
+                                      res.json({success: true, msg: "Password Updated"});
+                                    }
+                                });
+                            });
+                        });
+                    }else{
+                        return res.send({success: false, msg: 'Incorrect Password'});
+                    }
+                    console.log("OK: "+isMatch);
+                });
+            }
+        });
+    } else {
+        return res.send({success: false, msg: 'No token provided.'});
+    }
 });
