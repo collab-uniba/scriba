@@ -65,7 +65,7 @@ var apiRoutes = express.Router();
 apiRoutes.post('/signup', function(req, res) {
     console.log(req.body);
   if (!req.body.username || !req.body.password || !req.body.name || !req.body.surname) {
-    res.json({success: false, msg: 'Please pass all parameters.'});
+    res.json({success: false, msg: 'Passaggio di parametri incompleto'});
   } else {
     var newUser = new User({
         name: req.body.name,
@@ -78,9 +78,9 @@ apiRoutes.post('/signup', function(req, res) {
     newUser.save(function(err) {
       if (err) {
                 console.log(err);
-        return res.json({success: false, msg: 'Username already exists.'});
+        return res.json({success: false, msg: 'Username già esistente'});
       }
-      res.json({success: true, msg: 'Successful created new user.'});
+      res.json({success: true, msg: 'Nuovo utente creato con successo'});
     });
   }
 });
@@ -100,7 +100,7 @@ apiRoutes.post('/authenticate', function(req, res) {
     if (err) throw err;
  
     if (!user) {
-      res.send({success: false, msg: 'Authentication failed. User not found.'});
+      res.send({success: false, msg: 'Autenticazione fallita, Utente non trovato'});
     } else {
       // check if password matches
       user.comparePassword(req.body.password, function (err, isMatch) {
@@ -110,7 +110,7 @@ apiRoutes.post('/authenticate', function(req, res) {
           // return the information including token as JSON
           res.json({success: true, token: 'JWT ' + token});
         } else {
-          res.send({success: false, msg: 'Authentication failed. Wrong password.'});
+          res.send({success: false, msg: 'Autenticazione fallita, Password non valida'});
         }
       });
     }
@@ -131,13 +131,13 @@ apiRoutes.get('/memberinfo', passport.authenticate('jwt', { session: false}), fu
         if (err) throw err;
  
         if (!user) {
-          return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
+          return res.status(403).send({success: false, msg: 'Autenticazione fallita, Utente non trovato'});
         } else {
           res.json({success: true, data: user});
         }
     });
   } else {
-    return res.status(403).send({success: false, msg: 'No token provided.'});
+    return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
   }
 });
  
@@ -163,7 +163,7 @@ apiRoutes.get('/publicevents', function(req, res) {
         if (err) throw err;
  
         if (!result) {
-          return res.status(403).send({success: false, msg: 'Authentication failed. Public Events not found.'});
+          return res.status(403).send({success: false, msg: 'Autenticazione fallita, Nessun evento pubblico trovato'});
         } else {
           res.json({success: true, data: result});
         }
@@ -184,14 +184,14 @@ apiRoutes.post('/updateuser', function(req, res) {
             if (err) throw err;
 
             if (!result) {
-              return res.status(403).send({success: false, msg: 'Update Failed'});
+              return res.status(403).send({success: false, msg: 'Aggiornamento utente fallito'});
                 console.log(res);
             } else {
-              res.json({success: true, msg: "User Updated"});
+              res.json({success: true, msg: "Aggiornamento utente eseguito"});
             }
         });
     } else {
-        return res.status(403).send({success: false, msg: 'No token provided.'});
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
 
@@ -205,11 +205,11 @@ apiRoutes.post('/updatepassword', passport.authenticate('jwt', { session: false}
             if (err) throw err;
             
             if (!user) {
-              return res.send({success: false, msg: 'User not found.'});
+              return res.send({success: false, msg: 'Autenticazione fallita, Utente non trovato'});
             } else {
                 bcryptjs.compare(req.body.oldPassword, user.password, function (err, isMatch) {
                     if (err) {
-                        return res.send({success: false, msg: 'Comparation Error'}); 
+                        return res.send({success: false, msg: 'Errore nella comparazione della password'}); 
                     }
                     if(isMatch){
                         var newPassword;
@@ -232,21 +232,21 @@ apiRoutes.post('/updatepassword', passport.authenticate('jwt', { session: false}
                                     if (err) throw err;
 
                                     if (!result) {
-                                      return res.send({success: false, msg: 'Update Failed'});
+                                      return res.send({success: false, msg: 'Aggiornamento fallito'});
                                     } else {
-                                      res.json({success: true, msg: "Password Updated"});
+                                      res.json({success: true, msg: "Password Aggiornata"});
                                     }
                                 });
                             });
                         });
                     }else{
-                        return res.send({success: false, msg: 'Incorrect Password'});
+                        return res.send({success: false, msg: 'Autenticazione fallita, Password errata'});
                     }
                     console.log("OK: "+isMatch);
                 });
             }
         });
     } else {
-        return res.send({success: false, msg: 'No token provided.'});
+        return res.send({success: false, msg: 'Nessun token ricevuto'});
     }
 });

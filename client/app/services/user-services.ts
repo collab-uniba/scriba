@@ -16,7 +16,7 @@ export class UserService {
     constructor(private http: Http, private usrData: User) {
         this.isLoggedin = false
     }
-
+    
     login(user): Observable<Response>  {
         let body = "username=" + user.username + "&password="+ user.password;
         console.log(body);

@@ -1,6 +1,6 @@
 <ion-toolbar>
     <ion-title>
-        Login
+        Accedi
     </ion-title>
 </ion-toolbar>
 <form [ngFormModel]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
@@ -15,7 +15,7 @@
     </ion-item>
     
     <ion-item>
-        <button type="submit" [disabled]="!loginForm.valid" class="btn btn-standard">Login</button>
-        <button type="reset" (click)="close()">Cancel</button>
+        <button type="submit" [disabled]="!loginForm.valid" class="btn btn-standard">Accedi</button>
+        <button type="reset" (click)="close()">Annulla</button>
     </ion-item>
 </form>

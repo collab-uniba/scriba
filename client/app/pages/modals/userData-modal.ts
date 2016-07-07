@@ -11,8 +11,8 @@ import {PersonalPage} from '../personal-page/personal-page';
   providers: [UserService]
 })
 export class UserDataPage {
-    private editing={name:false, surname:false, username:false, password:false, email:false};
-    private changed={name:false, surname:false, username:false, password:false, email:false};
+    private editing={name:false, surname:false, password:false, email:false};
+    private changed={name:false, surname:false, password:false, email:false};
     updateForm: ControlGroup;
     passwordForm: ControlGroup;
     oldPassword: AbstractControl;
@@ -62,7 +62,6 @@ export class UserDataPage {
     }
     checkPasswords(group: ControlGroup): { [s: string]: boolean } {
         if(group.controls["oldPassword"].value!=group.controls["newPassword"].value){
-            console.log("OK");
             if(group.controls["newPassword"].value!=group.controls["confirmPassword"].value){
                 return {confirmError: true}
             }
@@ -102,6 +101,7 @@ export class UserDataPage {
                 alert(data.msg);
             }
         });
+        //this.changed={name:false, surname:false, password:false, email:false};
     }
     onSubmitPassword(value): void { 
             console.log('Submitted value: ', value);    
@@ -109,7 +109,8 @@ export class UserDataPage {
                 console.log(data);
                 if(data.success){
                     window.localStorage.setItem("user", JSON.stringify(this.user));
-                    this.viewCtrl.destroy();
+                    this.editing.password=!this.editing.password;
+                    //this.viewCtrl.destroy();
                     this.nav.setRoot(PersonalPage);
                 }else{
                     alert(data.msg);

@@ -53,7 +53,7 @@ export class SignupPage {
                             this.viewCtrl.destroy();//dismiss();
                             this.nav.present(Modal.create(LoginPage));
                         }else{
-                            alert("Errore di Registrazione, Username già in uso!");
+                            alert("Errore di registrazione, Username già in uso!");
                         }
                      });
         }

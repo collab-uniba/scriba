@@ -40,7 +40,7 @@ export class LoginPage {
                             this.us.isLoggedin=true;
                             this.nav.setRoot(PersonalPage);//.push(PersonalPage) ha lo stesso effetto ... non so perchè!!!
                         }else{
-                            alert("Authentication Failed!")
+                            alert(data.msg);
                         }
                      });
         }

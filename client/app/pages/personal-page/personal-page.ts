@@ -2,7 +2,7 @@ import {Component} from '@angular/core'
 import {HomePage} from '../home-page/home-page';
 import {AboutPage} from '../about-page/about-page';
 import {ContactPage} from '../contact-page/contact-page';
-import {Modal, NavController} from 'ionic-angular';
+import {Modal, NavController, MenuController} from 'ionic-angular';
 import {UserService} from '../../services/user-services';
 import {User} from '../../services/user-model';
 import {TabsPage} from '../tabs/tabs';
@@ -16,17 +16,22 @@ import{LoginPage} from '../modals/login-modal'
 
 export class PersonalPage {
   private user: User;
-  private tab1Root: any;
-  private tab2Root: any;
-  private tab3Root: any;
+  //private tab1Root: any;
+  //private tab2Root: any;
+  //private tab3Root: any;
+  private rootPage = HomePage;
+  private HomePage = HomePage;
+  private AboutPage = AboutPage;
+  private ContactPage = ContactPage;
 
-  constructor(private nav: NavController, private us: UserService) {
+  constructor(private nav: NavController, private us: UserService,  private menu: MenuController) {
     // this tells the tabs component which Pages
     // should be each tab's root Page
     this.user = new User("","","","","");
-    this.tab1Root = HomePage;
-    this.tab2Root = AboutPage;
-    this.tab3Root = ContactPage;
+    
+    //this.tab1Root = HomePage;
+    //this.tab2Root = AboutPage;
+    //this.tab3Root = ContactPage;
   }
   ionViewWillEnter(){
 	  this.getUserData();
@@ -51,5 +56,14 @@ export class PersonalPage {
   logout(){
     this.us.logout();
     this.nav.setRoot(TabsPage);
+  }
+
+  openPage(page) {
+    // Reset the nav controller to have just this page
+    // we wouldn't want the back button to show in this scenario
+    this.rootPage = page;
+
+    // close the menu when clicking a link from the menu
+    this.menu.close();
   }
 }

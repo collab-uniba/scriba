@@ -3,15 +3,17 @@ import {NavController} from 'ionic-angular';
 import {ScientificFactsPage} from '../scientific-facts-page/scientific-facts-page';
 import {EventService} from '../../services/event-services';
 
+import{RecognitionService} from '../../services/recognition-service';
+
 @Component({
   templateUrl: 'build/pages/home-page/home-page.html',
-  providers: [EventService]
+  providers: [EventService, RecognitionService]
 })
 export class HomePage {
 	
 	private events: string[];
-  constructor(private _navController: NavController, private es: EventService) {
-
+  constructor(private _navController: NavController, private es: EventService, private rs: RecognitionService) {
+    
   }
   
   ionViewWillEnter(){
@@ -38,4 +40,11 @@ export class HomePage {
   goToFactsPage(){
     this._navController.push(ScientificFactsPage);
   }
+
+  startRec(){
+    this.rs.record('it-IT').subscribe(word => {
+      console.log(word);
+    })
+  }
+
 }

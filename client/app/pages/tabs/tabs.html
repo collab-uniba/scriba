@@ -4,12 +4,12 @@
       Scriba
     </ion-title>
 
-    <ion-buttons end>
+    <ion-buttons end><!-- *ngIf="ionic.Platform.isWebView()" mostra diversamente-->
       <button (click)="openModal('login')" class="solid">
-        <ion-icon name="log-in"> Login</ion-icon>
+        <ion-icon name="log-in"> Accedi</ion-icon>
       </button>
       <button (click)="openModal('signup')">
-        <ion-icon name="person-add"> SignUp</ion-icon>
+        <ion-icon name="person-add"> Registrati</ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -20,6 +20,6 @@
 
 <ion-tabs>
   <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
-  <ion-tab [root]="tab2Root" tabTitle="About" tabIcon="information-circle"></ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="Contact" tabIcon="contacts"></ion-tab>
+  <ion-tab [root]="tab2Root" tabTitle="Informazioni" tabIcon="information-circle"></ion-tab>
+  <ion-tab [root]="tab3Root" tabTitle="Contatti" tabIcon="contacts"></ion-tab>
 </ion-tabs>
