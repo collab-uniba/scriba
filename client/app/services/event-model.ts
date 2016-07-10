@@ -1,14 +1,8 @@
 export class Event {
-  public name: string;
-  public surname: string;
-  public username: string;
-  public password: string;
-  public email: string;
-  constructor(name, surname, username, password, email) {
-    this.name = name;
-    this.surname = surname;
-    this.username = username;
-    this.password = password;
-    this.email = email;
-  }
+  constructor(
+    public creator: string,
+    public title: string,
+    public date: Date,
+    public location: string
+  ) {  }
 }

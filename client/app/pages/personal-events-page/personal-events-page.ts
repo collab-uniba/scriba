@@ -1,16 +1,17 @@
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
-import {ScientificFactsPage} from '../scientific-facts-page/scientific-facts-page';
 import {EventService} from '../../services/event-services';
 
+import{NewEventPage} from '../new-event-page/new-event-page';
+
 @Component({
-  templateUrl: 'build/pages/home-page/home-page.html',
+  templateUrl: 'build/pages/personal-events-page/personal-events-page.html',
   providers: [EventService]
 })
-export class HomePage {
+export class PersonalEventsPage {
 	
 	private events: string[];
-  constructor(private _navController: NavController, private es: EventService) {
+  constructor(private nav: NavController, private es: EventService) {
     
   }
   
@@ -18,7 +19,7 @@ export class HomePage {
 	  this.updateEvents();
   }
 
-  updateEvents(){
+  updateEvents(){//CAMBIARE IN GET PERSONAL EVENTS
     let _events = [];
 
     let eventList = this.es.getPublicEvents().map(res=> res.json()).subscribe((data) => {
@@ -28,16 +29,9 @@ export class HomePage {
         this.events = _events;
       })
     });
-    
   }
 
-  //selectFact(fact){
-    //this._navController.push(SelectedFactPage, {selectedFact: fact})
-  //}
-
-  goToFactsPage(){
-    this._navController.push(ScientificFactsPage);
+  newEvent(){
+    this.nav.push(NewEventPage);
   }
-
-
 }

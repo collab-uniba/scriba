@@ -93,7 +93,6 @@ app.use('/api', apiRoutes);
  
 // route to authenticate a user (POST http://localhost:8080/api/authenticate)
 apiRoutes.post('/authenticate', function(req, res) {
-    console.log(req.body);
   User.findOne({
     username: req.body.username
   }, function(err, user) {
@@ -168,6 +167,36 @@ apiRoutes.get('/publicevents', function(req, res) {
           res.json({success: true, data: result});
         }
     });
+});
+
+apiRoutes.post('/createevent', function(req, res) {
+    console.log(req.body);
+    var token = getToken(req.headers);
+    if (token) {
+      if (!req.body.title || !req.body.date || !req.body.location || !req.body.organizer || !req.body.sessions) {
+        res.json({success: false, msg: 'Passaggio di parametri incompleto'});
+      } else {
+          console.log(req.body.sessions[0]);
+        var newEvent = new Event({
+            title: req.body.title,
+            date: req.body.date,
+            location: req.body.location,
+            organizer: req.body.organizer,
+            sessions: req.body.sessions,
+            public: true
+        });
+        // save the user
+        newEvent.save(function(err) {
+          if (err) {
+            console.log(err);
+            return res.json({success: false, msg: 'Errore di creazione Evento'});
+          }
+          res.json({success: true, msg: 'Nuovo evento creato con successo'});
+        });
+      }
+    }else{
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
 });
 
 apiRoutes.post('/updateuser', function(req, res) {

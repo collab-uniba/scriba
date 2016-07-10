@@ -1,0 +1,53 @@
+<!--ion-navbar *navbar>
+  <ion-title>Home</ion-title>
+</ion-navbar>-->
+<ion-header>
+  <ion-navbar>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h2>Welcome to Scriba!</h2>
+  <p>
+    Questa pagina mostra tutti i tuoi eventi. Modifica i filtri per trovare un evento o creane uno nuovo! 
+  </p>
+
+  <ion-list>
+    <ion-list-header>Eventi Pubblici, Clicca per Espandere</ion-list-header>
+    <ion-item text-wrap *ngFor="let event of events">
+      <p>
+        <ion-icon *ngIf="!event.expanded" name="arrow-dropdown" (click)="event.expanded=!event.expanded"></ion-icon> 
+        <ion-icon *ngIf="event.expanded" name="arrow-dropup" (click)="event.expanded=!event.expanded"></ion-icon> 
+          {{event.title}} (@{{event.location}}) - {{event.date}} --- {{event.expanded}}
+      </p>
+      <ion-list *ngIf="event.expanded">
+        <ion-item text-wrap *ngFor="let session of event.sessions">
+          <p>
+            <ion-icon *ngIf="!session.expanded" name="arrow-dropdown" (click)="session.expanded=!session.expanded"></ion-icon> 
+            <ion-icon *ngIf="session.expanded" name="arrow-dropup" (click)="session.expanded=!session.expanded"></ion-icon> 
+              {{session.title}} - {{session.date}} --- {{session.expanded}}
+          </p>
+          <ion-list *ngIf="session.expanded">
+            <ion-item text-wrap *ngFor="let intervent of session.intervents">
+              <p>
+                <ion-icon *ngIf="!intervent.expanded" name="arrow-dropdown" (click)="intervent.expanded=!intervent.expanded"></ion-icon> 
+                <ion-icon *ngIf="intervent.expanded" name="arrow-dropup" (click)="intervent.expanded=!intervent.expanded"></ion-icon> 
+                  {{intervent.title}} - {{intervent.date}} --- {{intervent.expanded}}
+              </p>
+              
+            </ion-item>
+          </ion-list>
+        </ion-item>
+      </ion-list>
+    </ion-item>
+  </ion-list>
+
+  <ion-toolbar position="bottom">
+    <ion-buttons end>
+      <button (click)="newEvent()">
+        Nuovo Evento
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-content>

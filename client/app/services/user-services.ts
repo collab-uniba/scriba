@@ -26,10 +26,8 @@ export class UserService {
         return result;
     }
     
-    
     register(user: User): Observable<Response>  {
         let body = "name="+ user.name + "&surname="+  user.surname + "&username=" + user.username + "&password="+ user.password + "&email=" + user.email;
-        console.log(body);
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         let options = new RequestOptions({ headers: headers });
         return this.http.post(this.ServerWithApiUrl + '/signup', body, options);      
@@ -44,7 +42,6 @@ export class UserService {
     }
     updateUser(user: User): Observable<Response>{
         let body = "name="+ user.name + "&surname="+  user.surname + "&email=" + user.email;
-        console.log(body);
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
@@ -53,7 +50,6 @@ export class UserService {
 
     changePassword(oldPassword: string, newPassword: string): Observable<Response>{
         let body = "oldPassword=" + oldPassword +"&newPassword=" + newPassword;
-        console.log(body);
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });

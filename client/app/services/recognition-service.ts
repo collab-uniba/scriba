@@ -1,34 +1,79 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {Injectable, Inject} from '@angular/core';
 
-export interface IRecognitionService extends Window{
-    webkitSpeechRecognition: any;
-}
+declare var webkitSpeechRecognition: any;
 
 @Injectable()
-export class RecognitionService {
-
-  constructor() {
-    /* void */
+export class TranscriptionService{
+  private recognition;
+  private final_transcript = "";
+  private recognizing = false;
+  constructor(){
+    if ('webkitSpeechRecognition' in window) {
+      this.recognition = new webkitSpeechRecognition();
+      this.recognition.continuous = true;
+	    this.recognition.interimResults = true;
+      this.recognition.onresult=this.resultHandler.bind(this);
+    }else{
+      console.log("Not CHROME");
+    }
   }
 
-  /**
-   * Record
-   * @param {string} language - Language of the voice recognition
-   * @returns {Observable<string>} - Observable of voice converted to string 
-   */
-  record(language: string): Observable<string> {
-    return Observable.create((observer) => {
-      const { webkitSpeechRecognition }: IRecognitionService = <IRecognitionService>window;
-      const recognition = new webkitSpeechRecognition();
-      recognition.onresult = (e) => observer.next(e.results.item(e.results.length - 1).item(0).transcript);
-      recognition.onerror = observer.error;
-      recognition.onend = observer.completed;
+  startDictation() {
+    if (this.recognizing) {
+      this.recognition.stop();
+      this.recognizing=false;
+      return;
+    }
+    this.final_transcript = '';
 
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = language;
-      recognition.start();
-    });
+    this.recognition.lang = 'it-IT';
+    this.recognition.start();
   }
+
+  resultHandler(event){
+		var interim_transcript = '';
+		for (var i = event.resultIndex; i < event.results.length; ++i) {
+			if (event.results[i].isFinal) {
+				this.final_transcript += event.results[i][0].transcript;
+        console.log(this.final_transcript);
+			} else {
+				interim_transcript += event.results[i][0].transcript;
+			}
+		}
+		this.final_transcript = this.capitalize(this.final_transcript);
+		//final_span.innerHTML = linebreak(final_transcript);
+		//interim_span.innerHTML = linebreak(interim_transcript);
+	};
+/*TODO OTHER HANDLERS
+recognition.onstart = function () {
+		recognizing = true;
+		log_span.innerHTML += "RECOGNITION STARTED";
+	};
+
+	recognition.onerror = function (event) {
+		console.log(event.error);
+		log_span.innerHTML += "RECOGNITION ERROR";
+	};
+
+	recognition.onend = function () {
+		log_span.innerHTML += "RECOGNITION STOPPED";
+		if(recognizing){
+			recognition.start();
+			log_span.innerHTML += "RECOGNITION RESTARTED";
+		}
+
+	};
+  */
+
+  private two_line = /\n\n/g;
+  private one_line = /\n/g;
+linebreak(s) {
+	return s.replace(this.two_line, '<p></p>').replace(this.one_line, '<br>');
+}
+
+capitalize(s) {
+	return s.replace(s.substr(0, 1), function (m) {
+		return m.toUpperCase();
+	});
+}
 }

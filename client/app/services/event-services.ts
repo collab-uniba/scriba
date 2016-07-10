@@ -23,5 +23,18 @@ export class EventService {
         let result = this.http.get(this.ServerWithApiUrl + '/publicevents', options);   
         return result;
     }
+    createEvent(event): Observable<Response>{
+        console.log(event);
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        let body = "title="+ event.title + "&date="+  event.date + "&hour=" + event.hour + "&location=" + event.location + "&organizer=" + event.organizer + "&sessions=" + event.sessions;
+        console.log(body);
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        let result = this.http.post(this.ServerWithApiUrl + '/createevent', body, options);   
+        result.map(res=>res.json()).subscribe(data=>{
+            console.log(data);
+        })
+        return result;
+    }
 
 }

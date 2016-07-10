@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <button menuToggle><ion-icon name="menu"></ion-icon></button>
-
+    
     <ion-buttons begin>
       <button>
         <ion-title>
@@ -28,10 +28,11 @@
   </ion-toolbar>
   <ion-content>
     <ion-list>
-      <button (click)="openPage(EventsPage)" ion-item>I miei Eventi</button>
-      <button (click)="openPage(HomePage)" ion-item>Tutti gli Eventi</button>
+      <button (click)="openPage(PersonalEventsPage)" ion-item>I miei Eventi</button>
+      <button (click)="openPage(EventsPage)" ion-item>Tutti gli Eventi</button>
       <button (click)="openPage(AboutPage)" ion-item>Informazioni</button>
       <button (click)="openPage(ContactPage)" ion-item>Contatti</button><!--detail-none-->
+      <button (click)="openPage(InterventPage)" ion-item>Intervento PROVA</button>
     </ion-list>
   </ion-content>
 </ion-menu>
