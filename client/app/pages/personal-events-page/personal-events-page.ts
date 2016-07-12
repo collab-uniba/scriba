@@ -1,8 +1,10 @@
 import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController, Modal} from 'ionic-angular';
 import {EventService} from '../../services/event-services';
+import {Events} from 'ionic-angular';
 
-import{NewEventPage} from '../new-event-page/new-event-page';
+//IMPORT PAGES - MODALS
+import {NewEventPage} from '../modals/event-modal';
 
 @Component({
   templateUrl: 'build/pages/personal-events-page/personal-events-page.html',
@@ -10,8 +12,9 @@ import{NewEventPage} from '../new-event-page/new-event-page';
 })
 export class PersonalEventsPage {
 	
-	private events: string[];
-  constructor(private nav: NavController, private es: EventService) {
+  private events=[];
+
+  constructor(private evts: Events, private nav: NavController, private es: EventService) {
     
   }
   
@@ -22,16 +25,37 @@ export class PersonalEventsPage {
   updateEvents(){//CAMBIARE IN GET PERSONAL EVENTS
     let _events = [];
 
-    let eventList = this.es.getPublicEvents().map(res=> res.json()).subscribe((data) => {
+    this.es.getPersonalEvents().map(res=> res.json()).subscribe((data) => {
       data.data.forEach(event =>{
         event.expanded=false;
+        
+        //FINDS AND MERGES SESSIONS
+        let _sessions = [];
+        this.es.getSessions(event._id).map(res=>res.json()).subscribe(data=>{
+          data.data.forEach(session =>{
+            session.expanded=false;
+            //FINDS AND MERGES INTERVENTS
+            let _intervents = [];
+            this.es.getSessions(event._id).map(res=>res.json()).subscribe(data=>{
+              data.data.forEach(intervent =>{
+                _intervents.push(intervent);
+              session.intervents=_intervents;
+              })
+            });
+            _sessions.push(session);
+            event.sessions=_sessions;
+          })
+        })
         _events.push(event);
         this.events = _events;
-      })
+      });
     });
   }
-
   newEvent(){
-    this.nav.push(NewEventPage);
+    this.evts.subscribe('reloadPersonalPage',() => {
+      this.updateEvents();
+    });
+    let modal = Modal.create(NewEventPage);
+    this.nav.present(modal);
   }
 }

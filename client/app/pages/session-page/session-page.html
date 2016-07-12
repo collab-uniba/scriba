@@ -1,0 +1,40 @@
+<ion-toolbar>
+
+</ion-toolbar>
+
+<ion-content padding>
+
+    <ion-header padding>
+        <ion-navbar>
+            <ion-title>
+                {{event.title}}
+            </ion-title>
+        </ion-navbar>
+    </ion-header>
+
+    <ion-card *ngFor="let session of sessions">
+        <ion-card-header>
+            <ion-toolbar>
+                <ion-title>
+                    {{session.title}}
+                </ion-title>
+                <ion-buttons end>
+                    <button>
+                        <ion-icon name="create"> </ion-icon>
+                    </button>
+                    <button>
+                        <ion-icon name="trash"> </ion-icon>
+                    </button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-card-header>
+    </ion-card>
+
+  <ion-toolbar position="bottom">
+    <ion-buttons end>
+      <button (click)="newEvent()">
+        Nuovo Evento
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-content>

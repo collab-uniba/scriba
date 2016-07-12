@@ -22,6 +22,9 @@ var InterventSchema = new Schema({
     text: {
         type: String,
         required: false
+    },
+    session: {
+        type: String,
     }
 });
 

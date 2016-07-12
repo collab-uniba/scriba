@@ -4,7 +4,7 @@ import {AboutPage} from '../about-page/about-page';
 import {ContactPage} from '../contact-page/contact-page';
 import {Modal, NavController, MenuController} from 'ionic-angular';
 import {UserService} from '../../services/user-services';
-import {User} from '../../services/user-model';
+import {User} from '../../services/models/user-model';
 import {TabsPage} from '../tabs/tabs';
 import {UserDataPage} from '../modals/userData-modal';
 import {LoginPage} from '../modals/login-modal';

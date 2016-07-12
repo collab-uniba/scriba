@@ -1,23 +1,45 @@
-<ion-header>
-  <ion-navbar>
-      
-  </ion-navbar>
-</ion-header>
+<ion-toolbar>
+    
+</ion-toolbar>
+
 <ion-content padding>
-    <ion-toolbar>
+    <ion-header padding>
+    <ion-navbar>
         <ion-title>
-            <ion-icon name="arrow-back" (click)="close()" ></ion-icon> 
             Nuovo Evento
         </ion-title>
-    </ion-toolbar>
+    </ion-navbar>
+    </ion-header>
 
-    <ion-toolbar>
-        <ion-title>
-            Dati Evento
-        </ion-title>
-    </ion-toolbar>
-
-    <form (ngSubmit)="submit()" #eventForm="ngForm">
+    <ion-card *ngFor="let event of events">
+        <ion-card-header>
+            <ion-toolbar>
+                <ion-title>
+                    {{event.title}}
+                </ion-title>
+                <ion-buttons end>
+                    <button>
+                        <ion-icon name="create"> </ion-icon>
+                    </button>
+                    <button>
+                        <ion-icon name="trash"> </ion-icon>
+                    </button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-card-header>
+    </ion-card>
+    <ion-card *ngIf="!creatingEvent">
+        <ion-card-header>
+            <ion-icon name="add" (click)="creatingEvent=!creatingEvent"> Crea Evento</ion-icon>
+        </ion-card-header>
+    </ion-card>
+    <form *ngIf="creatingEvent" (ngSubmit)="submit()" #eventForm="ngForm" padding>
+        <ion-toolbar>
+            <ion-title>
+                Dati Evento
+            </ion-title>
+        </ion-toolbar>
+        
         <ion-item >
             <ion-label inline>Titolo</ion-label>
             <ion-input type="text" ngControl="titleControl" [(ngModel)]="event.title" required></ion-input>
@@ -25,20 +47,25 @@
 
         <ion-item >
             <ion-label inline>Data</ion-label>
-            <ion-input type="date" ngControl="dateControl" min="{{currentDate | date:'yyyy-MM-dd'}}" class="form-control" [(ngModel)]="event.date" required></ion-input>
-        </ion-item>
-
-        <ion-item >
-            <ion-label inline>Ora</ion-label>
-            <ion-input type="time" ngControl="timeControl" class="form-control" [(ngModel)]="event.hour" required></ion-input>
+            <ion-input type="datetime-local" ngControl="dateControl" min="{{currentDate | date:'yyyy-MM-dd'}}" class="form-control" [(ngModel)]="event.date" required></ion-input>
         </ion-item>
 
         <ion-item >
             <ion-label inline>Luogo</ion-label>
             <ion-input type="text" ngControl="locationControl" class="form-control" [(ngModel)]="event.location" required></ion-input>
         </ion-item>
+
         
-<!-- SESSIONI -->
+        <ion-item>
+            <button type="submit" class="btn btn-standard" [disabled]="!eventForm.valid">Salva</button>
+                {{eventForm.valid}}
+            <button type="reset" (click)="creatingEvent=!creatingEvent">Annulla</button>
+        </ion-item>
+    </form>
+    
+</ion-content>
+        
+<!-- SESSIONI --
             <ion-toolbar>
                 <ion-title>
                     Sessioni
@@ -68,7 +95,7 @@
                     <ion-input type="time" ngControl="timeControl" class="form-control" [(ngModel)]="session.hour" required></ion-input>
                 </ion-item>
 
-        <!-- INTERVENTI -->
+        -- INTERVENTI --
                     <ion-toolbar>
                         <ion-title>
                             Interventi
@@ -110,7 +137,7 @@
                             <button type="reset">Azzera</button>
                         </ion-item>
                     </form>
-        <!-- FINE INTERVENTI -->
+        -- FINE INTERVENTI --
 
 
                 <ion-item>
@@ -119,14 +146,4 @@
                     <button type="reset">Azzera</button>
                 </ion-item>
             </form>
-<!-- FINE SESSIONI -->
-
-        
-        <ion-item>
-            <button type="submit" class="btn btn-standard" [disabled]="!eventForm.valid">Salva</button>
-                {{eventForm.valid}}
-            <button type="reset" (click)="showFormControls(eventForm)">Annulla</button>
-        </ion-item>
-    </form>
-    
-</ion-content>
+-- FINE SESSIONI -->

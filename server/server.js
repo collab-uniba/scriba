@@ -9,7 +9,15 @@ var User        = require('./app/models/user'); // get the mongoose model
 var port        = process.env.PORT || 8080;
 var jwt         = require('jwt-simple');
 var Event = require('./app/models/event');
+var Session = require('./app/models/session');
+var Intervent = require('./app/models/intervent');
 var bcryptjs = require('bcryptjs');
+
+//MONGO CLIENT
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var ObjectId = require('mongodb').ObjectID;
+
 // Add headers
 app.use(function (req, res, next) {
 
@@ -156,43 +164,207 @@ getToken = function (headers) {
 //NEW 
 
 apiRoutes.get('/publicevents', function(req, res) {
+
     Event.find({
       public: true
-    }, function(err, result) {
+    }, function(err, eventsArray) {
         if (err) throw err;
  
-        if (!result) {
-          return res.status(403).send({success: false, msg: 'Autenticazione fallita, Nessun evento pubblico trovato'});
-        } else {
-          res.json({success: true, data: result});
-        }
+        if (!eventsArray) {
+          return res.send({success: false, msg: 'Nessun evento pubblico trovato'});
+        } 
+        
+        res.json({success: true, data: eventsArray});
+    });
+});
+apiRoutes.post('/sessions', function(req, res) {
+
+    Session.find({
+      event: req.body.event
+    }, function(err, sessionsArray) {
+        if (err) throw err;
+ 
+        if (!sessionsArray) {
+          return res.send({success: false, msg: 'Nessuna sessione trovata per questo Evento'});
+        } 
+        
+        res.json({success: true, data: sessionsArray});
+    });
+});
+apiRoutes.post('/intervents', function(req, res) {
+
+    Intervent.find({
+      session: req.body.session
+    }, function(err, interventsArray) {
+        if (err) throw err;
+ 
+        if (!interventsArray) {
+          return res.send({success: false, msg: 'Nessun intervento trovato per questa Sessione'});
+        } 
+        
+        res.json({success: true, data: interventsArray});
     });
 });
 
-apiRoutes.post('/createevent', function(req, res) {
-    console.log(req.body);
+apiRoutes.get('/personalevents', function(req, res) {
     var token = getToken(req.headers);
     if (token) {
-      if (!req.body.title || !req.body.date || !req.body.location || !req.body.organizer || !req.body.sessions) {
+        var decoded = jwt.decode(token, config.secret);
+        Event.find({
+            organizer: 'user9'//decoded.username
+        }, function(err, eventsArray) {
+            if (err) throw err;
+
+            if (!eventsArray) {
+              return res.send({success: false, msg: 'Nessun evento per questo utente trovato'});
+            } 
+
+            res.json({success: true, data: eventsArray});
+        });
+    }else{
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
+
+apiRoutes.post('/createevent', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+      if (!req.body.title || !req.body.date || !req.body.location || !req.body.organizer) {
         res.json({success: false, msg: 'Passaggio di parametri incompleto'});
       } else {
-          console.log(req.body.sessions[0]);
         var newEvent = new Event({
             title: req.body.title,
             date: req.body.date,
             location: req.body.location,
             organizer: req.body.organizer,
-            sessions: req.body.sessions,
             public: true
         });
-        // save the user
         newEvent.save(function(err) {
           if (err) {
             console.log(err);
             return res.json({success: false, msg: 'Errore di creazione Evento'});
           }
-          res.json({success: true, msg: 'Nuovo evento creato con successo'});
+            //CREATES A SINGLE SESSION
+            var newSession = new Session({
+                title: newEvent.title,
+                date: newEvent.date,
+                speakers: [newEvent.organizer],
+                event: newEvent._id
+            });
+            newSession.save(function(err) {
+              if (err) {
+                console.log(err);
+                return res.json({success: false, msg: 'Errore di creazione Evento'});
+              }
+                //CREATES A SINGLE INTERVENT
+                var newIntervent = new Intervent({
+                    title: newEvent.title,
+                    date: newEvent.date,
+                    speaker: newEvent.organizer,
+                    session: newSession._id
+                });
+                newIntervent.save(function(err) {
+                  if (err) {
+                    console.log(err);
+                    return res.json({success: false, msg: 'Errore di creazione Evento'});
+                  }
+                  res.json({success: true, msg: 'Nuovo evento creato con successo', id: newEvent._id});
+                });
+            });
         });
+      }
+    }else{
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
+
+apiRoutes.post('/createsession', function(req, res) {
+    console.log(req.body);
+    var token = getToken(req.headers);
+    if (token) {
+      if (!req.body.title || !req.body.date || !req.body.speakers || !req.body.event) {
+        res.json({success: false, msg: 'Passaggio di parametri incompleto'});
+      } else {
+          Event.findOne({
+            _id: req.body.event
+          }, function(err, event) {
+              if(err){
+                  return res.json({success: false, msg: 'Errore di creazione Sessione, Nessun Evento trovato con ID ricevuto'});
+              }
+              var newSession = new Session({
+                  title: req.body.title,
+                  date: req.body.date,
+                  speakers: req.body.speakers,
+                  event: req.body.event
+              });
+              newSession.save(function(err) {
+                  if (err) {
+                    console.log(err);
+                    return res.json({success: false, msg: 'Errore di creazione Sessione'});
+                  }
+                    //CREATES A SINGLE INTERVENT
+                    var newIntervent = new Intervent({
+                        title: newSession.title,
+                        date: newSession.date,
+                        speaker: newSession.speakers[0],
+                        session: newSession._id
+                    });
+                    newIntervent.save(function(err) {
+                        if (err) {
+                            console.log(err);
+                            return res.json({success: false, msg: 'Errore di creazione Sessione'});
+                        }
+                        res.json({success: true, msg: 'Nuova sessione creata con successo', id: newSession._id});
+                    });
+                });
+          });
+      }
+    }else{
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
+
+apiRoutes.post('/createintervent', function(req, res) {
+    console.log(req.body);
+    var token = getToken(req.headers);
+    if (token) {
+      if (!req.body.title || !req.body.date || !req.body.speaker || !req.body.session) {
+        res.json({success: false, msg: 'Passaggio di parametri incompleto'});
+      } else {
+          Session.findOne({
+            _id: req.body.session
+          }, function(err, session) {
+              if(err){
+                  return res.json({success: false, msg: 'Errore di creazione Intervento, Nessuna Sessione trovata con ID ricevuto'});
+              }
+              var newIntervent = new Intervent({
+                  title: req.body.title,
+                  date: req.body.date,
+                  speaker: req.body.speaker,
+                  session: req.body.session
+              });
+              newIntervent.save(function(err) {
+                  if (err) {
+                    console.log(err);
+                    return res.json({success: false, msg: 'Errore di creazione Intervento'});
+                  }
+                  if(session.speakers.indexOf(req.body.speaker) == -1){//SE NON ESISTE GIA' UNO SPEAKER CON QUEL NOME 
+                      //AGGIORNA GLI SPEAKER DELLA SESSIONE
+                      Session.update({
+                        _id: req.body.session
+                      },{ $push: {
+                          speakers: req.body.speaker
+                      }}, {multi: false}, function(err, result) {
+                          if (err) throw err;
+
+                          if (!result) {
+                            return res.json({success: false, msg: 'Errore di aggiornamento Sessione'});
+                          } 
+                      });
+                  }
+                  res.json({success: true, msg: 'Nuovo intervento creato con successo', id: newIntervent._id});
+              });
+          });
       }
     }else{
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
@@ -214,7 +386,6 @@ apiRoutes.post('/updateuser', function(req, res) {
 
             if (!result) {
               return res.status(403).send({success: false, msg: 'Aggiornamento utente fallito'});
-                console.log(res);
             } else {
               res.json({success: true, msg: "Aggiornamento utente eseguito"});
             }

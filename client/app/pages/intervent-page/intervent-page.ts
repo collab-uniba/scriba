@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {ViewController, NavController, Modal} from 'ionic-angular';
-import {User} from '../../services/user-model';
+import {User} from '../../services/models/user-model';
 import {TranscriptionService} from '../../services/recognition-service';
 
 @Component({

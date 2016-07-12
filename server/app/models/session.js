@@ -19,12 +19,12 @@ var SessionSchema = new Schema({
     speakers: {
         type: [String]
     },
-    intervents: {
-        type: [Intervent],
+    event: {
+        type: String,
         required: false
     }
 });
 
 //METODI
- 
+
 module.exports = mongoose.model('Session', SessionSchema);

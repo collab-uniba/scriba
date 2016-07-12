@@ -1,9 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-
 // set up a mongoose model
-var EventSchema = new Schema({
+var CompleteEventSchema = new Schema({
     title: {
         type: String,
         unique: false,
@@ -26,12 +25,17 @@ var EventSchema = new Schema({
         type: Boolean,
         required: true
     },
-    allowed: {
-        type: [String]
+    sessions: {
+        type: Array
     }
-    
 });
 
 //METODI
+CompleteEventSchema.methods.updateTable = function (cb) {
+    
+        return cb(err);
+        cb(null, isMatch);
+    });
+};
  
-module.exports = mongoose.model('Event', EventSchema);
+module.exports = mongoose.model('CompleteEvent', CompleteEventSchema);

@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
-import {ScientificFactsPage} from '../scientific-facts-page/scientific-facts-page';
 import {EventService} from '../../services/event-services';
 
 @Component({
@@ -9,7 +8,8 @@ import {EventService} from '../../services/event-services';
 })
 export class HomePage {
 	
-	private events: string[];
+	private events = [];
+  private sessions: string[];
   constructor(private _navController: NavController, private es: EventService) {
     
   }
@@ -21,23 +21,30 @@ export class HomePage {
   updateEvents(){
     let _events = [];
 
-    let eventList = this.es.getPublicEvents().map(res=> res.json()).subscribe((data) => {
+    this.es.getPublicEvents().map(res=> res.json()).subscribe((data) => {
       data.data.forEach(event =>{
         event.expanded=false;
+        
+        //FINDS AND MERGES SESSIONS
+        let _sessions = [];
+        this.es.getSessions(event._id).map(res=>res.json()).subscribe(data=>{
+          data.data.forEach(session =>{
+            session.expanded=false;
+            //FINDS AND MERGES INTERVENTS
+            let _intervents = [];
+            this.es.getSessions(event._id).map(res=>res.json()).subscribe(data=>{
+              data.data.forEach(intervent =>{
+                _intervents.push(intervent);
+              session.intervents=_intervents;
+              })
+            });
+            _sessions.push(session);
+            event.sessions=_sessions;
+          })
+        })
         _events.push(event);
         this.events = _events;
-      })
+      });
     });
-    
   }
-
-  //selectFact(fact){
-    //this._navController.push(SelectedFactPage, {selectedFact: fact})
-  //}
-
-  goToFactsPage(){
-    this._navController.push(ScientificFactsPage);
-  }
-
-
 }

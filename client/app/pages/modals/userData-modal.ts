@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl} from '@angular/common';
 import {ViewController, NavController} from 'ionic-angular';
 import {UserService} from '../../services/user-services';
-import {User} from '../../services/user-model';
+import {User} from '../../services/models/user-model';
 import {PersonalPage} from '../personal-page/personal-page';
 
 @Component({
