@@ -91,6 +91,30 @@ export class EventService {
         let options = new RequestOptions({ headers: headers });
         return this.http.post(this.ServerWithApiUrl + '/updatesession', body, options);   
     }
+    deleteEvent(eventID): Observable<Response>{
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        let body = "id=" + eventID;
+        console.log(body);
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/deleteevent', body, options);   
+    }
+    deleteSession(sessionID): Observable<Response>{
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        let body = "id=" + sessionID;
+        console.log(body);
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/deletesession', body, options);   
+    }
+    deleteIntervent(interventID): Observable<Response>{
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        let body = "id=" + interventID;
+        console.log(body);
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/deleteintervent', body, options);   
+    }
 
 
 }

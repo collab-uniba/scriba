@@ -30,9 +30,14 @@
                 </ion-title>
                 <ion-buttons end>
                     <button (click)="openEvent(event)">
+                        <ion-icon name="navigate"> Apri </ion-icon>
+                    </button>
+                    <!--
+                    <button (click)="openEvent(event)">
                         <ion-icon name="create"> </ion-icon>
                     </button>
-                    <button>
+                    -->
+                    <button (click)="deleteEvent(event)">
                         <ion-icon name="trash"> </ion-icon>
                     </button>
                 </ion-buttons>

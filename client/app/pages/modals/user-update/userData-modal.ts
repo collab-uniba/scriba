@@ -6,7 +6,7 @@ import {User} from '../../../services/models/user-model';
 import {PersonalPage} from '../../personal-page/personal-page';
 
 @Component({
-  templateUrl: 'build/pages/modals/userData-modal.html',
+  templateUrl: 'build/pages/modals/user-update/userData-modal.html',
   //directives: [FORM_DIRECTIVES],
   providers: [UserService]
 })

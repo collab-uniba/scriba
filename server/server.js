@@ -211,7 +211,7 @@ apiRoutes.get('/personalevents', function(req, res) {
     if (token) {
         var decoded = jwt.decode(token, config.secret);
         Event.find({
-            organizer: 'user9'//decoded.username
+            organizer: decoded.username
         }, function(err, eventsArray) {
             if (err) throw err;
 
@@ -370,6 +370,108 @@ apiRoutes.post('/createintervent', function(req, res) {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+apiRoutes.post('/deleteintervent', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {//INSTEAD OF findOneAndRemove
+        Intervent.remove({
+          _id: req.body.id
+        }, function(err, result) {
+            if (err) throw err;
+
+            if (!result) {
+              return res.status(403).send({success: false, msg: 'Eliminazione Intervento fallita'});
+            } else {
+              res.json({success: true, msg: "Eliminazione Intervento eseguita"});
+            }
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
+apiRoutes.post('/deletesession', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        Intervent.remove({
+          session: req.body.id
+        }, function(err, result) {
+            if (err) throw err;
+
+            if (!result) {
+              return res.status(403).send({success: false, msg: 'Eliminazione Interventi della sessione fallita'});
+            } else {
+                Session.remove({
+                    _id: req.body.id
+                }, function(err, result){
+                    if(err) throw err;
+                    
+                    if (!result) {
+                        return res.status(403).send({success: false, msg: 'Eliminazione Sessione fallita'});
+                    }else{
+                        res.json({success: true, msg: "Eliminazione Sessione e relativi Interventi eseguita"});
+                    }
+                })
+            }
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
+apiRoutes.post('/deleteevent', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        //TROVA SESSIONI
+        Session.find({
+            event: req.body.id
+        }, function(err, sessionsList){
+            if (err) throw err;
+            
+            if(!sessionsList){
+                return res.status(403).send({success: false, msg: 'Eliminazione Sessioni di questo evento fallita'});
+            }else{
+                //PER OGNI SESSIONE CANCELLA INTERVENTI
+                sessionsList.forEach(function(currentSession){
+                    //CANCELLA INTERVENTI DI CIASCUNA SESSIONE
+                    Intervent.remove({
+                      session: currentSession._id
+                    }, function(err, result) {
+                        if (err) throw err;
+
+                        if (!result) {
+                          return res.status(403).send({success: false, msg: 'Eliminazione Interventi delle sessioni di questo intervento fallita'});
+                        }
+                    });
+                });
+                //CANCELLA TUTTE LE SESSIONI DELL'EVENTO
+                Session.remove({
+                  event: req.body.id
+                }, function(err, result) {
+                    if (err) throw err;
+
+                    if (!result) {
+                      return res.status(403).send({success: false, msg: 'Eliminazione Sessioni di questo evento fallita'});
+                    } else {
+                        //CANCELLA EVENTI
+                        Event.remove({
+                            _id: req.body.id
+                        }, function(err, result){
+                            if(err) throw err;
+
+                            if (!result) {
+                                return res.status(403).send({success: false, msg: 'Eliminazione Evento fallita'});
+                            }else{
+                                res.json({success: true, msg: "Eliminazione Evento e relative Sessioni e Interventi eseguita"});
+                            }
+                        })
+                    }
+                });
+                
+            }
+        })
+    } else {
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
+
 apiRoutes.post('/updateevent', function(req, res) {
     var token = getToken(req.headers);
     if (token) {

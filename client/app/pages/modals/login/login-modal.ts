@@ -5,7 +5,7 @@ import {UserService} from '../../../services/user-services';
 import {PersonalPage} from '../../personal-page/personal-page';
 
 @Component({
-  templateUrl: 'build/pages/modals/login-modal.html',
+  templateUrl: 'build/pages/modals/login/login-modal.html',
   directives: [FORM_DIRECTIVES],
   providers: [UserService]
 })

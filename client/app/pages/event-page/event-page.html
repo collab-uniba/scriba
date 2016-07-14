@@ -55,10 +55,15 @@
                         {{session.title}}
                     </ion-title>
                     <ion-buttons end>
+                        <button (click)="openSession(session)">
+                            <ion-icon name="navigate"> Apri </ion-icon>
+                        </button>
+                        <!--
                         <button (click)= "openSession(session)">
                             <ion-icon name="create"> </ion-icon>
                         </button>
-                        <button>
+                        -->
+                        <button (click)="deleteSession(session)">
                             <ion-icon name="trash"> </ion-icon>
                         </button>
                     </ion-buttons>

@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var Session = require('./session');
 
 
 // set up a mongoose model

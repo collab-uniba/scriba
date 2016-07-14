@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {NavController, NavParams, Modal} from 'ionic-angular';
+import {NavController, NavParams, Modal, Alert} from 'ionic-angular';
 import {EventService} from '../../services/event-services';
 import {Events} from 'ionic-angular';
 
@@ -89,6 +89,35 @@ export class EventPage {
     });
   }
 
+  deleteSession(session){
+    if(this.sessions.length==1){
+      alert("Impossibile eliminare la sessione. Deve essere sempre presente almeno una Sessione per un Evento!")
+    }else{
+      let confirm = Alert.create({
+        title: 'Cancellare questo Intervento?',
+        message: 'Se cancelli questa sessione saranno eliminati tutti gli interventi al suo interno e non sarà più possibile ripristinarla!',
+        buttons: [
+          {
+            text: 'Cancella',
+            handler: () => {
+              console.log('Cancellala');
+              this.es.deleteSession(session._id).map(res=>res.json()).subscribe(data=>{
+                if (data.success) {
+                  this.updateSessions(this.event._id);
+                }else{
+                  alert(data.msg)
+                }
+              });
+            }
+          },
+          {
+            text: 'Mantieni'
+          }
+        ]
+      });
+      this.nav.present(confirm);
+    }
+  }
   close() {
       this.nav.pop();
   }

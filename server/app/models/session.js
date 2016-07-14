@@ -25,6 +25,7 @@ var SessionSchema = new Schema({
     }
 });
 
+
 //METODI
 
 module.exports = mongoose.model('Session', SessionSchema);

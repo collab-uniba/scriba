@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {NavController, NavParams, Modal} from 'ionic-angular';
+import {NavController, NavParams, Modal, Alert} from 'ionic-angular';
 import {EventService} from '../../services/event-services';
 import {Events} from 'ionic-angular';
 
@@ -79,6 +79,38 @@ export class SessionPage {
       this.nav.push(InterventPage, {
           intervent: interventToOpen
         })
+  }
+  editIntervent(intervent){
+    console.log("EDITING");
+  }
+  deleteIntervent(intervent){
+    if(this.intervents.length==1){
+      alert("Impossibile eliminare l'Intervento. Deve essere sempre presente almeno un intervento per una Sessione!")
+    }else{
+      let confirm = Alert.create({
+        title: 'Cancellare questo Intervento?',
+        message: 'Se cancelli questo intervento, non sarà più possibile ripristinarlo!',
+        buttons: [
+          {
+            text: 'Cancella',
+            handler: () => {
+              console.log('Cancellalo');
+              this.es.deleteIntervent(intervent._id).map(res=>res.json()).subscribe(data=>{
+                if (data.success) {
+                  this.updateIntervents(this.session._id);
+                }else{
+                  alert(data.msg)
+                }
+              });
+            }
+          },
+          {
+            text: 'Mantieni'
+          }
+        ]
+      });
+      this.nav.present(confirm);
+    }
   }
 
   close() {

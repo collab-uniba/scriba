@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, Modal} from 'ionic-angular';
+import {NavController, Modal, Alert} from 'ionic-angular';
 import {EventService} from '../../services/event-services';
 import {Events} from 'ionic-angular';
 
@@ -63,5 +63,34 @@ export class PersonalEventsPage {
     this.nav.push(EventPage,{
         event: eventToOpen,
     });
+  }
+  deleteEvent(event){
+    if(this.events.length==1){
+      alert("Impossibile eliminare la sessione. Deve essere sempre presente almeno una Sessione per un Evento!")
+    }else{
+      let confirm = Alert.create({
+        title: 'Cancellare questo Evento?',
+        message: 'Se cancelli questo Evento saranno eliminati tutte le sessioni e gli interventi al suo interno e non sarà più possibile ripristinarlo!',
+        buttons: [
+          {
+            text: 'Cancella',
+            handler: () => {
+              console.log('Cancellalo');
+              this.es.deleteEvent(event._id).map(res=>res.json()).subscribe(data=>{
+                if (data.success) {
+                  this.updateEvents();
+                }else{
+                  alert(data.msg)
+                }
+              });
+            }
+          },
+          {
+            text: 'Mantieni'
+          }
+        ]
+      });
+      this.nav.present(confirm);
+    }
   }
 }
