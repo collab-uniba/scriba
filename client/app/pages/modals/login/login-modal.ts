@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import {ViewController, NavController} from 'ionic-angular';
 import { FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl } from '@angular/common';
-import {UserService} from '../../services/user-services';
-import {PersonalPage} from '../personal-page/personal-page';
+import {UserService} from '../../../services/user-services';
+import {PersonalPage} from '../../personal-page/personal-page';
 
 @Component({
   templateUrl: 'build/pages/modals/login-modal.html',

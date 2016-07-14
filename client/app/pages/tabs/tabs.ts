@@ -2,8 +2,8 @@ import {Component} from '@angular/core'
 import {HomePage} from '../home-page/home-page';
 import {AboutPage} from '../about-page/about-page';
 import {ContactPage} from '../contact-page/contact-page';
-import{SignupPage} from '../modals/signup-modal'
-import{LoginPage} from '../modals/login-modal'
+import{SignupPage} from '../modals/signup/signup-modal'
+import{LoginPage} from '../modals/login/login-modal'
 import {Modal, NavController} from 'ionic-angular';
 
 @Component({

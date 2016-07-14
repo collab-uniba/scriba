@@ -73,5 +73,24 @@ export class EventService {
         let options = new RequestOptions({ headers: headers });
         return this.http.post(this.ServerWithApiUrl + '/createintervent', body, options);   
     }
+    updateEvent(event): Observable<Response>{
+        console.log(event);
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        let body = "id=" + event._id +"&title="+ event.title + "&date="+  event.date + "&location=" + event.location;
+        console.log(body);
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/updateevent', body, options);   
+    }
+    updateSession(session): Observable<Response>{
+        console.log(session);
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        let body = "id=" + session._id +"&title="+ session.title + "&date="+  session.date;
+        console.log(body);
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/updatesession', body, options);   
+    }
+
 
 }

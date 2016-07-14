@@ -6,10 +6,9 @@ import {Modal, NavController, MenuController} from 'ionic-angular';
 import {UserService} from '../../services/user-services';
 import {User} from '../../services/models/user-model';
 import {TabsPage} from '../tabs/tabs';
-import {UserDataPage} from '../modals/userData-modal';
-import {LoginPage} from '../modals/login-modal';
+import {UserDataPage} from '../modals/user-update/userData-modal';
+import {LoginPage} from '../modals/login/login-modal';
 import {PersonalEventsPage} from '../personal-events-page/personal-events-page';
-import {InterventPage} from '../intervent-page/intervent-page';
 
 @Component({
   templateUrl: 'build/pages/personal-page/personal-page.html',
@@ -20,7 +19,6 @@ export class PersonalPage {
   private user: User;
   private rootPage = HomePage;
   private PersonalEventsPage = PersonalEventsPage;
-  private InterventPage = InterventPage;
   private EventsPage = HomePage;//CAMBIARE CREANDONE UNA NUOVA
   private AboutPage = AboutPage;
   private ContactPage = ContactPage;

@@ -5,7 +5,7 @@ declare var webkitSpeechRecognition: any;
 @Injectable()
 export class TranscriptionService{
   private recognition;
-  private final_transcript = "";
+  public final_transcript = "";
   private recognizing = false;
   constructor(){
     if ('webkitSpeechRecognition' in window) {
@@ -13,18 +13,21 @@ export class TranscriptionService{
       this.recognition.continuous = true;
 	    this.recognition.interimResults = true;
       this.recognition.onresult=this.resultHandler.bind(this);
+			this.recognition.onstart=this.startHandler.bind(this);
+			this.recognition.onerror=this.errorHandler.bind(this);
+			this.recognition.onend=this.endHandler.bind(this);
     }else{
       console.log("Not CHROME");
     }
   }
 
-  startDictation() {
+  startDictation(transcription) {
     if (this.recognizing) {
       this.recognition.stop();
       this.recognizing=false;
       return;
     }
-    this.final_transcript = '';
+    this.final_transcript = transcription;
 
     this.recognition.lang = 'it-IT';
     this.recognition.start();
@@ -35,6 +38,7 @@ export class TranscriptionService{
 		for (var i = event.resultIndex; i < event.results.length; ++i) {
 			if (event.results[i].isFinal) {
 				this.final_transcript += event.results[i][0].transcript;
+				
         console.log(this.final_transcript);
 			} else {
 				interim_transcript += event.results[i][0].transcript;
@@ -44,36 +48,33 @@ export class TranscriptionService{
 		//final_span.innerHTML = linebreak(final_transcript);
 		//interim_span.innerHTML = linebreak(interim_transcript);
 	};
-/*TODO OTHER HANDLERS
-recognition.onstart = function () {
-		recognizing = true;
-		log_span.innerHTML += "RECOGNITION STARTED";
+	startHandler () {
+		this.recognizing = true;
+		console.log("RECOGNITION STARTED");
 	};
 
-	recognition.onerror = function (event) {
-		console.log(event.error);
-		log_span.innerHTML += "RECOGNITION ERROR";
+	errorHandler(event) {
+		console.log("RECOGNITION ERROR: " + event.error);
 	};
 
-	recognition.onend = function () {
-		log_span.innerHTML += "RECOGNITION STOPPED";
-		if(recognizing){
-			recognition.start();
-			log_span.innerHTML += "RECOGNITION RESTARTED";
+	endHandler() {
+		console.log("RECOGNITION STOPPED");
+		if(this.recognizing){
+			this.recognition.start();
+			console.log("RECOGNITION RESTARTED");
 		}
-
 	};
-  */
 
   private two_line = /\n\n/g;
   private one_line = /\n/g;
-linebreak(s) {
-	return s.replace(this.two_line, '<p></p>').replace(this.one_line, '<br>');
-}
 
-capitalize(s) {
-	return s.replace(s.substr(0, 1), function (m) {
-		return m.toUpperCase();
-	});
-}
+	linebreak(s) {
+		return s.replace(this.two_line, '<p></p>').replace(this.one_line, '<br>');
+	}
+
+	capitalize(s) {
+		return s.replace(s.substr(0, 1), function (m) {
+			return m.toUpperCase();
+		});
+	}
 }

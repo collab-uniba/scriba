@@ -1,15 +1,16 @@
-<ion-header>
-  <ion-navbar>
-      
-  </ion-navbar>
-</ion-header>
+<ion-toolbar>
+    
+</ion-toolbar>
+
 <ion-content padding>
-    <ion-toolbar>
-        <ion-title>
-            <ion-icon name="arrow-back"></ion-icon> 
-            Intervento - Dati
-        </ion-title>
-    </ion-toolbar>
+    <ion-header padding>
+        <ion-navbar>
+            <ion-title>
+                {{intervent.title}}
+            </ion-title>
+        </ion-navbar>
+    </ion-header>
+    
     <button (click)="startRecognizing()"> Inizia </button>
-    <textarea disabled>{{transcription}}</textarea>
+    <textarea disabled>{{intervent.text}}</textarea>
 </ion-content>

@@ -370,7 +370,49 @@ apiRoutes.post('/createintervent', function(req, res) {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+apiRoutes.post('/updateevent', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        Event.update({
+          _id: req.body.id
+        },{ $set: { 
+            title: req.body.title,
+            date: req.body.date,
+            location: req.body.location
+        }}, {multi: false}, function(err, result) {
+            if (err) throw err;
 
+            if (!result) {
+              return res.status(403).send({success: false, msg: 'Aggiornamento evento fallito'});
+            } else {
+              res.json({success: true, msg: "Aggiornamento evento eseguito"});
+            }
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
+apiRoutes.post('/updatesession', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        Session.update({
+          _id: req.body.id
+        },{ $set: { 
+            title: req.body.title,
+            date: req.body.date,
+        }}, {multi: false}, function(err, result) {
+            if (err) throw err;
+
+            if (!result) {
+              return res.status(403).send({success: false, msg: 'Aggiornamento sessione fallito'});
+            } else {
+              res.json({success: true, msg: "Aggiornamento sessione eseguito"});
+            }
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
 apiRoutes.post('/updateuser', function(req, res) {
     var token = getToken(req.headers);
     if (token) {

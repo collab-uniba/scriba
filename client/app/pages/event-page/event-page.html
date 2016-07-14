@@ -4,19 +4,19 @@
 
 <ion-content padding>
     <ion-header padding>
-        <ion-navbar>
-            <ion-title>
-                {{session.title}}
-            </ion-title>
-            <ion-buttons *ngIf="!updating" end>
-                <button (click)="updating=!updating">
-                    <ion-icon name="create"> </ion-icon>
-                </button>
-            </ion-buttons>
-        </ion-navbar>
+    <ion-navbar>
+        <ion-title>
+            {{event.title}}
+        </ion-title>
+        <ion-buttons *ngIf="!updating" end>
+            <button (click)="updating=!updating">
+                <ion-icon name="create"> </ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
     </ion-header>
 
-    <form *ngIf="updating" (ngSubmit)="submit()" #sessionForm="ngForm">
+    <form *ngIf="updating" (ngSubmit)="submit()" #eventForm="ngForm">
         <ion-item >
             <ion-label inline>Titolo</ion-label>
             <ion-input type="text" ngControl="titleControl" [(ngModel)]="newData.title" required></ion-input>
@@ -27,33 +27,35 @@
             <ion-input type="datetime-local" ngControl="dateControl" min="{{currentDate | date:'yyyy-MM-dd'}}" class="form-control" [(ngModel)]="newData.date" required></ion-input>
         </ion-item>
 
+        <ion-item >
+            <ion-label inline>Luogo</ion-label>
+            <ion-input type="text" ngControl="locationControl" class="form-control" [(ngModel)]="newData.location" required></ion-input>
+        </ion-item>
+
         <ion-item>
-            <button type="submit" class="btn btn-standard" [disabled]="!sessionForm.valid">Salva</button>
+            <button type="submit" class="btn btn-standard" [disabled]="!eventForm.valid">Salva</button>
             <button type="reset" (click)="reset()">Annulla</button>
         </ion-item>
     </form>
     <ion-list>
         <ion-toolbar padding>
             <ion-title>
-                INTERVENTI
+                SESSIONI
             </ion-title>
             <ion-buttons end>
-                <button (click)="newIntervent()">
-                <ion-icon name="add"> Nuovo Intervento</ion-icon>
+                <button (click)="newSession()">
+                <ion-icon name="add"> Nuova Sessione</ion-icon>
                 </button>
             </ion-buttons>    
         </ion-toolbar>
-        <ion-card *ngFor="let intervent of intervents">
+        <ion-card *ngFor="let session of sessions">
             <ion-card-header>
                 <ion-toolbar>
                     <ion-title>
-                        {{intervent.title}}
+                        {{session.title}}
                     </ion-title>
                     <ion-buttons end>
-                        <button (click)="openIntervent(intervent)">
-                            <ion-icon name="navigate"> Apri </ion-icon>
-                        </button>
-                        <button>
+                        <button (click)= "openSession(session)">
                             <ion-icon name="create"> </ion-icon>
                         </button>
                         <button>

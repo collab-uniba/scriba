@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl } from '@angular/common';
 import {ViewController, NavController, Modal} from 'ionic-angular';
-import {UserService} from '../../services/user-services';
-import {User} from '../../services/models/user-model';
-import{LoginPage} from '../modals/login-modal'
+import {UserService} from '../../../services/user-services';
+import {User} from '../../../services/models/user-model';
+import{LoginPage} from '../login/login-modal'
 
 @Component({
   templateUrl: 'build/pages/modals/signup-modal.html',

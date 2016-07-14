@@ -4,7 +4,8 @@ import {EventService} from '../../services/event-services';
 import {Events} from 'ionic-angular';
 
 //IMPORT PAGES - MODALS
-import {NewEventPage} from '../modals/event-modal';
+import {NewEventPage} from '../modals/event/event-modal';
+import {EventPage} from '../event-page/event-page';
 
 @Component({
   templateUrl: 'build/pages/personal-events-page/personal-events-page.html',
@@ -36,7 +37,7 @@ export class PersonalEventsPage {
             session.expanded=false;
             //FINDS AND MERGES INTERVENTS
             let _intervents = [];
-            this.es.getSessions(event._id).map(res=>res.json()).subscribe(data=>{
+            this.es.getIntervents(session._id).map(res=>res.json()).subscribe(data=>{
               data.data.forEach(intervent =>{
                 _intervents.push(intervent);
               session.intervents=_intervents;
@@ -57,5 +58,10 @@ export class PersonalEventsPage {
     });
     let modal = Modal.create(NewEventPage);
     this.nav.present(modal);
+  }
+  openEvent(eventToOpen){
+    this.nav.push(EventPage,{
+        event: eventToOpen,
+    });
   }
 }

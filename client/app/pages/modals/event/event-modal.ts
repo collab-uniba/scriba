@@ -1,18 +1,15 @@
 import { Component } from '@angular/core';
 import {NavController} from 'ionic-angular';
-import {EventService} from '../../services/event-services';
+import {EventService} from '../../../services/event-services';
 import {NgForm} from '@angular/forms';
 import {Events} from 'ionic-angular';
 
-//IMPORT PAGES - MODALS
-import {PersonalEventsPage} from '../personal-events-page/personal-events-page';
-
 //IMPORT MODELS
-import {User} from '../../services/models/user-model';
-import {Event} from '../../services/models/event-model';
+import {User} from '../../../services/models/user-model';
+import {Event} from '../../../services/models/event-model';
 
 @Component({
-  templateUrl: 'build/pages/modals/event-modal.html',
+  templateUrl: 'build/pages/modals/event/event-modal.html',
   providers: [EventService]
 })
 export class NewEventPage {

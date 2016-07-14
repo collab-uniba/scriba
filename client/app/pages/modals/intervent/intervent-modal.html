@@ -1,0 +1,26 @@
+<ion-toolbar>
+    <ion-title>
+        Dati Nuovo Intervento
+    </ion-title>
+</ion-toolbar>
+<form (ngSubmit)="submit()" #interventForm="ngForm">
+    <ion-item >
+        <ion-label inline>Titolo</ion-label>
+        <ion-input type="text" ngControl="titleControl" [(ngModel)]="intervent.title" required></ion-input>
+    </ion-item>
+
+    <ion-item >
+        <ion-label inline>Data</ion-label>
+        <ion-input type="datetime-local" ngControl="dateControl" min="{{currentDate | date:'yyyy-MM-dd'}}" class="form-control" [(ngModel)]="intervent.date" required></ion-input>
+    </ion-item>
+
+    <ion-item >
+        <ion-label inline>Speaker (username)</ion-label>
+        <ion-input type="text" ngControl="speakerControl" class="form-control" [(ngModel)]="intervent.speaker" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <button type="submit" class="btn btn-standard" [disabled]="!interventForm.valid">Salva</button>
+        <button type="reset" (click)="close()">Annulla</button>
+    </ion-item>
+</form>
