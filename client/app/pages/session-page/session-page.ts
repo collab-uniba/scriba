@@ -6,6 +6,7 @@ import {Events} from 'ionic-angular';
 
 //IMPORT MODELS
 import {User} from '../../services/models/user-model';
+import {Session} from '../../services/models/session-model';
 
 //IMPORT PAGES - MODALS
 import {NewInterventPage} from '../modals/intervent/intervent-modal';
@@ -22,19 +23,41 @@ export class SessionPage {
 
   //SETS PASSED EVENT
   private updating = false;
-  private session;
+  private event = this.np.get('event');
+  private session = this.np.get('session');
   private newData;
+  private overlapError = {status: false, session: null};
 
   //SETS SESSION INTERVENTS
   private intervents = [];
 
   constructor(private nav: NavController, private np: NavParams, private es: EventService, private evts: Events) {
-    this.session=this.np.get('session');
-    this.newData={title:this.session.title, date: this.session.date};
+    //this.session
+    console.log(this.session);
+    this.newData = {_id: this.session._id, title:this.session.title, startDate: this.session.startDate, endDate: this.session.endDate};
   }
 
   ionViewWillEnter(){
 	  this.updateIntervents(this.session._id);
+  }
+  overlap(): Session{
+      let overlap = null;
+      let sessions=this.np.get('sessions');
+      sessions.forEach(sessionInList => {
+        if(sessionInList._id!=this.newData._id){
+          console.log(this.newData.startDate);
+          console.log(this.newData.endDate);
+          console.log(sessionInList.startDate);
+          console.log(sessionInList.endDate);
+          if((sessionInList.startDate < this.newData.startDate && this.newData.startDate < sessionInList.endDate) || 
+              (sessionInList.startDate < this.newData.endDate && this.newData.endDate < sessionInList.endDate) ||
+              (this.newData.startDate < sessionInList.startDate && sessionInList.endDate < this.newData.endDate)){
+              console.log(sessionInList);
+              overlap = sessionInList;
+          }
+        }
+      });
+      return overlap;
   }
 
   updateIntervents(sessionID){//CAMBIARE IN GET PERSONAL EVENTS
@@ -50,19 +73,27 @@ export class SessionPage {
       });
   }
   submit(){
-    console.log("SUBMIT");
-    this.newData._id=this.session._id;
-    this.es.updateSession(this.newData).map(res=>res.json()).subscribe(data=>{
-      console.log(data);
-      if(data.success){
-        this.nav.pop()
-      }else{
-        alert(data.msg)
-      }
-    })
+    this.overlapError.status = false;
+    this.overlapError.session = null;
+    console.log(this.overlapError);
+    let olp = this.overlap();
+    if(olp!=null){
+        this.overlapError.status=true;
+        this.overlapError.session=olp;
+        console.log(this.overlapError);
+    }else{
+      this.es.updateSession(this.newData).map(res=>res.json()).subscribe(data=>{
+        console.log(data);
+        if(data.success){
+          this.nav.pop()
+        }else{
+          alert(data.msg)
+        }
+      })
+    }
   }
   reset(){
-    this.newData={title:this.session.title, date: this.session.date};
+    this.newData={_id: this.session._id, title:this.session.title, startDate: this.session.date, endDate: this.session.endDate};
     this.updating=false;
   }
 
@@ -71,12 +102,14 @@ export class SessionPage {
       console.log("Update Intervents and remove intervent fetch from event page");
       this.updateIntervents(this.session._id);
     });
-    let modal = Modal.create(NewInterventPage, {sessionID: this.session._id});
+    let modal = Modal.create(NewInterventPage, {session: this.session, intervents: this.intervents});
     this.nav.present(modal);
   }
   openIntervent(interventToOpen){
       //SOLO SE è TRA GLI SPEAKER
       this.nav.push(InterventPage, {
+          session: this.session,
+          intervents: this.intervents,
           intervent: interventToOpen
         })
   }
@@ -84,33 +117,29 @@ export class SessionPage {
     console.log("EDITING");
   }
   deleteIntervent(intervent){
-    if(this.intervents.length==1){
-      alert("Impossibile eliminare l'Intervento. Deve essere sempre presente almeno un intervento per una Sessione!")
-    }else{
-      let confirm = Alert.create({
-        title: 'Cancellare questo Intervento?',
-        message: 'Se cancelli questo intervento, non sarà più possibile ripristinarlo!',
-        buttons: [
-          {
-            text: 'Cancella',
-            handler: () => {
-              console.log('Cancellalo');
-              this.es.deleteIntervent(intervent._id).map(res=>res.json()).subscribe(data=>{
-                if (data.success) {
-                  this.updateIntervents(this.session._id);
-                }else{
-                  alert(data.msg)
-                }
-              });
-            }
-          },
-          {
-            text: 'Mantieni'
+    let confirm = Alert.create({
+      title: 'Cancellare questo Intervento?',
+      message: 'Se cancelli questo intervento, non sarà più possibile ripristinarlo!',
+      buttons: [
+        {
+          text: 'Cancella',
+          handler: () => {
+            console.log('Cancellalo');
+            this.es.deleteIntervent(intervent._id).map(res=>res.json()).subscribe(data=>{
+              if (data.success) {
+                this.updateIntervents(this.session._id);
+              }else{
+                alert(data.msg)
+              }
+            });
           }
-        ]
-      });
-      this.nav.present(confirm);
-    }
+        },
+        {
+          text: 'Mantieni'
+        }
+      ]
+    });
+    this.nav.present(confirm);
   }
 
   close() {

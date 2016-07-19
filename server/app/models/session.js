@@ -11,7 +11,12 @@ var SessionSchema = new Schema({
         unique: false,
         required: true
     },
-    date: {
+    startDate: {
+        type: Date,
+        unique: false,
+        required: true
+    },
+    endDate: {
         type: Date,
         unique: false,
         required: true
@@ -19,12 +24,33 @@ var SessionSchema = new Schema({
     speakers: {
         type: [String]
     },
+    status: {
+        type: String,
+        required: true
+    },
     event: {
         type: String,
         required: false
     }
 });
-
+/*
+SessionSchema.pre('save', function(next){
+    //CREATES A SINGLE SESSION
+    var newIntervent = new Intervent({
+        title: this.title,
+        date: this.startDate,
+        speaker: this.organizer,
+        session: this._id
+    });
+    newIntervent.save(function(err) {
+      if (err) {
+        console.log(err);
+        return next(err);
+      }
+        next();
+    });  
+})
+*/
 
 //METODI
 

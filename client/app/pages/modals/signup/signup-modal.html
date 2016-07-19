@@ -3,44 +3,40 @@
         Registrati
     </ion-title>
 </ion-toolbar>
-<form [ngFormModel]="regForm" (ngSubmit)="onSubmit(regForm.value)">
-    <ion-item [class.error]="!name.valid && name.touched">
+<form #signupForm="ngForm" (ngSubmit)="submit()">
+    <ion-item>
         <ion-label floating>Nome</ion-label>
-        <ion-input type="text" class="form-control" [ngFormControl]="name" required></ion-input>
+        <ion-input type="text" ngControl="nameControl" [(ngModel)]="user.name" pattern="[a-zA-Z ]*" required></ion-input>
     </ion-item>
-    <div *ngIf="name.hasError('checkFirstCharacterValidator') && name.touched" 
-        class="error-box">* Il Nome non può iniziare con un numero!</div>     
 
-    <ion-item [class.error]="!surname.valid && surname.touched">
+    <ion-item>
         <ion-label floating>Cognome</ion-label>
-        <ion-input type="text" class="form-control" [ngFormControl]="surname" required></ion-input>
+        <ion-input type="text" ngControl="surnameControl" [(ngModel)]="user.surname" pattern="[a-zA-Z ]*" required></ion-input>
     </ion-item>
-    <div *ngIf="surname.hasError('checkFirstCharacterValidator') && surname.touched" 
-        class="error-box">* Il Cognome non può iniziare con un numero!</div>     
 
-    <ion-item [class.error]="!username.valid && username.touched">
+    <ion-item>
         <ion-label floating>Username</ion-label>
-        <ion-input type="text" class="form-control" [ngFormControl]="username" required></ion-input>
-    </ion-item>
-    <div *ngIf="username.hasError('minlength') && username.touched" 
-        class="error-box">* La lunghezza minima dello Username è 4!</div>            
-    <div *ngIf="username.hasError('checkFirstCharacterValidator') && username.touched" 
-        class="error-box">* Lo Username non può iniziare con un numero!</div>     
-    
-    <ion-item [class.error]="!password.valid && password.touched">
-        <ion-label floating>Password</ion-label>
-        <ion-input type="password" class="form-control" [ngFormControl]="password" required></ion-input>
-    </ion-item>
-    <div *ngIf="password.hasError('minlength') && password.touched" 
-        class="error-box">* La lunghezza minima della password è 8!</div>            
-    
-    <ion-item [class.error]="!email.valid && email.touched">
-        <ion-label floating>e-Mail</ion-label>
-        <ion-input type="email" class="form-control" [ngFormControl]="email"></ion-input>
-    </ion-item>
+        <ion-input type="text" ngControl="usernameControl" [(ngModel)]="user.username" minlength="4" pattern="[a-zA-z]+[0-9]*" required></ion-input>
+    </ion-item> 
     
     <ion-item>
-        <button type="submit" [disabled]="!regForm.valid" class="btn btn-standard">Registrati</button>
+        <ion-label floating>Password</ion-label>
+        <ion-input type="password" ngControl="passwordControl" [(ngModel)]="user.password" minlength="8" #pwd="ngForm" required></ion-input>
+    </ion-item>   
+
+    <ion-item>
+        <ion-label floating>Conferma Password</ion-label>
+        <ion-input type="password" ngControl="confirmPasswordControl" minlength="8" #cpwd="ngForm" required></ion-input>
+    </ion-item> 
+    <div *ngIf="pwd.value!=cpwd.value && cpwd.touched" class="error-box">Le password non corrispondono</div>  
+    
+    <ion-item>
+        <ion-label floating>e-Mail</ion-label>
+        <ion-input type="email" ngControl="emailControl" [(ngModel)]="user.email" required></ion-input>
+    </ion-item>
+         
+    <ion-item>
+        <button type="submit" [disabled]="!signupForm.valid || (pwd.value!=cpwd.value && cpwd.touched)" class="btn btn-standard">Registrati</button>
         <button type="reset" (click)="close()">Annulla</button>
     </ion-item>
 </form>

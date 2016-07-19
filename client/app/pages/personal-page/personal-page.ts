@@ -2,7 +2,7 @@ import {Component} from '@angular/core'
 import {HomePage} from '../home-page/home-page';
 import {AboutPage} from '../about-page/about-page';
 import {ContactPage} from '../contact-page/contact-page';
-import {Modal, NavController, MenuController} from 'ionic-angular';
+import {Modal, NavController, MenuController, Events} from 'ionic-angular';
 import {UserService} from '../../services/user-services';
 import {User} from '../../services/models/user-model';
 import {TabsPage} from '../tabs/tabs';
@@ -23,7 +23,7 @@ export class PersonalPage {
   private AboutPage = AboutPage;
   private ContactPage = ContactPage;
 
-  constructor(private nav: NavController, private us: UserService,  private menu: MenuController) {
+  constructor(private evts: Events, private nav: NavController, private us: UserService,  private menu: MenuController) {
     this.user = new User("","","","","");
   }
   ionViewWillEnter(){
@@ -42,7 +42,10 @@ export class PersonalPage {
     })
   }
   userData(){
-    let modal = Modal.create(UserDataPage);
+    this.evts.subscribe('reloadUserData',() => {
+      this.getUserData();
+    });
+    let modal = Modal.create(UserDataPage, {user: this.user});
     this.nav.present(modal);
   }
 

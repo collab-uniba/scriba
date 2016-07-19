@@ -3,17 +3,17 @@
         Accedi
     </ion-title>
 </ion-toolbar>
-<form [ngFormModel]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
-    <ion-item [class.error]="!username.valid && username.touched">
+<form #loginForm="ngForm" (ngSubmit)="submit()">
+    <ion-item>
         <ion-label floating>Username</ion-label>
-        <ion-input type="text" class="form-control" [ngFormControl]="username" required></ion-input>
-    </ion-item>        
+        <ion-input type="text" ngControl="usernameControl" [(ngModel)]="username" minlength="4" pattern="[a-zA-z]+[0-9]*" required></ion-input>
+    </ion-item> 
     
-    <ion-item [class.error]="!password.valid && password.touched">
+    <ion-item>
         <ion-label floating>Password</ion-label>
-        <ion-input type="password" class="form-control" [ngFormControl]="password" required></ion-input>
-    </ion-item>
-    
+        <ion-input type="password" ngControl="passwordControl" [(ngModel)]="password" minlength="8" #pwd="ngForm" required></ion-input>
+    </ion-item>   
+
     <ion-item>
         <button type="submit" [disabled]="!loginForm.valid" class="btn btn-standard">Accedi</button>
         <button type="reset" (click)="close()">Annulla</button>

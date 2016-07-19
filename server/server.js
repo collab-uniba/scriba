@@ -229,13 +229,15 @@ apiRoutes.get('/personalevents', function(req, res) {
 apiRoutes.post('/createevent', function(req, res) {
     var token = getToken(req.headers);
     if (token) {
-      if (!req.body.title || !req.body.date || !req.body.location || !req.body.organizer) {
+      if (!req.body.title || !req.body.startDate || !req.body.endDate || !req.body.location || !req.body.organizer || !req.body.status) {
         res.json({success: false, msg: 'Passaggio di parametri incompleto'});
       } else {
         var newEvent = new Event({
             title: req.body.title,
-            date: req.body.date,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
             location: req.body.location,
+            status: req.body.status,
             organizer: req.body.organizer,
             public: true
         });
@@ -244,33 +246,7 @@ apiRoutes.post('/createevent', function(req, res) {
             console.log(err);
             return res.json({success: false, msg: 'Errore di creazione Evento'});
           }
-            //CREATES A SINGLE SESSION
-            var newSession = new Session({
-                title: newEvent.title,
-                date: newEvent.date,
-                speakers: [newEvent.organizer],
-                event: newEvent._id
-            });
-            newSession.save(function(err) {
-              if (err) {
-                console.log(err);
-                return res.json({success: false, msg: 'Errore di creazione Evento'});
-              }
-                //CREATES A SINGLE INTERVENT
-                var newIntervent = new Intervent({
-                    title: newEvent.title,
-                    date: newEvent.date,
-                    speaker: newEvent.organizer,
-                    session: newSession._id
-                });
-                newIntervent.save(function(err) {
-                  if (err) {
-                    console.log(err);
-                    return res.json({success: false, msg: 'Errore di creazione Evento'});
-                  }
-                  res.json({success: true, msg: 'Nuovo evento creato con successo', id: newEvent._id});
-                });
-            });
+            res.json({success: true, msg: 'Nuovo evento creato con successo', id: newEvent._id});
         });
       }
     }else{
@@ -282,7 +258,7 @@ apiRoutes.post('/createsession', function(req, res) {
     console.log(req.body);
     var token = getToken(req.headers);
     if (token) {
-      if (!req.body.title || !req.body.date || !req.body.speakers || !req.body.event) {
+      if (!req.body.title || !req.body.startDate || !req.body.endDate || !req.body.speakers || !req.body.status || !req.body.event) {
         res.json({success: false, msg: 'Passaggio di parametri incompleto'});
       } else {
           Event.findOne({
@@ -293,29 +269,18 @@ apiRoutes.post('/createsession', function(req, res) {
               }
               var newSession = new Session({
                   title: req.body.title,
-                  date: req.body.date,
+                  startDate: req.body.startDate,
+                  endDate: req.body.endDate,
                   speakers: req.body.speakers,
+                  status: req.body.status,
                   event: req.body.event
               });
               newSession.save(function(err) {
                   if (err) {
                     console.log(err);
                     return res.json({success: false, msg: 'Errore di creazione Sessione'});
-                  }
-                    //CREATES A SINGLE INTERVENT
-                    var newIntervent = new Intervent({
-                        title: newSession.title,
-                        date: newSession.date,
-                        speaker: newSession.speakers[0],
-                        session: newSession._id
-                    });
-                    newIntervent.save(function(err) {
-                        if (err) {
-                            console.log(err);
-                            return res.json({success: false, msg: 'Errore di creazione Sessione'});
-                        }
-                        res.json({success: true, msg: 'Nuova sessione creata con successo', id: newSession._id});
-                    });
+                  } 
+                    res.json({success: true, msg: 'Nuova sessione creata con successo', id: newSession._id});
                 });
           });
       }
@@ -328,7 +293,7 @@ apiRoutes.post('/createintervent', function(req, res) {
     console.log(req.body);
     var token = getToken(req.headers);
     if (token) {
-      if (!req.body.title || !req.body.date || !req.body.speaker || !req.body.session) {
+      if (!req.body.title || !req.body.date || !req.body.speaker || !req.body.session || !req.body.status) {
         res.json({success: false, msg: 'Passaggio di parametri incompleto'});
       } else {
           Session.findOne({
@@ -340,8 +305,10 @@ apiRoutes.post('/createintervent', function(req, res) {
               var newIntervent = new Intervent({
                   title: req.body.title,
                   date: req.body.date,
+                  duration: req.body.duration,
                   speaker: req.body.speaker,
-                  session: req.body.session
+                  session: req.body.session,
+                  status: req.body.status
               });
               newIntervent.save(function(err) {
                   if (err) {
@@ -479,7 +446,8 @@ apiRoutes.post('/updateevent', function(req, res) {
           _id: req.body.id
         },{ $set: { 
             title: req.body.title,
-            date: req.body.date,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
             location: req.body.location
         }}, {multi: false}, function(err, result) {
             if (err) throw err;
@@ -501,7 +469,8 @@ apiRoutes.post('/updatesession', function(req, res) {
           _id: req.body.id
         },{ $set: { 
             title: req.body.title,
-            date: req.body.date,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
         }}, {multi: false}, function(err, result) {
             if (err) throw err;
 
@@ -509,6 +478,29 @@ apiRoutes.post('/updatesession', function(req, res) {
               return res.status(403).send({success: false, msg: 'Aggiornamento sessione fallito'});
             } else {
               res.json({success: true, msg: "Aggiornamento sessione eseguito"});
+            }
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
+apiRoutes.post('/updateintervent', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        Intervent.update({
+          _id: req.body.id
+        },{ $set: { 
+            title: req.body.title,
+            date: req.body.date,
+            duration: req.body.duration,
+            speaker: req.body.speaker
+        }}, {multi: false}, function(err, result) {
+            if (err) throw err;
+
+            if (!result) {
+              return res.status(403).send({success: false, msg: 'Aggiornamento intervento fallito'});
+            } else {
+              res.json({success: true, msg: "Aggiornamento intervento eseguito"});
             }
         });
     } else {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController, NavParams} from 'ionic-angular';
 import {EventService} from '../../../services/event-services';
 import {NgForm} from '@angular/forms';
 import {Events} from 'ionic-angular';
@@ -16,14 +16,14 @@ export class NewEventPage {
     //GETS CURRENT USER
     private localUser=JSON.parse(window.localStorage.getItem("user"));
     private user= new User(this.localUser.name, this.localUser.surname, this.localUser.username, this.localUser.password, this.localUser.email);    
-    
     //SETS NEW VOID EVENT
-    private event = new Event("",this.user.username,"", null, "");
+    private today = new Date();
+    private now = this.today.toISOString();
 
-    constructor(private evts: Events, private nav: NavController, private es: EventService) {
-
+    private event = new Event("",this.user.username,"", this.today, this.today, "", "programmed");
+    constructor(private np: NavParams, private evts: Events, private nav: NavController, private es: EventService) {
+        console.log(this.now);
     }
-
     submit(){
         console.log(this.event);
         this.es.createEvent(this.event).map(res=>res.json()).subscribe(data=>{
@@ -36,6 +36,7 @@ export class NewEventPage {
             }
         });
     }
+
 
     close() {
         this.nav.pop();//this.viewCtrl.destroy();//dismiss();

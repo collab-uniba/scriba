@@ -1,13 +1,39 @@
 import {Injectable, Inject} from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import {Events} from 'ionic-angular';
 
 declare var webkitSpeechRecognition: any;
+/*
+class MyObject{
+  constructor() {
+    this.prop1Change$ = new Observable<string>(observer => this._prop1Observer = observer).share(); // share() allows multiple subscribers
+  }
+  prop1Change$: Observable<string>;
+  private _prop1Observer: Observer<string>;
+  _prop1:string;
+
+  get prop1():string { return this._prop1 };
+
+  set prop1(value:string) {
+    this._prop1 = value;
+    this._prop1Observer && this._prop1Observer.next(value);
+  }
+}
+*/
 
 @Injectable()
 export class TranscriptionService{
   private recognition;
   public final_transcript = "";
-  private recognizing = false;
-  constructor(){
+  public recognizing = false;
+
+	public transcriptionChange$: Observable<string>;
+  private transcriptionObserver: Observer<string>;
+
+  constructor(private evts: Events){
+		this.transcriptionChange$ = new Observable<string>(observer => this.transcriptionObserver = observer).share(); // share() allows multiple subscribers
+		
     if ('webkitSpeechRecognition' in window) {
       this.recognition = new webkitSpeechRecognition();
       this.recognition.continuous = true;
@@ -28,7 +54,6 @@ export class TranscriptionService{
       return;
     }
     this.final_transcript = transcription;
-
     this.recognition.lang = 'it-IT';
     this.recognition.start();
   }
@@ -38,18 +63,18 @@ export class TranscriptionService{
 		for (var i = event.resultIndex; i < event.results.length; ++i) {
 			if (event.results[i].isFinal) {
 				this.final_transcript += event.results[i][0].transcript;
-				
-        console.log(this.final_transcript);
+				this.transcriptionObserver.next(event.results[i][0].transcript);
+				//this.evts.publish('newResult', event.results[i][0].transcript);
 			} else {
 				interim_transcript += event.results[i][0].transcript;
 			}
 		}
-		this.final_transcript = this.capitalize(this.final_transcript);
 		//final_span.innerHTML = linebreak(final_transcript);
 		//interim_span.innerHTML = linebreak(interim_transcript);
 	};
 	startHandler () {
 		this.recognizing = true;
+		this.evts.publish('recognizing', this.recognizing);
 		console.log("RECOGNITION STARTED");
 	};
 
@@ -65,16 +90,11 @@ export class TranscriptionService{
 		}
 	};
 
-  private two_line = /\n\n/g;
-  private one_line = /\n/g;
-
-	linebreak(s) {
-		return s.replace(this.two_line, '<p></p>').replace(this.one_line, '<br>');
-	}
-
+/*Rende la prima lettera della stringa Maiuscola
 	capitalize(s) {
 		return s.replace(s.substr(0, 1), function (m) {
 			return m.toUpperCase();
 		});
 	}
+*/
 }

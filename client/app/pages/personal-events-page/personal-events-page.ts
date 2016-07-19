@@ -48,8 +48,9 @@ export class PersonalEventsPage {
           })
         })
         _events.push(event);
-        this.events = _events;
+
       });
+              this.events = _events;
     });
   }
   newEvent(){
@@ -65,32 +66,28 @@ export class PersonalEventsPage {
     });
   }
   deleteEvent(event){
-    if(this.events.length==1){
-      alert("Impossibile eliminare la sessione. Deve essere sempre presente almeno una Sessione per un Evento!")
-    }else{
-      let confirm = Alert.create({
-        title: 'Cancellare questo Evento?',
-        message: 'Se cancelli questo Evento saranno eliminati tutte le sessioni e gli interventi al suo interno e non sarà più possibile ripristinarlo!',
-        buttons: [
-          {
-            text: 'Cancella',
-            handler: () => {
-              console.log('Cancellalo');
-              this.es.deleteEvent(event._id).map(res=>res.json()).subscribe(data=>{
-                if (data.success) {
-                  this.updateEvents();
-                }else{
-                  alert(data.msg)
-                }
-              });
-            }
-          },
-          {
-            text: 'Mantieni'
+    let confirm = Alert.create({
+      title: 'Cancellare questo Evento?',
+      message: 'Se cancelli questo Evento saranno eliminati tutte le sessioni e gli interventi al suo interno e non sarà più possibile ripristinarlo!',
+      buttons: [
+        {
+          text: 'Cancella',
+          handler: () => {
+            console.log('Cancellalo');
+            this.es.deleteEvent(event._id).map(res=>res.json()).subscribe(data=>{
+              if (data.success) {
+                this.updateEvents();
+              }else{
+                alert(data.msg)
+              }
+            });
           }
-        ]
-      });
-      this.nav.present(confirm);
-    }
+        },
+        {
+          text: 'Mantieni'
+        }
+      ]
+    });
+    this.nav.present(confirm);
   }
 }

@@ -50,7 +50,7 @@ export class EventService {
     createEvent(event): Observable<Response>{
         console.log(event);
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
-        let body = "title="+ event.title + "&date="+  event.date + "&location=" + event.location + "&organizer=" + event.organizer;
+        let body = "title="+ event.title + "&startDate="+  event.startDate + "&endDate="+  event.endDate + "&location=" + event.location + "&organizer=" + event.organizer + "&status=" + event.status;
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
         return this.http.post(this.ServerWithApiUrl + '/createevent', body, options);
@@ -58,7 +58,7 @@ export class EventService {
      createSession(session): Observable<Response>{
         console.log(session);
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
-        let body = "title="+ session.title + "&date="+  session.date + "&speakers=" + session.speakers +"&event=" + session.event;
+        let body = "title="+ session.title + "&startDate="+  session.startDate + "&endDate="+  session.endDate + "&speakers=" + session.speakers +"&status=" + session.status +"&event=" + session.event;
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
@@ -67,7 +67,7 @@ export class EventService {
      createIntervent(intervent): Observable<Response>{
         console.log(intervent);
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
-        let body = "title="+ intervent.title + "&date="+  intervent.date + "&speaker=" + intervent.speaker + "&session=" + intervent.session;
+        let body = "title="+ intervent.title + "&date="+  intervent.date + "&duration="+  intervent.duration + "&speaker=" + intervent.speaker + "&session=" + intervent.session + "&status=" + intervent.status;
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
@@ -76,7 +76,7 @@ export class EventService {
     updateEvent(event): Observable<Response>{
         console.log(event);
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
-        let body = "id=" + event._id +"&title="+ event.title + "&date="+  event.date + "&location=" + event.location;
+        let body = "id=" + event._id +"&title="+ event.title + "&startDate="+  event.startDate + "&endDate="+  event.endDate + "&location=" + event.location;
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
@@ -85,11 +85,20 @@ export class EventService {
     updateSession(session): Observable<Response>{
         console.log(session);
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
-        let body = "id=" + session._id +"&title="+ session.title + "&date="+  session.date;
+        let body = "id=" + session._id +"&title="+ session.title + "&startDate="+  session.startDate + "&endDate="+  session.endDate;
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
         return this.http.post(this.ServerWithApiUrl + '/updatesession', body, options);   
+    }
+    updateIntervent(intervent): Observable<Response>{
+        console.log(intervent);
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        let body = "id=" + intervent._id +"&title="+ intervent.title + "&date="+  intervent.date + "&duration=" +  intervent.duration + "&speaker="+  intervent.speaker;
+        console.log(body);
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/updateintervent', body, options);   
     }
     deleteEvent(eventID): Observable<Response>{
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json

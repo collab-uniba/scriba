@@ -20,17 +20,19 @@ export class EventPage {
   private localUser=JSON.parse(window.localStorage.getItem("user"));
   private user= new User(this.localUser.name, this.localUser.surname, this.localUser.username, this.localUser.password, this.localUser.email);    
 
-  //SETS PASSED EVENT
   private updating = false;
-  private event;
+  private event=this.np.get('event');
   private newData;
+  
+  private today = new Date();
+  private now = this.today.toISOString();
 
   //SETS EVENT SESSIONS
   private sessions = [];
 
   constructor(private nav: NavController, private np: NavParams, private es: EventService, private evts: Events) {
-    this.event=this.np.get('event');
-    this.newData={title:this.event.title, date: this.event.date, location: this.event.location};
+    console.log(this.event);
+    this.newData={_id: this.event._id, title:this.event.title, startDate: this.event.startDate, endDate: this.event.endDate, location: this.event.location};
   }
 
   ionViewWillEnter(){
@@ -59,7 +61,6 @@ export class EventPage {
       });
   }
   submit(){
-    this.newData._id=this.event._id;
     this.es.updateEvent(this.newData).map(res=>res.json()).subscribe(data=>{
       console.log(data);
       if(data.success){
@@ -70,7 +71,7 @@ export class EventPage {
     })
   }
   reset(){
-    this.newData={title:this.event.title, date: this.event.date, location: this.event.location};
+    this.newData={_id: this.event._id, title:this.event.title, startDate: this.event.startDate, endDate: this.event.endDate, location: this.event.location};
     this.updating=false;
   }
 
@@ -79,22 +80,24 @@ export class EventPage {
       console.log("Update Sessions and remove session and intervent fetch from personal events page");
       this.updateSessions(this.event._id);
     });
-    let modal = Modal.create(NewSessionPage, {eventID: this.event._id});
+    let modal = Modal.create(NewSessionPage, {event: this.event, sessions: this.sessions});
     this.nav.present(modal);
   }
 
   openSession(sessionToOpen){
     this.nav.push(SessionPage,{
+        event: this.event,
         session: sessionToOpen,
+        sessions: this.sessions
     });
   }
 
   deleteSession(session){
-    if(this.sessions.length==1){
-      alert("Impossibile eliminare la sessione. Deve essere sempre presente almeno una Sessione per un Evento!")
+    if(session.status=="ongoing"){
+      alert("Impossibile eliminare la sessione poichè è ancora IN CORSO!")
     }else{
       let confirm = Alert.create({
-        title: 'Cancellare questo Intervento?',
+        title: 'Cancellare questa Sessione?',
         message: 'Se cancelli questa sessione saranno eliminati tutti gli interventi al suo interno e non sarà più possibile ripristinarla!',
         buttons: [
           {

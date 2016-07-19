@@ -3,7 +3,9 @@ export class Event {
     public id:string,
     public organizer: string,
     public title: string,
-    public date: Date,
-    public location: string
+    public startDate: Date,
+    public endDate: Date,
+    public location: string,
+    public status: string
   ) {  }
 }

@@ -1,14 +1,14 @@
 <ion-header>
   <ion-navbar>
-    <ion-title (click)="openModal()">
+    <ion-title>
       Scriba
     </ion-title>
 
-    <ion-buttons end><!-- *ngIf="ionic.Platform.isWebView()" mostra diversamente-->
-      <button (click)="openModal('login')" class="solid">
+    <ion-buttons end>
+      <button (click)="login()">
         <ion-icon name="log-in"> Accedi</ion-icon>
       </button>
-      <button (click)="openModal('signup')">
+      <button (click)="signUp()">
         <ion-icon name="person-add"> Registrati</ion-icon>
       </button>
     </ion-buttons>

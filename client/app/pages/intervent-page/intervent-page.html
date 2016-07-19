@@ -6,11 +6,65 @@
     <ion-header padding>
         <ion-navbar>
             <ion-title>
-                {{intervent.title}}
+                {{intervent.title}} - {{intervent.date}} Durata: {{intervent.duration}} minuti
             </ion-title>
+            <ion-buttons *ngIf="!updating && intervent.status=='programmed'" end>
+                <button (click)="updating=!updating">
+                    <ion-icon name="create"> </ion-icon>
+                </button>
+            </ion-buttons>
         </ion-navbar>
     </ion-header>
+    <form *ngIf="updating" (ngSubmit)="submit()" #interventForm="ngForm">
+        <ion-item >
+            <ion-label inline>Titolo</ion-label>
+            <ion-input type="text" ngControl="titleControl" [(ngModel)]="newData.title"></ion-input>
+        </ion-item>
+
+        <ion-item >
+            <ion-label inline>Inizio</ion-label>
+            <ion-input type="datetime-local" ngControl="timeControl" [(ngModel)]="newData.date" #date="ngForm" ></ion-input>
+        </ion-item>
+        <div *ngIf="date.value<=now && date.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
+        <div *ngIf="(date.value<session.startDate || date.value>session.endDate) && date.touched">La data di Inizio deve cadere durante la Sessione!</div>
+
+        <ion-item >
+            <ion-label inline>Durata (minuti)</ion-label>
+            <ion-input type="number" ngControl="durationControl" min="0" max="180" step="1" value="0" [(ngModel)]="newData.duration" #duration="ngForm" required></ion-input>
+        </ion-item>
+        <div *ngIf="((date.value+duration.value)>session.endDate) && duration.touched">L'Intervento deve terminare durante la Sessione!</div>
+
+        <div *ngIf="overlapError.status">L'Intervento si sovrappone con "{{overlapError.intervent.title}}" programmato il {{overlapError.intervent.date}}, durata {{overlapError.intervent.duration}} minuti</div>
+
+        <ion-item >
+            <ion-label inline>Speaker (username)</ion-label>
+            <ion-input type="text" ngControl="speakerControl" class="form-control" [(ngModel)]="newData.speaker" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <button type="submit" class="btn btn-standard" [disabled]="!interventForm.valid ||
+                                                                    (date.value<=now && date.touched) ||
+                                                                    ((date.value<session.startDate || date.value>session.endDate) && date.touched) ||
+                                                                    (((date.value+duration.value)>session.endDate) && duration.touched)">Salva</button>
+            <button type="reset" (click)="reset()">Annulla</button>
+        </ion-item>
+    </form>
     
-    <button (click)="startRecognizing()"> Inizia </button>
-    <textarea disabled>{{intervent.text}}</textarea>
+    <ion-card>
+        <ion-card-header>
+            <ion-toolbar>
+                <ion-buttons end>
+                    <button *ngIf="!recognizing" (click)="startRecognizing()">
+                        <ion-icon name="play"> </ion-icon>
+                    </button>
+                    <button *ngIf="recognizing" (click)="startRecognizing()">
+                        <ion-icon name="pause"> </ion-icon>
+                    </button>
+                </ion-buttons>
+            </ion-toolbar>
+            {{recognizing}}
+            <textarea disabled>{{intervent.text}}{{text}}</textarea>
+        </ion-card-header>
+    </ion-card>
+    
 </ion-content>

@@ -1,9 +1,9 @@
-import {Component} from '@angular/core'
+import {Component} from '@angular/core';
 import {HomePage} from '../home-page/home-page';
 import {AboutPage} from '../about-page/about-page';
 import {ContactPage} from '../contact-page/contact-page';
-import{SignupPage} from '../modals/signup/signup-modal'
-import{LoginPage} from '../modals/login/login-modal'
+import{SignupPage} from '../modals/signup/signup-modal';
+import{LoginPage} from '../modals/login/login-modal';
 import {Modal, NavController} from 'ionic-angular';
 
 @Component({
@@ -24,14 +24,12 @@ export class TabsPage {
     this.tab3Root = ContactPage;
   }
 
-  openModal(whatToOpen: string) {
-    if (whatToOpen==='login') {
-      let modal = Modal.create(LoginPage);
-      this.nav.present(modal);
-    }
-    if (whatToOpen==='signup') {
-      let modal = Modal.create(SignupPage);
-      this.nav.present(modal);
-    }
+  login(){
+    let modal = Modal.create(LoginPage);
+    this.nav.present(modal);
+  }
+  signUp(){
+    let modal = Modal.create(SignupPage);
+    this.nav.present(modal);
   }
 }

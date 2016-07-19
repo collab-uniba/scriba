@@ -4,36 +4,46 @@
 
 <ion-content padding>
     <ion-header padding>
-    <ion-navbar>
-        <ion-title>
-            {{event.title}}
-        </ion-title>
-        <ion-buttons *ngIf="!updating" end>
-            <button (click)="updating=!updating">
-                <ion-icon name="create"> </ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-navbar>
+        <ion-navbar>
+            <ion-title>
+                {{event.title}} - Dal: {{event.startDate}} - Al: {{event.endDate}}
+            </ion-title>
+            <ion-buttons *ngIf="!updating && event.status=='programmed'" end>
+                <button (click)="updating=!updating">
+                    <ion-icon name="create"> </ion-icon>
+                </button>
+            </ion-buttons>
+        </ion-navbar>
     </ion-header>
 
     <form *ngIf="updating" (ngSubmit)="submit()" #eventForm="ngForm">
+
         <ion-item >
             <ion-label inline>Titolo</ion-label>
             <ion-input type="text" ngControl="titleControl" [(ngModel)]="newData.title" required></ion-input>
         </ion-item>
 
-        <ion-item >
-            <ion-label inline>Data</ion-label>
-            <ion-input type="datetime-local" ngControl="dateControl" min="{{currentDate | date:'yyyy-MM-dd'}}" class="form-control" [(ngModel)]="newData.date" required></ion-input>
+        <ion-item>
+            <ion-label inline>Data Inizio</ion-label>
+            <ion-input type="datetime-local" ngControl="startDateControl" #sd="ngForm" [(ngModel)]="newData.startDate" required></ion-input>
         </ion-item>
+        <div *ngIf="sd.value<=now && sd.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
+        
+        <ion-item>
+            <ion-label inline>Data Termine</ion-label>
+            <ion-input type="datetime-local" ngControl="endDateControl" #ed="ngForm" [(ngModel)]="newData.endDate" required></ion-input>
+        </ion-item>
+        <div *ngIf="sd.value>=ed.value && ed.touched">La Data di Termine deve essere POSTERIORE a quella di Inizio!</div>
 
         <ion-item >
             <ion-label inline>Luogo</ion-label>
             <ion-input type="text" ngControl="locationControl" class="form-control" [(ngModel)]="newData.location" required></ion-input>
         </ion-item>
-
+        
         <ion-item>
-            <button type="submit" class="btn btn-standard" [disabled]="!eventForm.valid">Salva</button>
+            <button type="submit" class="btn btn-standard" [disabled]="!eventForm.valid ||
+                                                                        (sd.value<=now && sd.touched) ||
+                                                                        (sd.value>=ed.value && ed.touched)">Salva</button>
             <button type="reset" (click)="reset()">Annulla</button>
         </ion-item>
     </form>
@@ -68,6 +78,7 @@
                         </button>
                     </ion-buttons>
                 </ion-toolbar>
+                Dal: {{session.startDate}} - Al: {{session.endDate}}
             </ion-card-header>
         </ion-card>
     </ion-list>

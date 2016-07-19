@@ -15,6 +15,10 @@ var InterventSchema = new Schema({
         unique: false,
         required: true
     },
+    duration: {
+        type: Number,
+        required: false,
+    },
     speaker: {
         type: String,
         required: false
@@ -24,6 +28,9 @@ var InterventSchema = new Schema({
         required: false
     },
     session: {
+        type: String,
+    },
+    status: {
         type: String,
     }
 });
