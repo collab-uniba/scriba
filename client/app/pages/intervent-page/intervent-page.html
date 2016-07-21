@@ -53,17 +53,29 @@
     <ion-card>
         <ion-card-header>
             <ion-toolbar>
-                <ion-buttons end>
-                    <button *ngIf="!recognizing" (click)="startRecognizing()">
+                <ion-buttons begin>
+                    <button *ngIf="room==null" (click)="openRoom()">
                         <ion-icon name="play"> </ion-icon>
                     </button>
-                    <button *ngIf="recognizing" (click)="startRecognizing()">
+                    <button *ngIf="room!=null" (click)="closeRoom()" [disabled]="recognizing">
                         <ion-icon name="pause"> </ion-icon>
                     </button>
                 </ion-buttons>
+                <ion-buttons *ngIf="room!=null" end>
+                    <button *ngIf="!recognizing" (click)="startRecognizing()">
+                        <ion-icon name="mic"> </ion-icon>
+                    </button>
+                    <button *ngIf="recognizing" (click)="stopRecognizing()">
+                        <ion-icon name="mic-off"> </ion-icon>
+                    </button>
+                </ion-buttons>
             </ion-toolbar>
-            {{recognizing}}
-            <textarea disabled>{{intervent.text}}{{text}}</textarea>
+            <textarea id="text" disabled></textarea>
+            <ion-item>
+                <button *ngIf="room!=null" (click)="saveAndCloseRoom()" [disabled]="recognizing">
+                    Salva e Chiudi
+                </button>
+            </ion-item>
         </ion-card-header>
     </ion-card>
     

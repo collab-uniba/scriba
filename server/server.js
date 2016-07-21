@@ -138,7 +138,7 @@ apiRoutes.get('/memberinfo', passport.authenticate('jwt', { session: false}), fu
         if (err) throw err;
  
         if (!user) {
-          return res.status(403).send({success: false, msg: 'Autenticazione fallita, Utente non trovato'});
+          return res.send({success: false, msg: 'Autenticazione fallita, Utente non trovato'});
         } else {
           res.json({success: true, data: user});
         }
@@ -346,7 +346,7 @@ apiRoutes.post('/deleteintervent', function(req, res) {
             if (err) throw err;
 
             if (!result) {
-              return res.status(403).send({success: false, msg: 'Eliminazione Intervento fallita'});
+              return res.send({success: false, msg: 'Eliminazione Intervento fallita'});
             } else {
               res.json({success: true, msg: "Eliminazione Intervento eseguita"});
             }
@@ -364,7 +364,7 @@ apiRoutes.post('/deletesession', function(req, res) {
             if (err) throw err;
 
             if (!result) {
-              return res.status(403).send({success: false, msg: 'Eliminazione Interventi della sessione fallita'});
+              return res.send({success: false, msg: 'Eliminazione Interventi della sessione fallita'});
             } else {
                 Session.remove({
                     _id: req.body.id
@@ -372,7 +372,7 @@ apiRoutes.post('/deletesession', function(req, res) {
                     if(err) throw err;
                     
                     if (!result) {
-                        return res.status(403).send({success: false, msg: 'Eliminazione Sessione fallita'});
+                        return res.send({success: false, msg: 'Eliminazione Sessione fallita'});
                     }else{
                         res.json({success: true, msg: "Eliminazione Sessione e relativi Interventi eseguita"});
                     }
@@ -393,7 +393,7 @@ apiRoutes.post('/deleteevent', function(req, res) {
             if (err) throw err;
             
             if(!sessionsList){
-                return res.status(403).send({success: false, msg: 'Eliminazione Sessioni di questo evento fallita'});
+                return res.send({success: false, msg: 'Eliminazione Sessioni di questo evento fallita'});
             }else{
                 //PER OGNI SESSIONE CANCELLA INTERVENTI
                 sessionsList.forEach(function(currentSession){
@@ -404,7 +404,7 @@ apiRoutes.post('/deleteevent', function(req, res) {
                         if (err) throw err;
 
                         if (!result) {
-                          return res.status(403).send({success: false, msg: 'Eliminazione Interventi delle sessioni di questo intervento fallita'});
+                          return res.send({success: false, msg: 'Eliminazione Interventi delle sessioni di questo intervento fallita'});
                         }
                     });
                 });
@@ -415,7 +415,7 @@ apiRoutes.post('/deleteevent', function(req, res) {
                     if (err) throw err;
 
                     if (!result) {
-                      return res.status(403).send({success: false, msg: 'Eliminazione Sessioni di questo evento fallita'});
+                      return res.send({success: false, msg: 'Eliminazione Sessioni di questo evento fallita'});
                     } else {
                         //CANCELLA EVENTI
                         Event.remove({
@@ -424,7 +424,7 @@ apiRoutes.post('/deleteevent', function(req, res) {
                             if(err) throw err;
 
                             if (!result) {
-                                return res.status(403).send({success: false, msg: 'Eliminazione Evento fallita'});
+                                return res.send({success: false, msg: 'Eliminazione Evento fallita'});
                             }else{
                                 res.json({success: true, msg: "Eliminazione Evento e relative Sessioni e Interventi eseguita"});
                             }
@@ -453,7 +453,7 @@ apiRoutes.post('/updateevent', function(req, res) {
             if (err) throw err;
 
             if (!result) {
-              return res.status(403).send({success: false, msg: 'Aggiornamento evento fallito'});
+              return res.send({success: false, msg: 'Aggiornamento evento fallito'});
             } else {
               res.json({success: true, msg: "Aggiornamento evento eseguito"});
             }
@@ -475,7 +475,7 @@ apiRoutes.post('/updatesession', function(req, res) {
             if (err) throw err;
 
             if (!result) {
-              return res.status(403).send({success: false, msg: 'Aggiornamento sessione fallito'});
+              return res.send({success: false, msg: 'Aggiornamento sessione fallito'});
             } else {
               res.json({success: true, msg: "Aggiornamento sessione eseguito"});
             }
@@ -498,7 +498,7 @@ apiRoutes.post('/updateintervent', function(req, res) {
             if (err) throw err;
 
             if (!result) {
-              return res.status(403).send({success: false, msg: 'Aggiornamento intervento fallito'});
+              return res.send({success: false, msg: 'Aggiornamento intervento fallito'});
             } else {
               res.json({success: true, msg: "Aggiornamento intervento eseguito"});
             }
@@ -521,7 +521,7 @@ apiRoutes.post('/updateuser', function(req, res) {
             if (err) throw err;
 
             if (!result) {
-              return res.status(403).send({success: false, msg: 'Aggiornamento utente fallito'});
+              return res.send({success: false, msg: 'Aggiornamento utente fallito'});
             } else {
               res.json({success: true, msg: "Aggiornamento utente eseguito"});
             }
@@ -586,3 +586,92 @@ apiRoutes.post('/updatepassword', passport.authenticate('jwt', { session: false}
         return res.send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+
+apiRoutes.post('/openserver', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        //DEPENDENCIES
+        var server = require("http").Server(express);
+        var io = require("socket.io")(server); 
+        //TEST PORTS
+        server.listen(0);
+        //SAVE PORT IN INTERVENT
+        Intervent.findOne({ _id: req.body.id }, function (err, intervent){
+            if(err) throw err;
+            
+            intervent.status= 'ongoing';
+            intervent.port= server.address().port;
+            intervent.save();
+            
+            Session.findOne({ _id: intervent.session}, function (err, session){
+                if(err) throw err;
+
+                session.status= 'ongoing';
+                session.save();
+
+                Event.findOne({ _id: session.event }, function (err, event){
+                    if(err) throw err;
+
+                    event.status= 'ongoing';
+                    event.save();
+                });
+            });
+        });
+        
+        //LISTENER
+        var allClients=[];
+        io.on('connection', function (socket) {
+            console.log("User Connected");
+            allClients.push(socket);
+            
+            socket.on('client_type',function(data){
+                var msg="User Type: ";
+                msg += data.text;
+                console.log(msg);
+            });
+            
+            socket.on('client_message',function(data){
+                console.log(data.text);
+                socket.broadcast.emit('server_message',{text:data.text});
+            });
+            socket.on('close_room', function (data) {
+                socket.broadcast.emit('closing_room', {text:"La stanza è stata Chiusa!" });
+                //socket.disconnect();//HA LO STESSO EFFETTO DEL LATO CLIENT
+                allClients.forEach(function(s) {
+                    s.disconnect();
+                });
+                
+                console.log("Room Disconnected");
+                
+                //RIAGGIORNA LO STATO DI INTERVENTO; SESSIONE ED EVENTO
+                Intervent.findOne({ _id: req.body.id }, function (err, intervent){
+                    if(err) throw err;
+
+                    intervent.status= 'programmed';
+                    intervent.save();
+
+                    Session.findOne({ _id: intervent.session}, function (err, session){
+                        if(err) throw err;
+
+                        session.status= 'programmed';
+                        session.save();
+
+                        Event.findOne({ _id: session.event }, function (err, event){
+                            if(err) throw err;
+
+                            event.status= 'programmed';
+                            event.save();
+
+                        });
+                    });
+                });
+                io.close();
+            });
+        });
+        
+        res.send({success: true, port: server.address().port});
+    } else {
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
+

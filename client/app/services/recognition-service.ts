@@ -47,16 +47,16 @@ export class TranscriptionService{
     }
   }
 
-  startDictation(transcription) {
-    if (this.recognizing) {
-      this.recognition.stop();
-      this.recognizing=false;
-      return;
-    }
-    this.final_transcript = transcription;
+  startDictation() {
+    this.final_transcript = "";
     this.recognition.lang = 'it-IT';
     this.recognition.start();
+		this.recognizing=true;
   }
+	stopDictation(){
+		this.recognition.stop();
+    this.recognizing=false;
+	}
 
   resultHandler(event){
 		var interim_transcript = '';

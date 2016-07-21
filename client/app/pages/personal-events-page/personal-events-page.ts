@@ -66,28 +66,32 @@ export class PersonalEventsPage {
     });
   }
   deleteEvent(event){
-    let confirm = Alert.create({
-      title: 'Cancellare questo Evento?',
-      message: 'Se cancelli questo Evento saranno eliminati tutte le sessioni e gli interventi al suo interno e non sarà più possibile ripristinarlo!',
-      buttons: [
-        {
-          text: 'Cancella',
-          handler: () => {
-            console.log('Cancellalo');
-            this.es.deleteEvent(event._id).map(res=>res.json()).subscribe(data=>{
-              if (data.success) {
-                this.updateEvents();
-              }else{
-                alert(data.msg)
-              }
-            });
+    if(event.status=="ongoing"){
+      alert("Impossibile eliminare la sessione poichè è ancora IN CORSO!")
+    }else{
+      let confirm = Alert.create({
+        title: 'Cancellare questo Evento?',
+        message: 'Se cancelli questo Evento saranno eliminati tutte le sessioni e gli interventi al suo interno e non sarà più possibile ripristinarlo!',
+        buttons: [
+          {
+            text: 'Cancella',
+            handler: () => {
+              console.log('Cancellalo');
+              this.es.deleteEvent(event._id).map(res=>res.json()).subscribe(data=>{
+                if (data.success) {
+                  this.updateEvents();
+                }else{
+                  alert(data.msg)
+                }
+              });
+            }
+          },
+          {
+            text: 'Mantieni'
           }
-        },
-        {
-          text: 'Mantieni'
-        }
-      ]
-    });
-    this.nav.present(confirm);
+        ]
+      });
+      this.nav.present(confirm);
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
+import {NavController, NavParams, Events} from 'ionic-angular';
 import {EventService} from '../../../services/event-services';
 import {NgForm} from '@angular/forms';
 
@@ -22,8 +22,8 @@ export class NewInterventPage {
     private time;
     private overlapError = {status: false, intervent: null};
 
-    constructor(private nav: NavController, private np: NavParams, private es: EventService) {
-        this.intervent = new Intervent("","",null,null,"", this.session._id, "programmed");
+    constructor(private evts: Events, private nav: NavController, private np: NavParams, private es: EventService) {
+        this.intervent = new Intervent("","",null,null,"", this.session._id, "programmed","",null);
     }
     end(intervent): Date{
         let end = new Date(intervent.date);
@@ -67,6 +67,7 @@ export class NewInterventPage {
             this.es.createIntervent(this.intervent).map(res=>res.json()).subscribe(data=>{
                 console.log(data);
                 if(data.success){
+                    this.evts.publish('reloadSessionPage');
                     this.nav.pop();
                 }else{
                     alert(data.msg);

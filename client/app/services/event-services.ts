@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import {Injectable, Inject} from '@angular/core';
 import {Event} from './models/event-model';
 
-
 @Injectable() 
 export class EventService {
     private ServerWithApiUrl = "http://localhost:8080/api";
@@ -123,6 +122,14 @@ export class EventService {
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
         return this.http.post(this.ServerWithApiUrl + '/deleteintervent', body, options);   
+    }
+    openServer(interventID): Observable<Response>{
+       let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+       let body = "id=" + interventID;
+       console.log(body);
+       headers.append("Authorization",window.localStorage.getItem("token"));
+       let options = new RequestOptions({ headers: headers });
+       return this.http.post(this.ServerWithApiUrl + '/openserver', body, options);
     }
 
 

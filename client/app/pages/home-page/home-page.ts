@@ -1,6 +1,9 @@
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
 import {EventService} from '../../services/event-services';
+import {Events} from 'ionic-angular';
+import {ListenInterventPage} from '../listen-intervent-page/listen-intervent-page';
+declare var io: any;
 
 @Component({
   templateUrl: 'build/pages/home-page/home-page.html',
@@ -9,8 +12,8 @@ import {EventService} from '../../services/event-services';
 export class HomePage {
 	
 	private events = [];
-  private sessions: string[];
-  constructor(private _navController: NavController, private es: EventService) {
+
+  constructor(private evts: Events, private nav: NavController, private es: EventService) {
     
   }
   
@@ -32,10 +35,10 @@ export class HomePage {
             session.expanded=false;
             //FINDS AND MERGES INTERVENTS
             let _intervents = [];
-            this.es.getSessions(event._id).map(res=>res.json()).subscribe(data=>{
+            this.es.getIntervents(session._id).map(res=>res.json()).subscribe(data=>{
               data.data.forEach(intervent =>{
                 _intervents.push(intervent);
-              session.intervents=_intervents;
+                session.intervents=_intervents;
               })
             });
             _sessions.push(session);
@@ -47,4 +50,32 @@ export class HomePage {
       });
     });
   }
+  openEvent(eventToOpen){
+    this.events.forEach(event => {
+      if(event._id==eventToOpen._id){
+        console.log(event);
+        event.sessions.forEach(session => {
+          if(session.status=="ongoing"){
+            console.log(session);
+            session.intervents.forEach(intervent => {
+              if(intervent.status=="ongoing"){
+                console.log(intervent);
+                this.nav.push(ListenInterventPage,{intervent: intervent})
+              }
+            });
+          }
+        });
+      }
+    });
+    //AVVIA ASCOLTO 
+    /*this.nav.push(EventPage,{
+        event: eventToOpen,
+    });
+    */
+
+  }
 }
+
+
+  
+  

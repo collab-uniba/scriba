@@ -1,0 +1,26 @@
+<ion-toolbar>
+    
+</ion-toolbar>
+
+<ion-content padding>
+    <ion-header padding>
+        <ion-navbar>
+            <ion-title>
+                {{intervent.title}} - {{intervent.date}} Durata: {{intervent.duration}} minuti
+            </ion-title>
+        </ion-navbar>
+    </ion-header>
+
+    <ion-card>
+        <ion-card-header>
+            {{recognizing}}
+            <textarea id="text"></textarea>
+            <ion-item>
+                <button (click)="close()">
+                    Chiudi
+                </button>
+            </ion-item>
+        </ion-card-header>
+    </ion-card>
+    
+</ion-content>

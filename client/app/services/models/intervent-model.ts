@@ -6,6 +6,8 @@ export class Intervent {
     public duration: number,
     public speaker: string,
     public session: string,
-    public status: string
+    public status: string,
+    public text: string,
+    public port: number
   ) {  }
 }

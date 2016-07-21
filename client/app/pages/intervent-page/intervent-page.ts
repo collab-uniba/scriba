@@ -5,6 +5,8 @@ import {Intervent} from '../../services/models/intervent-model';
 import {EventService} from '../../services/event-services';
 import {TranscriptionService} from '../../services/recognition-service';
 
+declare var io: any;
+
 @Component({
   templateUrl: 'build/pages/intervent-page/intervent-page.html',
   providers:[TranscriptionService, EventService]
@@ -23,6 +25,7 @@ export class InterventPage {
 
     private text;
     private recognizing=this.ts.recognizing;
+    private room = null; 
     constructor(private es: EventService, private evts: Events, private np: NavParams, private viewCtrl: ViewController, private nav: NavController, private ts: TranscriptionService) {
         this.text="";
         this.intervent.text="";
@@ -87,28 +90,49 @@ export class InterventPage {
         this.updating = false;
     }
 
+
+    openRoom(){
+        this.es.openServer(this.intervent._id).map(res=>res.json()).subscribe(data=>{
+            if(data.success){
+                console.log(data.port);
+                this.room = io.connect('http://localhost:'+data.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
+                this.room.emit('client_type', {text: "Speaker"});
+            }else{
+                alert(data.msg);
+            }
+            
+        });
+    }
+    closeRoom(){
+        this.room.emit('close_room');//CHIUDE IL SERVER
+        this.room.disconnect();//DISCONNETTE IL SINGOLO CLIENT
+        this.room=null;
+    }
+    saveAndCloseRoom(){
+        console.log("save and close");
+    }
     startRecognizing(){
-        this.ts.startDictation(this.intervent.text);
+        
         this.recognizing=!this.recognizing;
-        /*this.evts.subscribe('newResult', (data) => {
+        this.ts.startDictation();
+        /*
+        this.evts.subscribe('newResult', (data) => {
             this.updateText();
         });
         */
-        let txt = "";
+
         this.ts.transcriptionChange$.subscribe(data=>{
             console.log(data);
-            txt += data;
-            this.text=txt;
-            this.updateText(txt);
-        })
-        console.log(this.text);
-        console.log(txt);
-    }
-    updateText(txt){
-        this.intervent.text += txt;
-        console.log(this.intervent.text);
+            this.room.emit('client_message', {text: data});
+            //this.text+=data;
+            document.getElementById('text').innerHTML += data; //BRUTTISSIMO!!!
+        });
     }
 
+    stopRecognizing(){
+        this.recognizing=!this.recognizing;
+        this.ts.stopDictation();
+    }
     close() {
         this.nav.pop();
     }

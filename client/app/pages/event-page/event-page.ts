@@ -56,8 +56,8 @@ export class EventPage {
               })
             });
             _sessions.push(session);
-            this.sessions=_sessions;
           })
+          this.sessions=_sessions;
       });
   }
   submit(){

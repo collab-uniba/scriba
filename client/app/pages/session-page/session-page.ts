@@ -68,8 +68,8 @@ export class SessionPage {
       data.data.forEach(intervent =>{
             intervent.expanded=false;
             _intervents.push(intervent);
-            this.intervents=_intervents;
           })
+          this.intervents=_intervents;
       });
   }
   submit(){
@@ -99,7 +99,6 @@ export class SessionPage {
 
   newIntervent(){
     this.evts.subscribe('reloadSessionPage',() => {
-      console.log("Update Intervents and remove intervent fetch from event page");
       this.updateIntervents(this.session._id);
     });
     let modal = Modal.create(NewInterventPage, {session: this.session, intervents: this.intervents});
@@ -117,29 +116,33 @@ export class SessionPage {
     console.log("EDITING");
   }
   deleteIntervent(intervent){
-    let confirm = Alert.create({
-      title: 'Cancellare questo Intervento?',
-      message: 'Se cancelli questo intervento, non sarà più possibile ripristinarlo!',
-      buttons: [
-        {
-          text: 'Cancella',
-          handler: () => {
-            console.log('Cancellalo');
-            this.es.deleteIntervent(intervent._id).map(res=>res.json()).subscribe(data=>{
-              if (data.success) {
-                this.updateIntervents(this.session._id);
-              }else{
-                alert(data.msg)
-              }
-            });
+    if(intervent.status=="ongoing"){
+      alert("Impossibile eliminare la sessione poichè è ancora IN CORSO!")
+    }else{
+      let confirm = Alert.create({
+        title: 'Cancellare questo Intervento?',
+        message: 'Se cancelli questo intervento, non sarà più possibile ripristinarlo!',
+        buttons: [
+          {
+            text: 'Cancella',
+            handler: () => {
+              console.log('Cancellalo');
+              this.es.deleteIntervent(intervent._id).map(res=>res.json()).subscribe(data=>{
+                if (data.success) {
+                  this.updateIntervents(this.session._id);
+                }else{
+                  alert(data.msg)
+                }
+              });
+            }
+          },
+          {
+            text: 'Mantieni'
           }
-        },
-        {
-          text: 'Mantieni'
-        }
-      ]
-    });
-    this.nav.present(confirm);
+        ]
+      });
+      this.nav.present(confirm);
+    }
   }
 
   close() {
