@@ -26,7 +26,7 @@ export class SessionPage {
   private event = this.np.get('event');
   private session = this.np.get('session');
   private newData;
-  private overlapError = {status: false, session: null};
+  //private overlapError = {status: false, session: null};
 
   //SETS SESSION INTERVENTS
   private intervents = [];
@@ -40,6 +40,7 @@ export class SessionPage {
   ionViewWillEnter(){
 	  this.updateIntervents(this.session._id);
   }
+  /*
   overlap(): Session{
       let overlap = null;
       let sessions=this.np.get('sessions');
@@ -59,6 +60,7 @@ export class SessionPage {
       });
       return overlap;
   }
+  */
 
   updateIntervents(sessionID){//CAMBIARE IN GET PERSONAL EVENTS
     let _intervents = [];
@@ -73,6 +75,7 @@ export class SessionPage {
       });
   }
   submit(){
+    /*
     this.overlapError.status = false;
     this.overlapError.session = null;
     console.log(this.overlapError);
@@ -82,6 +85,13 @@ export class SessionPage {
         this.overlapError.session=olp;
         console.log(this.overlapError);
     }else{
+      */
+      if(this.newData.startDate==null){
+        this.newData.startDate=this.session.startDate;
+      }
+      if(this.newData.endDate==null){
+        this.newData.endDate=this.session.endDate;
+      }
       this.es.updateSession(this.newData).map(res=>res.json()).subscribe(data=>{
         console.log(data);
         if(data.success){
@@ -90,7 +100,7 @@ export class SessionPage {
           alert(data.msg)
         }
       })
-    }
+    //}
   }
   reset(){
     this.newData={_id: this.session._id, title:this.session.title, startDate: this.session.date, endDate: this.session.endDate};

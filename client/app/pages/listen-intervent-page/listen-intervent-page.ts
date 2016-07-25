@@ -24,13 +24,18 @@ export class ListenInterventPage {
         this.room = io.connect('http://localhost:'+this.intervent.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
         this.room.emit('client_type', {text: "Listener"});
         
-        this.room.on('server_message', function (data) {
+        this.room.on('previous_text', (data) => {
+            //this.text += data.text;
+            document.getElementById('text').innerHTML += data.text;
+            console.log(this.text);
+        })
+        this.room.on('server_message', (data) => {
             //this.text += data.text;
             document.getElementById('text').innerHTML += data.text; //BRUTTISSIMO!!!
             console.log(this.text);
         });
 
-        this.room.on('closing_room', function(data){
+        this.room.on('closing_room', (data) => {
             this.room=null;
             alert(data.text);
         });

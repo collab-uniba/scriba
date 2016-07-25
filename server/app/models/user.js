@@ -28,6 +28,14 @@ var UserSchema = new Schema({
     email: {
         type: String,
         required: false
+    },
+    observedEvents: {
+        type: Array,
+        required: false
+    },
+    joinedEvents: {
+        type: Array,
+        required: false
     }
 });
  

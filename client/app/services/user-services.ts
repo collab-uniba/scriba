@@ -61,4 +61,36 @@ export class UserService {
         this.isLoggedin = false;
         window.localStorage.clear();
     }
+
+    addObservedEvent(eventID): Observable<Response>{
+        let body = "id=" + eventID;
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/addobservedevent', body, options);
+    }
+    
+    removeObservedEvent(eventID): Observable<Response>{
+        let body = "id=" + eventID;
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/removeobservedevent', body, options);
+    }
+
+    addJoinedEvent(eventID): Observable<Response>{
+        let body = "id=" + eventID;
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/addjoinedevent', body, options);
+    }
+    
+    removeJoinedEvent(eventID): Observable<Response>{
+        let body = "id=" + eventID;
+        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
+        headers.append("Authorization",window.localStorage.getItem("token"));
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.ServerWithApiUrl + '/removejoinedevent', body, options);
+    }
 }

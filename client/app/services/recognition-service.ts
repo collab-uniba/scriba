@@ -56,6 +56,7 @@ export class TranscriptionService{
 	stopDictation(){
 		this.recognition.stop();
     this.recognizing=false;
+		this.transcriptionObserver.complete();
 	}
 
   resultHandler(event){

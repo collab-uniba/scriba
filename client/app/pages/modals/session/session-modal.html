@@ -23,7 +23,7 @@
     <div *ngIf="sd.value>=ed.value && ed.touched">La Data di Termine deve essere POSTERIORE a quella di Inizio!</div>
     <div *ngIf="(ed.value<event.startDate || ed.value>event.endDate) && ed.touched">La data di Termine deve cadere durante l'Evento!</div>
 
-    <div *ngIf="overlapError.status">La Sessione si sovrappone con "{{overlapError.session.title}}" programmata dal {{overlapError.session.startDate}} al {{overlapError.session.endDate}}</div>
+    <!--<div *ngIf="overlapError.status">La Sessione si sovrappone con "{{overlapError.session.title}}" programmata dal {{overlapError.session.startDate}} al {{overlapError.session.endDate}}</div>-->
     <ion-item>
         <button type="submit" class="btn btn-standard" [disabled]="!sessionForm.valid ||
                                                                         (sd.value<=now && sd.touched) ||

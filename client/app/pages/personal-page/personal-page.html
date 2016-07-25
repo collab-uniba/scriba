@@ -28,8 +28,10 @@
   </ion-toolbar>
   <ion-content>
     <ion-list>
-      <button (click)="openPage(PersonalEventsPage)" ion-item>I miei Eventi</button>
       <button (click)="openPage(EventsPage)" ion-item>Tutti gli Eventi</button>
+      <button (click)="openPage(PersonalEventsPage)" ion-item>I miei Eventi</button>
+      <button (click)="openPage(ObservedEventsPage)" ion-item>Eventi Osservati</button>
+      <button (click)="openPage(JoinedEventsPage)" ion-item>Eventi Seguiti</button>
       <button (click)="openPage(AboutPage)" ion-item>Informazioni</button>
       <button (click)="openPage(ContactPage)" ion-item>Contatti</button><!--detail-none-->
     </ion-list>

@@ -70,13 +70,15 @@
                     </button>
                 </ion-buttons>
             </ion-toolbar>
-            <textarea id="text" disabled></textarea>
-            <ion-item>
-                <button *ngIf="room!=null" (click)="saveAndCloseRoom()" [disabled]="recognizing">
-                    Salva e Chiudi
-                </button>
-            </ion-item>
         </ion-card-header>
+
+        <ion-card-content id="text">
+        </ion-card-content>
+        <ion-item>
+            <button *ngIf="room!=null" (click)="saveAndCloseRoom()" [disabled]="recognizing">
+                Salva e Chiudi
+            </button>
+        </ion-item>
     </ion-card>
     
 </ion-content>

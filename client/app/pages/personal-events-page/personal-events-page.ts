@@ -7,6 +7,10 @@ import {Events} from 'ionic-angular';
 import {NewEventPage} from '../modals/event/event-modal';
 import {EventPage} from '../event-page/event-page';
 
+//import {Event} from '../../services/models/event-model'
+//import {Session} from '../../services/models/session-model'
+//import {Intervent} from '../../services/models/intervent-model'
+
 @Component({
   templateUrl: 'build/pages/personal-events-page/personal-events-page.html',
   providers: [EventService]
@@ -29,7 +33,6 @@ export class PersonalEventsPage {
     this.es.getPersonalEvents().map(res=> res.json()).subscribe((data) => {
       data.data.forEach(event =>{
         event.expanded=false;
-        
         //FINDS AND MERGES SESSIONS
         let _sessions = [];
         this.es.getSessions(event._id).map(res=>res.json()).subscribe(data=>{
@@ -50,7 +53,8 @@ export class PersonalEventsPage {
         _events.push(event);
 
       });
-              this.events = _events;
+      this.events = _events;
+      console.log(this.events);
     });
   }
   newEvent(){

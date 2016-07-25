@@ -225,6 +225,61 @@ apiRoutes.get('/personalevents', function(req, res) {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+apiRoutes.get('/observedevents', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        var decoded = jwt.decode(token, config.secret);
+        User.findOne({
+            username: decoded.username
+        }, function(err, user) {
+            if (err) throw err;
+
+            if (!user) {
+              return res.send({success: false, msg: 'Utente Non trovato'});
+            } 
+            
+            Event.find({
+                _id: {$in: user.observedEvents}
+            }, function(err, eventsArray){
+                if (err) throw err;
+
+                if (!eventsArray) {
+                  return res.send({success: false, msg: 'Errore nel recupero degli eventi osservati'});
+                }
+                res.json({success: true, data: eventsArray});
+            })
+        });
+    }else{
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
+apiRoutes.get('/joinedevents', function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        var decoded = jwt.decode(token, config.secret);
+        User.findOne({
+            username: decoded.username
+        }, function(err, user) {
+            if (err) throw err;
+
+            if (!user) {
+              return res.send({success: false, msg: 'Utente Non trovato'});
+            } 
+            Event.find({
+                _id: {$in: user.joinedEvents}
+            }, function(err, eventsArray){
+                if (err) throw err;
+
+                if (!eventsArray) {
+                  return res.send({success: false, msg: 'Errore nel recupero degli eventi seguiti'});
+                }
+                res.json({success: true, data: eventsArray});
+            })
+        });
+    }else{
+        return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+    }
+});
 
 apiRoutes.post('/createevent', function(req, res) {
     var token = getToken(req.headers);
@@ -620,6 +675,7 @@ apiRoutes.post('/openserver', function(req, res) {
         
         //LISTENER
         var allClients=[];
+        var _transcription="";
         io.on('connection', function (socket) {
             console.log("User Connected");
             allClients.push(socket);
@@ -627,11 +683,15 @@ apiRoutes.post('/openserver', function(req, res) {
             socket.on('client_type',function(data){
                 var msg="User Type: ";
                 msg += data.text;
+                if(data.text=='Listener'){
+                    socket.emit('previous_text', {text: _transcription})
+                }
                 console.log(msg);
             });
             
             socket.on('client_message',function(data){
                 console.log(data.text);
+                _transcription += data.text;
                 socket.broadcast.emit('server_message',{text:data.text});
             });
             socket.on('close_room', function (data) {
@@ -674,4 +734,133 @@ apiRoutes.post('/openserver', function(req, res) {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+
+apiRoutes.post('/addobservedevent', function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    var decoded = jwt.decode(token, config.secret);
+    User.findOne({
+      username: decoded.username
+    }, function(err, user) {
+        if (err) throw err;
+ 
+        if (!user) {
+          return res.send({success: false, msg: 'Utente non trovato'});
+        } else {
+            if(user.observedEvents.indexOf(req.body.id) != -1){
+                return res.send({success: false, msg: 'Evento già seguito'});
+            }
+            user.observedEvents.push(req.body.id);
+            user.save();
+            
+          res.json({success: true, data: user});
+        }
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+  }
+});
+
+apiRoutes.post('/removeobservedevent', function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    var decoded = jwt.decode(token, config.secret);
+    User.findOne({
+      username: decoded.username
+    }, function(err, user) {
+        if (err) throw err;
+ 
+        if (!user) {
+          return res.send({success: false, msg: 'Utente non trovato'});
+        } else {
+            var index = user.observedEvents.indexOf(req.body.id);
+            if(index == -1){
+                return res.send({success: false, msg: 'Evento non presente tra quelli seguiti'});
+            }
+            user.observedEvents.splice(index, 1);
+            user.save();
+            
+          res.json({success: true, data: user});
+        }
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+  }
+});
+
+apiRoutes.post('/saveinterventtext', function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    Intervent.findOne({
+      _id: req.body.id
+    }, function(err, intervent) {
+        if (err) throw err;
+ 
+        if (!intervent) {
+          return res.send({success: false, msg: 'Intervento non trovato'});
+        } else {
+            intervent.text=req.body.text;
+            intervent.save();
+            
+          res.json({success: true, data: intervent});
+        }
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+  }
+});
+
+apiRoutes.post('/addjoinedevent', function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    var decoded = jwt.decode(token, config.secret);
+    User.findOne({
+      username: decoded.username
+    }, function(err, user) {
+        if (err) throw err;
+ 
+        if (!user) {
+          return res.send({success: false, msg: 'Utente non trovato'});
+        } else {
+            if(user.joinedEvents.indexOf(req.body.id) != -1){
+                return res.send({success: false, msg: 'Evento già ascoltato'});
+            }
+            user.joinedEvents.push(req.body.id);
+            user.save();
+            
+          res.json({success: true, data: user});
+        }
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+  }
+});
+
+apiRoutes.post('/removejoinedevent', function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    var decoded = jwt.decode(token, config.secret);
+    User.findOne({
+      username: decoded.username
+    }, function(err, user) {
+        if (err) throw err;
+ 
+        if (!user) {
+          return res.send({success: false, msg: 'Utente non trovato'});
+        } else {
+            var index = user.joinedEvents.indexOf(req.body.id);
+            if(index == -1){
+                return res.send({success: false, msg: 'Evento non presente tra quelli ascoltati'});
+            }
+            user.joinedEvents.splice(index, 1);
+            user.save();
+            
+          res.json({success: true, data: user});
+        }
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+  }
+});
+
 

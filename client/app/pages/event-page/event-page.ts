@@ -31,7 +31,6 @@ export class EventPage {
   private sessions = [];
 
   constructor(private nav: NavController, private np: NavParams, private es: EventService, private evts: Events) {
-    console.log(this.event);
     this.newData={_id: this.event._id, title:this.event.title, startDate: this.event.startDate, endDate: this.event.endDate, location: this.event.location};
   }
 
@@ -43,7 +42,6 @@ export class EventPage {
     let _sessions = [];
 
     this.es.getSessions(eventID).map(res=> res.json()).subscribe((data) => {
-      console.log(data);
       data.data.forEach(session =>{
             session.expanded=false;
             
@@ -61,8 +59,13 @@ export class EventPage {
       });
   }
   submit(){
+    if(this.newData.startDate==null){
+      this.newData.startDate=this.event.startDate;
+    }
+    if(this.newData.endDate==null){
+      this.newData.endDate=this.event.endDate;
+    }
     this.es.updateEvent(this.newData).map(res=>res.json()).subscribe(data=>{
-      console.log(data);
       if(data.success){
         this.nav.pop()
       }else{
@@ -77,7 +80,6 @@ export class EventPage {
 
   newSession(){
     this.evts.subscribe('reloadEventPage',() => {
-      console.log("Update Sessions and remove session and intervent fetch from personal events page");
       this.updateSessions(this.event._id);
     });
     let modal = Modal.create(NewSessionPage, {event: this.event, sessions: this.sessions});
@@ -103,7 +105,6 @@ export class EventPage {
           {
             text: 'Cancella',
             handler: () => {
-              console.log('Cancellala');
               this.es.deleteSession(session._id).map(res=>res.json()).subscribe(data=>{
                 if (data.success) {
                   this.updateSessions(this.event._id);

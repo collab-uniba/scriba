@@ -8,7 +8,7 @@
     <ion-header padding>
       <ion-navbar>
           <ion-title>
-              Tutti Gli Eventi Pubblici
+              Eventi Osservati
           </ion-title>
       </ion-navbar>
     </ion-header>
@@ -22,6 +22,12 @@
                 <ion-buttons end>
                     <button *ngIf="event.status=='ongoing'" (click)="openEvent(event)">
                         <ion-icon name="play"> </ion-icon>
+                    </button>
+                    <button *ngIf="user.observedEvents.indexOf(event._id) == -1" (click)="observe(event)">
+                        <ion-icon name="eye"> </ion-icon>
+                    </button>
+                    <button *ngIf="user.observedEvents.indexOf(event._id) != -1" (click)="unobserve(event)">
+                        <ion-icon name="eye-off"> </ion-icon>
                     </button>
                 </ion-buttons>
             </ion-toolbar>

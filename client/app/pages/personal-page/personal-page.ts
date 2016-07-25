@@ -1,5 +1,5 @@
 import {Component} from '@angular/core'
-import {HomePage} from '../home-page/home-page';
+import {PersonalHomePage} from '../personal-home-page/personal-home-page';
 import {AboutPage} from '../about-page/about-page';
 import {ContactPage} from '../contact-page/contact-page';
 import {Modal, NavController, MenuController, Events} from 'ionic-angular';
@@ -9,6 +9,8 @@ import {TabsPage} from '../tabs/tabs';
 import {UserDataPage} from '../modals/user-update/userData-modal';
 import {LoginPage} from '../modals/login/login-modal';
 import {PersonalEventsPage} from '../personal-events-page/personal-events-page';
+import {ObservedEventsPage} from '../observed-events-page/observed-events-page';
+import {JoinedEventsPage} from '../joined-events-page/joined-events-page';
 
 @Component({
   templateUrl: 'build/pages/personal-page/personal-page.html',
@@ -16,24 +18,27 @@ import {PersonalEventsPage} from '../personal-events-page/personal-events-page';
 })
 
 export class PersonalPage {
-  private user: User;
-  private rootPage = HomePage;
+  private user = new User("","","","","");;
+  
   private PersonalEventsPage = PersonalEventsPage;
-  private EventsPage = HomePage;//CAMBIARE CREANDONE UNA NUOVA
+  private EventsPage = PersonalHomePage;
+  private ObservedEventsPage = ObservedEventsPage;
+  private JoinedEventsPage = JoinedEventsPage;
   private AboutPage = AboutPage;
   private ContactPage = ContactPage;
+  private rootPage;
 
   constructor(private evts: Events, private nav: NavController, private us: UserService,  private menu: MenuController) {
-    this.user = new User("","","","","");
-  }
-  ionViewWillEnter(){
-	  this.getUserData();
+    this.getUserData();
   }
   getUserData(){
+    console.log("arrivo");
     this.us.getUserData().map(res => res.json()).subscribe( data => {
       if(data.success){
-        this.user = new User(data.data.name, data.data.surname, data.data.username, data.data.password, data.data.email);
+        this.user = new User(data.data.name, data.data.surname, data.data.username, data.data.password, data.data.email, data.data.observedEvents);
         window.localStorage.setItem("user", JSON.stringify(this.user));
+        console.log(this.user.name);
+        this.openPage(this.EventsPage);
       }else{
         this.nav.setRoot(TabsPage);
         let modal = Modal.create(LoginPage);

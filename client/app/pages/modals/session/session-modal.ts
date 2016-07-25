@@ -24,12 +24,13 @@ export class NewSessionPage {
     //SETS NEW VOID SESSION
     private event = this.np.get('event');
     private session = new Session("", "", this.today, this.today, [this.user.username], "programmed", this.event._id);
-    private overlapError = {status: false, session: null};
+    //private overlapError = {status: false, session: null};
 
     constructor(private evts: Events, private nav: NavController, private np: NavParams, private es: EventService) {
         console.log(this.event);
     }
 
+/*
     overlap(): Session{
         let overlap = null;
         let sessions=this.np.get('sessions');
@@ -47,8 +48,10 @@ export class NewSessionPage {
         });
         return overlap;
     }
+    */
 
     submit(){
+        /*
         this.overlapError.status = false;
         this.overlapError.session = null;
         console.log(this.overlapError);
@@ -57,7 +60,7 @@ export class NewSessionPage {
             this.overlapError.status=true;
             this.overlapError.session=olp;
             console.log(this.overlapError);
-        }else{
+        }else{*/
             console.log(this.session);
             this.es.createSession(this.session).map(res=>res.json()).subscribe(data=>{
                 console.log(data);
@@ -68,7 +71,7 @@ export class NewSessionPage {
                     alert(data.msg);
                 }
             });
-        }
+        //}
     }
 
     close() {

@@ -1,27 +1,40 @@
 import {Component} from '@angular/core';
-import {NavController, Alert, Modal} from 'ionic-angular';
+import {NavController} from 'ionic-angular';
 import {EventService} from '../../services/event-services';
 import {UserService} from '../../services/user-services';
 import {Events} from 'ionic-angular';
 import {ListenInterventPage} from '../listen-intervent-page/listen-intervent-page';
 
-import {LoginPage} from '../modals/login/login-modal';
-import {SignupPage} from '../modals/signup/signup-modal';
+import {User} from '../../services/models/user-model';
 
 declare var io: any;
 
 @Component({
-  templateUrl: 'build/pages/home-page/home-page.html',
+  templateUrl: 'build/pages/personal-home-page/personal-home-page.html',
   providers: [EventService, UserService]
 })
-export class HomePage {
+export class PersonalHomePage {
+
+  //GETS CURRENT USER
+	private localUser;;
+  private user;
+
 	private events = [];
 
   constructor(private evts: Events, private nav: NavController, private es: EventService, private us: UserService) {
+    this.updateUser();
+    console.log(this.localUser);
+    console.log(this.user.observedEvents);
   }
   
   ionViewWillEnter(){
+    console.log("ionViewWillEnter");
 	  this.updateEvents();
+    this.updateUser();
+  }
+  updateUser(){
+    this.localUser=JSON.parse(window.localStorage.getItem("user"));
+    this.user = new User(this.localUser.name, this.localUser.surname, this.localUser.username, this.localUser.password, this.localUser.email, this.localUser.observedEvents);    
   }
 
   updateEvents(){
@@ -54,39 +67,9 @@ export class HomePage {
     });
   }
   openEvent(eventToOpen){
-    let confirm = Alert.create({
-            title: 'Accedi o Registrati per seguire questo Evento',
-            message: 'Hai bisogno di un profilo per seguire questo evento!',
-            buttons: [
-            {
-                text: 'Accedi',
-                handler: () => {
-                  this.evts.subscribe('openEvent', () => {
-                    //METTE L'EVENTO TRA QUELLI A CUI HA PARTECIPATO
-                    //IMPOSTA LA PAGINA ROOT A PERSONAL PAGE
-                    //PUSHA LA PAGINA DI ASCOLTO DELL'EVENTO
-                  });
-                  let modal = Modal.create(LoginPage);
-                  this.nav.present(modal);
-                }
-            },
-            {
-                text: 'Registrati',
-                handler: () => {
-                  //PRESENTA IL MODAL DI REGISTRAZIONE
-                  //PRESENTA IL MODAL DI LOGIN
-                  //METTE L'EVENTO TRA QUELLI A CUI HA PARTECIPATO
-                  //IMPOSTA LA PAGINA ROOT A PERSONAL PAGE
-                  //PUSHA LA PAGINA DI ASCOLTO DELL'EVENTO
-                }
-            },
-            {
-                text: 'Annulla'
-            }
-            ]
-        });
-        this.nav.present(confirm);
-        /*
+    this.us.addJoinedEvent(eventToOpen._id).map(res=>res.json()).subscribe(data=>{
+      console.log(data);
+    });
     this.events.forEach(event => {
       if(event._id==eventToOpen._id){
         console.log(event);
@@ -103,7 +86,28 @@ export class HomePage {
         });
       }
     });
-    */
+  }
+  observe(event){
+    this.us.addObservedEvent(event._id).map(res=>res.json()).subscribe(data=>{
+      console.log(data);
+      if(data.success){
+        this.user.observedEvents=data.data.observedEvents;
+        window.localStorage.setItem("user", JSON.stringify(this.user));
+      }else{
+        alert(data.msg);
+      }
+    });
+  }
+  unobserve(event){
+    this.us.removeObservedEvent(event._id).map(res=>res.json()).subscribe(data=>{
+      console.log(data);
+      if(data.success){
+        this.user.observedEvents=data.data.observedEvents;
+        window.localStorage.setItem("user", JSON.stringify(this.user));
+      }else{
+        alert(data.msg);
+      }
+    });
   }
 }
 

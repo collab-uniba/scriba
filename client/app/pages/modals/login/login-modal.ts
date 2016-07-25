@@ -16,8 +16,7 @@ export class LoginPage {
         
     }
 
-    submit(value: string): void { 
-        console.log('Submitted value: ', value);    
+    submit(): void {   
         let user = {username: this.username, password: this.password};
         this.us.login(user).map(res => res.json()).subscribe( data => {
             console.log(data);

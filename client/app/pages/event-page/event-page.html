@@ -25,13 +25,13 @@
 
         <ion-item>
             <ion-label inline>Data Inizio</ion-label>
-            <ion-input type="datetime-local" ngControl="startDateControl" #sd="ngForm" [(ngModel)]="newData.startDate" required></ion-input>
+            <ion-input type="datetime-local" ngControl="startDateControl" #sd="ngForm" [(ngModel)]="newData.startDate"></ion-input>
         </ion-item>
         <div *ngIf="sd.value<=now && sd.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
         
         <ion-item>
             <ion-label inline>Data Termine</ion-label>
-            <ion-input type="datetime-local" ngControl="endDateControl" #ed="ngForm" [(ngModel)]="newData.endDate" required></ion-input>
+            <ion-input type="datetime-local" ngControl="endDateControl" #ed="ngForm" [(ngModel)]="newData.endDate"></ion-input>
         </ion-item>
         <div *ngIf="sd.value>=ed.value && ed.touched">La Data di Termine deve essere POSTERIORE a quella di Inizio!</div>
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {ViewController, NavController, Modal, NavParams, Events} from 'ionic-angular';
+import {NavController, NavParams, Events, Alert} from 'ionic-angular';
 import {User} from '../../services/models/user-model';
 import {Intervent} from '../../services/models/intervent-model';
 import {EventService} from '../../services/event-services';
@@ -26,20 +26,17 @@ export class InterventPage {
     private text;
     private recognizing=this.ts.recognizing;
     private room = null; 
-    constructor(private es: EventService, private evts: Events, private np: NavParams, private viewCtrl: ViewController, private nav: NavController, private ts: TranscriptionService) {
+    constructor(private es: EventService, private evts: Events, private np: NavParams, private nav: NavController, private ts: TranscriptionService) {
         this.text="";
         this.intervent.text="";
-        console.log(this.intervent);
         this.newData = {_id: this.intervent._id, title:this.intervent.title, date: this.intervent.date, duration: this.intervent.duration, speaker: this.intervent.speaker};
     }
     end(intervent): Date{
         let end = new Date(intervent.date);
-        console.log(end);
         let hours = intervent.duration/60;
         let minutes = intervent.duration%60;
         end.setHours(end.getHours()+hours);
         end.setMinutes(end.getMinutes()+minutes);
-        console.log(end);
         return end;
     }
     overlap(): Intervent{
@@ -55,7 +52,6 @@ export class InterventPage {
                 if((inListStart < interventStart && interventStart < inListEnd) || 
                     (inListStart < interventEnd && interventEnd < inListEnd) ||
                     (interventStart < inListStart && inListEnd < interventEnd)){
-                        console.log(interventInList);
                         overlap = interventInList;
                 }
             }
@@ -70,12 +66,12 @@ export class InterventPage {
         if(olp!=null){
             this.overlapError.status=true;
             this.overlapError.intervent=olp;
-            console.log(this.overlapError);
         }else{
-            console.log("INVIATO");
-            
+            if(this.newData.date==null){
+                this.newData.date=this.intervent.date;
+            }
+
             this.es.updateIntervent(this.newData).map(res=>res.json()).subscribe(data=>{
-                console.log(data);
                 if(data.success){
                     this.evts.publish('reloadSessionPage');
                     this.nav.pop();
@@ -104,12 +100,40 @@ export class InterventPage {
         });
     }
     closeRoom(){
-        this.room.emit('close_room');//CHIUDE IL SERVER
-        this.room.disconnect();//DISCONNETTE IL SINGOLO CLIENT
-        this.room=null;
+        let confirm = Alert.create({
+            title: 'Chiudere la Stanza?',
+            message: 'Chiudendo la stanza in questo momento perderai tutto il testo trascritto. Si consiglia di Salvare il testo prima di chiudere questa Stanza!',
+            buttons: [
+            {
+                text: 'Salva e Chiudi',
+                handler: () => this.saveAndCloseRoom()
+            },
+            {
+                text: 'Chiudi senza Salvare',
+                handler: () => {
+                    this.room.emit('close_room');//CHIUDE IL SERVER
+                    this.room.disconnect();//DISCONNETTE IL SINGOLO CLIENT
+                    this.room=null;
+                }
+            },
+            {
+                text: 'Annulla'
+            }
+            ]
+        });
+        this.nav.present(confirm);
     }
     saveAndCloseRoom(){
-        console.log("save and close");
+        this.intervent.text=document.getElementById('text').innerHTML;
+        this.es.saveInterventText(this.intervent).map(res=>res.json()).subscribe(data=>{
+            if (data.success) {
+                this.room.emit('close_room');//CHIUDE IL SERVER
+                this.room.disconnect();//DISCONNETTE IL SINGOLO CLIENT
+                this.room=null;
+            }else{
+                alert(data.msg)
+            }
+        });
     }
     startRecognizing(){
         
