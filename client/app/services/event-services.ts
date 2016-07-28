@@ -6,7 +6,7 @@ import {Event} from './models/event-model';
 
 @Injectable() 
 export class EventService {
-    private ServerWithApiUrl = "http://localhost:8080/api";
+    private ServerWithApiUrl = "http://192.168.0.44:8080/api";//http://localhost:
     static get parameters() {
         return [[Http]];
     }

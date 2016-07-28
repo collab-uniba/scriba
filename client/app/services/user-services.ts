@@ -8,7 +8,7 @@ import {Injectable, Inject} from '@angular/core';
 @Injectable() 
 export class UserService {
     public isLoggedin;
-    private ServerWithApiUrl = "http://localhost:8080/api";
+    private ServerWithApiUrl = "http://192.168.0.44:8080/api";
     static get parameters() {
         return [[Http]];
     }

@@ -22,7 +22,7 @@ var ObjectId = require('mongodb').ObjectID;
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
+    res.setHeader('Access-Control-Allow-Origin', '*');//http://localhost:8100
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -54,7 +54,7 @@ app.get('/', function(req, res) {
 });
  
 // Start the server
-app.listen(port);
+app.listen(port, '192.168.0.44');
 console.log('There will be dragons: http://localhost:' + port);
 
 // demo Route (GET http://localhost:8080)

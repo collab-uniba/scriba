@@ -21,7 +21,7 @@ export class ListenInterventPage {
     constructor(private np: NavParams, private nav: NavController) {
         this.text="";
         console.log(this.intervent);
-        this.room = io.connect('http://localhost:'+this.intervent.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
+        this.room = io.connect('http://192.168.0.44:'+this.intervent.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
         this.room.emit('client_type', {text: "Listener"});
         
         this.room.on('previous_text', (data) => {

@@ -91,7 +91,7 @@ export class InterventPage {
         this.es.openServer(this.intervent._id).map(res=>res.json()).subscribe(data=>{
             if(data.success){
                 console.log(data.port);
-                this.room = io.connect('http://localhost:'+data.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
+                this.room = io.connect('http://192.168.0.44:'+data.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
                 this.room.emit('client_type', {text: "Speaker"});
             }else{
                 alert(data.msg);
