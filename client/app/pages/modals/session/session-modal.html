@@ -1,9 +1,9 @@
-<ion-toolbar>
+<ion-toolbar *ngIf="!overlapError.status">
     <ion-title>
         Dati Nuova Sessione
     </ion-title>
 </ion-toolbar>
-<form (ngSubmit)="submit()" #sessionForm="ngForm">
+<form *ngIf="!overlapError.status" (ngSubmit)="submit()" #sessionForm="ngForm">
     <ion-item >
         <ion-label inline>Titolo</ion-label>
         <ion-input type="text" ngControl="titleControl" [(ngModel)]="session.title" required></ion-input>
@@ -33,3 +33,17 @@
         <button type="reset" (click)="close()">Annulla</button>
     </ion-item>
 </form>
+<ion-card *ngIf="overlapError.status">
+    <ion-card-header>
+        La Sessione è contemporanea ad altre Sessioni, salvare comunque?
+    </ion-card-header>
+    <ion-card-content>
+        La Sessione si sovrappone con: {{overlapError.session.title}} 
+        prevista dal {{overlapError.session.startDate}} 
+        al {{overlapError.session.endDate}}
+        <ion-item>
+            <button (click)="saveSession()">Salva</button>
+            <button (click)="reset()">Modifica</button>
+        </ion-item>
+    </ion-card-content>
+</ion-card>

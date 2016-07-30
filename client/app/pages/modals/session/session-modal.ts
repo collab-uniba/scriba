@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
+import {NavController, NavParams, Alert} from 'ionic-angular';
 import {EventService} from '../../../services/event-services';
 import {NgForm} from '@angular/forms';
 import {Events} from 'ionic-angular';
@@ -24,13 +24,13 @@ export class NewSessionPage {
     //SETS NEW VOID SESSION
     private event = this.np.get('event');
     private session = new Session("", "", this.today, this.today, [this.user.username], "programmed", this.event._id);
-    //private overlapError = {status: false, session: null};
+    private overlapError = {status: false, session: null};
 
     constructor(private evts: Events, private nav: NavController, private np: NavParams, private es: EventService) {
         console.log(this.event);
     }
 
-/*
+
     overlap(): Session{
         let overlap = null;
         let sessions=this.np.get('sessions');
@@ -48,10 +48,9 @@ export class NewSessionPage {
         });
         return overlap;
     }
-    */
+    
 
     submit(){
-        /*
         this.overlapError.status = false;
         this.overlapError.session = null;
         console.log(this.overlapError);
@@ -60,18 +59,45 @@ export class NewSessionPage {
             this.overlapError.status=true;
             this.overlapError.session=olp;
             console.log(this.overlapError);
-        }else{*/
-            console.log(this.session);
-            this.es.createSession(this.session).map(res=>res.json()).subscribe(data=>{
-                console.log(data);
-                if(data.success){
-                    this.evts.publish('reloadEventPage');
-                    this.nav.pop();
-                }else{
-                    alert(data.msg);
-                }
+            /*
+            let confirm = Alert.create({
+                title: 'La Sessione è contemporanea ad altre Sessioni, salvare comunque?',
+                message: 'La Sessione si sovrappone con: "'+this.overlapError.session.title
+                +'" prevista dal '+this.overlapError.session.startDate
+                +' al '+this.overlapError.session.endDate,
+                buttons: [
+                    {
+                    text: 'Salva',
+                    handler: () => this.saveSession()
+                    },
+                    {
+                    text: 'Modifica'
+                    }
+                ]
             });
-        //}
+            this.nav.present(confirm);
+            */
+        }else{
+            this.saveSession();
+        }
+    }
+    saveSession(){
+        console.log(this.session);
+        this.es.createSession(this.session).map(res=>res.json()).subscribe(data=>{
+            console.log(data);
+            if(data.success){
+                this.evts.publish('reloadEventPage');
+                this.nav.pop();
+            }else{
+                alert(data.msg);
+            }
+        });
+    }
+    reset(){
+        this.overlapError.status = false;
+        this.overlapError.session = null;
+        console.log(this.overlapError);
+        this.overlap();
     }
 
     close() {

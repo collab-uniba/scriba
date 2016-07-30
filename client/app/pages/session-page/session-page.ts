@@ -26,7 +26,7 @@ export class SessionPage {
   private event = this.np.get('event');
   private session = this.np.get('session');
   private newData;
-  //private overlapError = {status: false, session: null};
+  private overlapError = {status: false, session: null};
 
   //SETS SESSION INTERVENTS
   private intervents = [];
@@ -40,7 +40,7 @@ export class SessionPage {
   ionViewWillEnter(){
 	  this.updateIntervents(this.session._id);
   }
-  /*
+  
   overlap(): Session{
       let overlap = null;
       let sessions=this.np.get('sessions');
@@ -60,9 +60,8 @@ export class SessionPage {
       });
       return overlap;
   }
-  */
 
-  updateIntervents(sessionID){//CAMBIARE IN GET PERSONAL EVENTS
+  updateIntervents(sessionID){
     let _intervents = [];
 
     this.es.getIntervents(sessionID).map(res=> res.json()).subscribe((data) => {
@@ -75,7 +74,6 @@ export class SessionPage {
       });
   }
   submit(){
-    /*
     this.overlapError.status = false;
     this.overlapError.session = null;
     console.log(this.overlapError);
@@ -84,9 +82,29 @@ export class SessionPage {
         this.overlapError.status=true;
         this.overlapError.session=olp;
         console.log(this.overlapError);
+        let confirm = Alert.create({
+          title: 'La Sessione è contemporanea ad altre Sessioni, salvare comunque?',
+          message: 'La Sessione si sovrappone con: "'+this.overlapError.session.title
+          +'" prevista dal '+this.overlapError.session.startDate
+          +' al '+this.overlapError.session.endDate,
+          buttons: [
+            {
+              text: 'Salva',
+              handler: () => this.saveSession()
+            },
+            {
+              text: 'Modifica'
+            }
+          ]
+        });
+        this.nav.present(confirm);
     }else{
-      */
-      if(this.newData.startDate==null){
+      this.saveSession();
+    }
+  }
+
+  saveSession(){
+    if(this.newData.startDate==null){
         this.newData.startDate=this.session.startDate;
       }
       if(this.newData.endDate==null){
@@ -100,7 +118,6 @@ export class SessionPage {
           alert(data.msg)
         }
       })
-    //}
   }
   reset(){
     this.newData={_id: this.session._id, title:this.session.title, startDate: this.session.date, endDate: this.session.endDate};
