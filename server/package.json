@@ -19,7 +19,6 @@
     "node-bcrypt": "0.0.1",
     "passport": "^0.3.2",
     "passport-jwt": "^2.0.0",
-    "socket.io": "^1.4.8",
-    "thinky": "^2.3.3"
+    "socket.io": "^1.4.8"
   }
 }

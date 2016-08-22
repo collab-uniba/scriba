@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController, Alert} from 'ionic-angular';
 import {EventService} from '../../services/event-services';
 import {UserService} from '../../services/user-services';
 import {Events} from 'ionic-angular';
@@ -67,9 +67,6 @@ export class JoinedEventsPage {
     });
   }
   openEvent(eventToOpen){
-    this.us.addJoinedEvent(eventToOpen._id).map(res=>res.json()).subscribe(data=>{
-      console.log(data);
-    });
     this.events.forEach(event => {
       if(event._id==eventToOpen._id){
         console.log(event);
@@ -88,15 +85,31 @@ export class JoinedEventsPage {
     });
   }
   delete(event){
-    this.us.removeJoinedEvent(event._id).map(res=>res.json()).subscribe(data=>{
-      console.log(data);
-      if(data.success){
-        this.updateUser();
-        this.updateEvents();
-      }else{
-        alert(data.msg);
-      }
-    });
+    let confirm = Alert.create({
+      title: 'Eliminare questo Evento dalla lista?',
+      message: 'Se elimini questo Evento dalla lista non potrai più aggiungerlo nuovamente!',
+      buttons: [
+        {
+          text: 'Elimina',
+          handler: () => {
+            this.us.removeJoinedEvent(event._id).map(res=>res.json()).subscribe(data=>{
+              console.log(data);
+              if(data.success){
+                this.updateUser();
+                this.updateEvents();
+              }else{
+                alert(data.msg);
+              }
+            });
+          }
+        },
+        {
+          text: 'Mantieni'
+        }
+        ]
+      });
+      this.nav.present(confirm);
+    
   }
 }
 

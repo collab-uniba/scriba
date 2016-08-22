@@ -139,9 +139,7 @@ export class SessionPage {
           intervent: interventToOpen
         })
   }
-  editIntervent(intervent){
-    console.log("EDITING");
-  }
+
   deleteIntervent(intervent){
     if(intervent.status=="ongoing"){
       alert("Impossibile eliminare la sessione poichè è ancora IN CORSO!")

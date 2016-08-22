@@ -16,7 +16,7 @@ declare var io: any;
 export class PersonalHomePage {
 
   //GETS CURRENT USER
-	private localUser;;
+	private localUser;
   private user;
 
 	private events = [];
@@ -68,7 +68,7 @@ export class PersonalHomePage {
   }
   openEvent(eventToOpen){
     this.us.addJoinedEvent(eventToOpen._id).map(res=>res.json()).subscribe(data=>{
-      console.log(data);
+      alert(data.msg);
     });
     this.events.forEach(event => {
       if(event._id==eventToOpen._id){

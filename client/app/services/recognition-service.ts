@@ -4,30 +4,13 @@ import { Observer } from 'rxjs/Observer';
 import {Events} from 'ionic-angular';
 
 declare var webkitSpeechRecognition: any;
-/*
-class MyObject{
-  constructor() {
-    this.prop1Change$ = new Observable<string>(observer => this._prop1Observer = observer).share(); // share() allows multiple subscribers
-  }
-  prop1Change$: Observable<string>;
-  private _prop1Observer: Observer<string>;
-  _prop1:string;
-
-  get prop1():string { return this._prop1 };
-
-  set prop1(value:string) {
-    this._prop1 = value;
-    this._prop1Observer && this._prop1Observer.next(value);
-  }
-}
-*/
 
 @Injectable()
 export class TranscriptionService{
   private recognition;
   public final_transcript = "";
   public recognizing = false;
-
+	public delay = null;
 	public transcriptionChange$: Observable<string>;
   private transcriptionObserver: Observer<string>;
 
@@ -43,7 +26,7 @@ export class TranscriptionService{
 			this.recognition.onerror=this.errorHandler.bind(this);
 			this.recognition.onend=this.endHandler.bind(this);
     }else{
-      console.log("Not CHROME");
+			alert("Attenzione, Il servizio è disponibile solo su browser Google Chrome");
     }
   }
 
@@ -58,8 +41,19 @@ export class TranscriptionService{
     this.recognizing=false;
 		this.transcriptionObserver.complete();
 	}
-
+	resetTimeOut(){
+		
+			clearTimeout(this.delay);
+		
+		this.delay = setTimeout(() => {
+			this.recognition.stop();
+			this.final_transcript += " ";
+			//this.recognition.start();
+  	}, 5000);
+	}
   resultHandler(event){
+		this.resetTimeOut();
+		
 		var interim_transcript = '';
 		for (var i = event.resultIndex; i < event.results.length; ++i) {
 			if (event.results[i].isFinal) {

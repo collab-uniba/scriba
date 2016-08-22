@@ -71,7 +71,7 @@ export class PersonalEventsPage {
   }
   deleteEvent(event){
     if(event.status=="ongoing"){
-      alert("Impossibile eliminare la sessione poichè è ancora IN CORSO!")
+      alert("Impossibile eliminare l'Evento poichè è ancora IN CORSO!")
     }else{
       let confirm = Alert.create({
         title: 'Cancellare questo Evento?',

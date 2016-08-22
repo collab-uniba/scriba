@@ -2,7 +2,6 @@ import { Http, Response, Headers,RequestOptions  } from '@angular/http';
 import 'rxjs/add/operator/map'
 import { Observable } from 'rxjs/Observable';
 import {Injectable, Inject} from '@angular/core';
-import {Event} from './models/event-model';
 
 @Injectable() 
 export class EventService {
@@ -11,7 +10,7 @@ export class EventService {
         return [[Http]];
     }
     
-    constructor(private http: Http, private eventData: Event) {
+    constructor(private http: Http) {
 
     }
     
@@ -64,7 +63,7 @@ export class EventService {
         let options = new RequestOptions({ headers: headers });
         return this.http.post(this.ServerWithApiUrl + '/createevent', body, options);
     }
-     createSession(session): Observable<Response>{
+    createSession(session): Observable<Response>{
         console.log(session);
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         let body = "title="+ session.title + "&startDate="+  session.startDate + "&endDate="+  session.endDate + "&speakers=" + session.speakers +"&status=" + session.status +"&event=" + session.event;

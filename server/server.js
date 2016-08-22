@@ -14,9 +14,11 @@ var Intervent = require('./app/models/intervent');
 var bcryptjs = require('bcryptjs');
 
 //MONGO CLIENT
+/*
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
+*/
 
 // Add headers
 app.use(function (req, res, next) {
@@ -47,19 +49,11 @@ app.use(morgan('dev'));
  
 // Use the passport package in our application
 app.use(passport.initialize());
- 
-// demo Route (GET http://localhost:8080)
-app.get('/', function(req, res) {
-  res.send('Hello! The API is at http://localhost:' + port + '/api');
-});
- 
+
 // Start the server
 app.listen(port, '192.168.0.44');
 console.log('There will be dragons: http://localhost:' + port);
 
-// demo Route (GET http://localhost:8080)
-// ...
- 
 // connect to database
 mongoose.connect(config.database);
  
@@ -68,11 +62,13 @@ require('./config/passport')(passport);
  
 // bundle our routes
 var apiRoutes = express.Router();
- 
+// connect the api routes under /api/*
+app.use('/api', apiRoutes);
+
 // create a new user account (POST http://localhost:8080/api/signup)
 apiRoutes.post('/signup', function(req, res) {
     console.log(req.body);
-  if (!req.body.username || !req.body.password || !req.body.name || !req.body.surname) {
+  if (!req.body.username || !req.body.password || !req.body.name || !req.body.surname || !req.body.email) {
     res.json({success: false, msg: 'Passaggio di parametri incompleto'});
   } else {
     var newUser = new User({
@@ -92,12 +88,6 @@ apiRoutes.post('/signup', function(req, res) {
     });
   }
 });
- 
-// connect the api routes under /api/*
-app.use('/api', apiRoutes);
-
-// create a new user account (POST http://localhost:8080/signup)
-// ...
  
 // route to authenticate a user (POST http://localhost:8080/api/authenticate)
 apiRoutes.post('/authenticate', function(req, res) {
@@ -123,9 +113,6 @@ apiRoutes.post('/authenticate', function(req, res) {
     }
   });
 });
-
-// route to authenticate a user (POST http://localhost:8080/api/authenticate)
-// ...
  
 // route to a restricted info (GET http://localhost:8080/api/memberinfo)
 apiRoutes.get('/memberinfo', passport.authenticate('jwt', { session: false}), function(req, res) {
@@ -178,7 +165,6 @@ apiRoutes.get('/publicevents', function(req, res) {
     });
 });
 apiRoutes.post('/sessions', function(req, res) {
-
     Session.find({
       event: req.body.event
     }, function(err, sessionsArray) {
@@ -253,6 +239,7 @@ apiRoutes.get('/observedevents', function(req, res) {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+
 apiRoutes.get('/joinedevents', function(req, res) {
     var token = getToken(req.headers);
     if (token) {
@@ -348,7 +335,7 @@ apiRoutes.post('/createintervent', function(req, res) {
     console.log(req.body);
     var token = getToken(req.headers);
     if (token) {
-      if (!req.body.title || !req.body.date || !req.body.speaker || !req.body.session || !req.body.status) {
+      if (!req.body.title || !req.body.date || !req.body.duration || !req.body.speaker || !req.body.session || !req.body.status) {
         res.json({success: false, msg: 'Passaggio di parametri incompleto'});
       } else {
           Session.findOne({
@@ -392,24 +379,56 @@ apiRoutes.post('/createintervent', function(req, res) {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+
 apiRoutes.post('/deleteintervent', function(req, res) {
     var token = getToken(req.headers);
-    if (token) {//INSTEAD OF findOneAndRemove
-        Intervent.remove({
+    if (token) {
+        Intervent.findOne({
           _id: req.body.id
-        }, function(err, result) {
+        }, function(err, intervent) {
             if (err) throw err;
-
-            if (!result) {
+            var sessionToUpdate = intervent.session;
+            if (!intervent) {
               return res.send({success: false, msg: 'Eliminazione Intervento fallita'});
             } else {
-              res.json({success: true, msg: "Eliminazione Intervento eseguita"});
+                //CERCA LA SESSIONE
+                Session.findOne({
+                    _id: sessionToUpdate
+                },function(err, session){
+                    if (err) throw err;
+
+                    if(!session){
+                        return res.send({success: false, msg: 'Eliminazione Intervento fallita'});
+                    }else{
+                        //CERCA TUTTI GLI INTERVENTI PER LA SESSIONE
+                        Intervent.find({
+                            session: sessionToUpdate
+                        }, function(err, intervents) {
+                            if (err) throw err;
+
+                            if(!intervents){
+                                return res.send({success: false, msg: 'Eliminazione Intervento fallita'});
+                            }else{
+                                session.speakers=session.speakers[0];
+                                intervents.forEach(function(singleIntervent) {
+                                    if(singleIntervent._id!=intervent._id && session.speakers.indexOf(singleIntervent.speaker)==-1){
+                                        session.speakers.push(singleIntervent.speaker);
+                                    }
+                                }, this);
+                                session.save();
+                            }
+                        });
+                    }
+                });
+                intervent.remove();
+                res.json({success: true, msg: "Eliminazione Intervento eseguita"});
             }
         });
     } else {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+
 apiRoutes.post('/deletesession', function(req, res) {
     var token = getToken(req.headers);
     if (token) {
@@ -497,71 +516,120 @@ apiRoutes.post('/deleteevent', function(req, res) {
 apiRoutes.post('/updateevent', function(req, res) {
     var token = getToken(req.headers);
     if (token) {
-        Event.update({
-          _id: req.body.id
-        },{ $set: { 
-            title: req.body.title,
-            startDate: req.body.startDate,
-            endDate: req.body.endDate,
-            location: req.body.location
-        }}, {multi: false}, function(err, result) {
-            if (err) throw err;
+        if (!req.body.title || !req.body.startDate || !req.body.endDate || !req.body.location || !req.body.id) {
+            res.json({success: false, msg: 'Passaggio di parametri incompleto'});
+        } else {
+            Event.update({
+            _id: req.body.id
+            },{ $set: { 
+                title: req.body.title,
+                startDate: req.body.startDate,
+                endDate: req.body.endDate,
+                location: req.body.location
+            }}, {multi: false}, function(err, result) {
+                if (err) throw err;
 
-            if (!result) {
-              return res.send({success: false, msg: 'Aggiornamento evento fallito'});
-            } else {
-              res.json({success: true, msg: "Aggiornamento evento eseguito"});
-            }
-        });
+                if (!result) {
+                return res.send({success: false, msg: 'Aggiornamento evento fallito'});
+                } else {
+                    console.log(result);
+                res.json({success: true, msg: "Aggiornamento evento eseguito"});
+                }
+            });
+        }
     } else {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+
 apiRoutes.post('/updatesession', function(req, res) {
     var token = getToken(req.headers);
     if (token) {
-        Session.update({
-          _id: req.body.id
-        },{ $set: { 
-            title: req.body.title,
-            startDate: req.body.startDate,
-            endDate: req.body.endDate,
-        }}, {multi: false}, function(err, result) {
-            if (err) throw err;
+        if (!req.body.title || !req.body.startDate || !req.body.endDate || !req.body.id) {
+            res.json({success: false, msg: 'Passaggio di parametri incompleto'});
+        } else {
+            Session.update({
+            _id: req.body.id
+            },{ $set: { 
+                title: req.body.title,
+                startDate: req.body.startDate,
+                endDate: req.body.endDate,
+            }}, {multi: false}, function(err, result) {
+                if (err) throw err;
 
-            if (!result) {
-              return res.send({success: false, msg: 'Aggiornamento sessione fallito'});
-            } else {
-              res.json({success: true, msg: "Aggiornamento sessione eseguito"});
-            }
-        });
+                if (!result) {
+                return res.send({success: false, msg: 'Aggiornamento sessione fallito'});
+                } else {
+                res.json({success: true, msg: "Aggiornamento sessione eseguito"});
+                }
+            });
+        }
     } else {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+
 apiRoutes.post('/updateintervent', function(req, res) {
     var token = getToken(req.headers);
     if (token) {
-        Intervent.update({
-          _id: req.body.id
-        },{ $set: { 
-            title: req.body.title,
-            date: req.body.date,
-            duration: req.body.duration,
-            speaker: req.body.speaker
-        }}, {multi: false}, function(err, result) {
-            if (err) throw err;
+        if (!req.body.title || !req.body.date || !req.body.duration || !req.body.speaker || !req.body.id) {
+            res.json({success: false, msg: 'Passaggio di parametri incompleto'});
+        } else {
+            Intervent.findOne({
+                _id: req.body.id
+            }, function(err, intervent) {
+                if (err) throw err;
 
-            if (!result) {
-              return res.send({success: false, msg: 'Aggiornamento intervento fallito'});
-            } else {
-              res.json({success: true, msg: "Aggiornamento intervento eseguito"});
-            }
-        });
+                if (!intervent) {
+                    return res.send({success: false, msg: 'Aggiornamento intervento fallito'});
+                } else {
+                    intervent.title = req.body.title;
+                    intervent.date = req.body.date;
+                    intervent.duration = req.body.duration;
+                    intervent.speaker = req.body.speaker;
+                    
+                    //CERCA LA SESSIONE
+                    Session.findOne({
+                        _id: intervent.session
+                    },function(err, session){
+                        if (err) throw err;
+
+                        if(!session){
+                            return res.send({success: false, msg: 'Aggiornamento intervento fallito'});
+                        }else{
+                            //CERCA TUTTI GLI INTERVENTI PER LA SESSIONE
+                            Intervent.find({
+                                session: intervent.session
+                            }, function(err, intervents) {
+                                if (err) throw err;
+                                console.log(intervents);
+                                if(!intervents){
+                                    return res.send({success: false, msg: 'Aggiornamento intervento fallito'});
+                                }else{
+                                    session.speakers=session.speakers[0];
+                                    intervents.forEach(function(singleIntervent) {
+                                        if(singleIntervent._id!=intervent._id && session.speakers.indexOf(singleIntervent.speaker)==-1){
+                                            session.speakers.push(singleIntervent.speaker);
+                                        }
+                                    }, this);
+                                    if(session.speakers.indexOf(intervent.speaker)==-1){
+                                        session.speakers.push(intervent.speaker);
+                                    }
+                                    session.save();
+                                }
+                            });
+                        }
+                    });
+                    intervent.save();
+                    res.json({success: true, msg: "Aggiornamento intervento eseguito"});
+                }
+            });  
+        }
     } else {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
 });
+
 apiRoutes.post('/updateuser', function(req, res) {
     var token = getToken(req.headers);
     if (token) {
@@ -828,7 +896,7 @@ apiRoutes.post('/addjoinedevent', function(req, res) {
             user.joinedEvents.push(req.body.id);
             user.save();
             
-          res.json({success: true, data: user});
+          res.json({success: true, data: user, msg: "Evento aggiunto agli eventi seguiti"});
         }
     });
   } else {
