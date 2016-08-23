@@ -39,8 +39,8 @@
     </ion-card-header>
     <ion-card-content>
         La Sessione si sovrappone con: {{overlapError.session.title}} 
-        prevista dal {{overlapError.session.startDate}} 
-        al {{overlapError.session.endDate}}
+        prevista dal {{formatDate(overlapError.session.startDate)}} 
+        al {{formatDate(overlapError.session.endDate)}}
         <ion-item>
             <button (click)="saveSession()">Salva</button>
             <button (click)="reset()">Modifica</button>

@@ -34,7 +34,7 @@
                     </button>
                 </ion-buttons>
             </ion-toolbar>
-            Dal: {{event.startDate}} - Al: {{event.endDate}}
+            Dal: {{formatDate(event.startDate)}} - Al: {{formatDate(event.endDate)}}
         </ion-card-header>
         <ion-card-content>
           <p>
@@ -47,12 +47,12 @@
               <p>
                 <ion-icon *ngIf="!session.expanded" name="arrow-dropdown" (click)="session.expanded=!session.expanded"></ion-icon> 
                 <ion-icon *ngIf="session.expanded" name="arrow-dropup" (click)="session.expanded=!session.expanded"></ion-icon> 
-                  {{session.title}} - {{session.startDate}}
+                  {{session.title}} - {{formatDate(session.startDate)}}
               </p>
               <ion-list *ngIf="session.expanded">
                 <ion-item text-wrap *ngFor="let intervent of session.intervents">
                   <p>
-                    {{intervent.title}} - {{intervent.date}} --- {{intervent.status}}
+                    {{intervent.title}} - {{formatDate(intervent.date)}} --- {{intervent.status}}
                   </p>
                   
                 </ion-item>

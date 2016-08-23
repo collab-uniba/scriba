@@ -6,7 +6,7 @@
     <ion-header padding>
         <ion-navbar>
             <ion-title>
-                {{intervent.title}} - {{intervent.date}} Durata: {{intervent.duration}} minuti
+                {{intervent.title}} - {{formatDate(intervent.date)}} Durata: {{intervent.duration}} minuti
             </ion-title>
             <ion-buttons *ngIf="!updating && intervent.status=='programmed'" end>
                 <button (click)="updating=!updating">
@@ -34,7 +34,7 @@
         </ion-item>
         <div *ngIf="((date.value+duration.value)>session.endDate) && duration.touched">L'Intervento deve terminare durante la Sessione!</div>
 
-        <div *ngIf="overlapError.status">L'Intervento si sovrappone con "{{overlapError.intervent.title}}" programmato il {{overlapError.intervent.date}}, durata {{overlapError.intervent.duration}} minuti</div>
+        <div *ngIf="overlapError.status">L'Intervento si sovrappone con "{{overlapError.intervent.title}}" programmato il {{formatDate(overlapError.intervent.date)}}, durata {{overlapError.intervent.duration}} minuti</div>
 
         <ion-item >
             <ion-label inline>Speaker (username)</ion-label>

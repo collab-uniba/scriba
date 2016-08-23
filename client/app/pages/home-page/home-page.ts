@@ -105,6 +105,27 @@ export class HomePage {
     });
     */
   }
+  formatDate(date: string): string{
+    let formattedDate = "";
+    let dateObject = new Date(date);
+
+    let day=dateObject.getDate();
+    let month=dateObject.getMonth() + 1;
+    let year=dateObject.getFullYear();
+    let hours=dateObject.getUTCHours();
+    let minutes=dateObject.getUTCMinutes();
+    if(hours<10){
+      formattedDate = day + "/" + month + "/" + year + " ORE: 0" + hours;
+    }else{
+      formattedDate = day + "/" + month + "/" + year + " ORE: " + hours;
+    }
+    if(minutes<10){
+      formattedDate += ".0" + minutes;
+    }else{
+      formattedDate += "." + minutes;
+    }
+    return formattedDate;
+  }
 }
 
 

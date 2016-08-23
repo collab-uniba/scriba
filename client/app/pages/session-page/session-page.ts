@@ -85,8 +85,8 @@ export class SessionPage {
         let confirm = Alert.create({
           title: 'La Sessione è contemporanea ad altre Sessioni, salvare comunque?',
           message: 'La Sessione si sovrappone con: "'+this.overlapError.session.title
-          +'" prevista dal '+this.overlapError.session.startDate
-          +' al '+this.overlapError.session.endDate,
+          +'" prevista dal '+this.formatDate(this.overlapError.session.startDate)
+          +' al '+this.formatDate(this.overlapError.session.endDate),
           buttons: [
             {
               text: 'Salva',
@@ -169,7 +169,27 @@ export class SessionPage {
       this.nav.present(confirm);
     }
   }
+  formatDate(date: string): string{
+    let formattedDate = "";
+    let dateObject = new Date(date);
 
+    let day=dateObject.getDate();
+    let month=dateObject.getMonth() + 1;
+    let year=dateObject.getFullYear();
+    let hours=dateObject.getUTCHours();
+    let minutes=dateObject.getUTCMinutes();
+    if(hours<10){
+      formattedDate = day + "/" + month + "/" + year + " ORE: 0" + hours;
+    }else{
+      formattedDate = day + "/" + month + "/" + year + " ORE: " + hours;
+    }
+    if(minutes<10){
+      formattedDate += ".0" + minutes;
+    }else{
+      formattedDate += "." + minutes;
+    }
+    return formattedDate;
+  }
   close() {
       this.nav.pop();
   }

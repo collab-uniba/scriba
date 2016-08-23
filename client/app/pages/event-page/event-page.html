@@ -6,7 +6,7 @@
     <ion-header padding>
         <ion-navbar>
             <ion-title>
-                {{event.title}} - Dal: {{event.startDate}} - Al: {{event.endDate}}
+                {{event.title}} - Dal: {{formatDate(event.startDate)}} - Al: {{formatDate(event.endDate)}}
             </ion-title>
             <ion-buttons *ngIf="!updating && event.status=='programmed'" end>
                 <button (click)="updating=!updating">
@@ -78,7 +78,7 @@
                         </button>
                     </ion-buttons>
                 </ion-toolbar>
-                Dal: {{session.startDate}} - Al: {{session.endDate}}
+                Dal: {{formatDate(session.startDate)}} - Al: {{formatDate(session.endDate)}}
             </ion-card-header>
         </ion-card>
     </ion-list>
