@@ -31,6 +31,7 @@ export class InterventPage {
         this.intervent.text="";
         this.newData = {_id: this.intervent._id, title:this.intervent.title, date: this.intervent.date, duration: this.intervent.duration, speaker: this.intervent.speaker};
     }
+
     end(intervent): Date{
         let end = new Date(intervent.date);
         let hours = intervent.duration/60;
@@ -146,10 +147,10 @@ export class InterventPage {
         */
 
         this.ts.transcriptionChange$.subscribe(data=>{
-            console.log(data);
+            console.log(new Date() + data);
             this.room.emit('client_message', {text: data});
             //this.text+=data;
-            document.getElementById('text').innerHTML += data; //BRUTTISSIMO!!!
+            document.getElementById('text').innerHTML += " " + data; //BRUTTISSIMO!!!
         });
     }
 

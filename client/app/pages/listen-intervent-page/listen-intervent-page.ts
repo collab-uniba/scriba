@@ -31,8 +31,9 @@ export class ListenInterventPage {
         })
         this.room.on('server_message', (data) => {
             //this.text += data.text;
+            console.log(new Date() + " " + data.text);
             document.getElementById('text').innerHTML += data.text; //BRUTTISSIMO!!!
-            console.log(this.text);
+            
         });
 
         this.room.on('closing_room', (data) => {

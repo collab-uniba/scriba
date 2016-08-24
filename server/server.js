@@ -758,8 +758,8 @@ apiRoutes.post('/openserver', function(req, res) {
             });
             
             socket.on('client_message',function(data){
-                console.log(data.text);
-                _transcription += data.text;
+                console.log(new Date() + " " + data.text);
+                _transcription += data.text + " ";
                 socket.broadcast.emit('server_message',{text:data.text});
             });
             socket.on('close_room', function (data) {

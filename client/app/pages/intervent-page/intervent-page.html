@@ -4,7 +4,7 @@
 
 <ion-content padding>
     <ion-header padding>
-        <ion-navbar>
+        <ion-navbar [hideBackButton]="recognizing || room!=null">
             <ion-title>
                 {{intervent.title}} - {{formatDate(intervent.date)}} Durata: {{intervent.duration}} minuti
             </ion-title>

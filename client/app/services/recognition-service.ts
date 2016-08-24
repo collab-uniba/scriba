@@ -41,16 +41,14 @@ export class TranscriptionService{
     this.recognizing=false;
 		this.transcriptionObserver.complete();
 	}
-	resetTimeOut(){
-		
-			clearTimeout(this.delay);
-		
+
+	resetTimeOut(){		
+		clearTimeout(this.delay);
 		this.delay = setTimeout(() => {
 			this.recognition.stop();
-			this.final_transcript += " ";
-			//this.recognition.start();
-  	}, 5000);
+  	}, 3000);
 	}
+
   resultHandler(event){
 		this.resetTimeOut();
 		
@@ -70,18 +68,18 @@ export class TranscriptionService{
 	startHandler () {
 		this.recognizing = true;
 		this.evts.publish('recognizing', this.recognizing);
-		console.log("RECOGNITION STARTED");
+		console.log(new Date() + "RECOGNITION STARTED");
 	};
 
 	errorHandler(event) {
-		console.log("RECOGNITION ERROR: " + event.error);
+		console.log(new Date() + "RECOGNITION ERROR: " + event.error);
 	};
 
 	endHandler() {
-		console.log("RECOGNITION STOPPED");
+		console.log(new Date() +"RECOGNITION STOPPED");
 		if(this.recognizing){
 			this.recognition.start();
-			console.log("RECOGNITION RESTARTED");
+			console.log(new Date() +"RECOGNITION RESTARTED");
 		}
 	};
 
