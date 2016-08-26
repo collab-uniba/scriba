@@ -3,7 +3,8 @@ import {Platform, ionicBootstrap} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {TabsPage} from './pages/tabs/tabs';
 import {PersonalPage} from './pages/personal-page/personal-page';
-
+import {enableProdMode} from '@angular/core';
+enableProdMode();
 @Component({
   template: '<ion-nav [root]="rootPage"></ion-nav>'
 })

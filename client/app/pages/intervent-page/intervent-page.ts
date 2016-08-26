@@ -147,7 +147,7 @@ export class InterventPage {
         */
 
         this.ts.transcriptionChange$.subscribe(data=>{
-            console.log(new Date() + data);
+            //console.log(new Date() + data);
             this.room.emit('client_message', {text: data});
             //this.text+=data;
             document.getElementById('text').innerHTML += " " + data; //BRUTTISSIMO!!!

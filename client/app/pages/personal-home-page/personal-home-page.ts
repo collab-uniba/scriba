@@ -28,7 +28,6 @@ export class PersonalHomePage {
   }
   
   ionViewWillEnter(){
-    console.log("ionViewWillEnter");
 	  this.updateEvents();
     this.updateUser();
   }

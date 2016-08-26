@@ -11,6 +11,7 @@ export class TranscriptionService{
   public final_transcript = "";
   public recognizing = false;
 	public delay = null;
+	public serviceTO = null;
 	public transcriptionChange$: Observable<string>;
   private transcriptionObserver: Observer<string>;
 
@@ -29,7 +30,7 @@ export class TranscriptionService{
 			alert("Attenzione, Il servizio è disponibile solo su browser Google Chrome");
     }
   }
-
+	
   startDictation() {
     this.final_transcript = "";
     this.recognition.lang = 'it-IT';
@@ -49,12 +50,20 @@ export class TranscriptionService{
   	}, 3000);
 	}
 
+	rebootServiceTimeOut(){		
+		clearTimeout(this.serviceTO);
+		this.serviceTO = setTimeout(() => {
+			this.recognition.stop();
+  	}, 270000);
+	}
+
   resultHandler(event){
 		this.resetTimeOut();
-		
+
 		var interim_transcript = '';
 		for (var i = event.resultIndex; i < event.results.length; ++i) {
 			if (event.results[i].isFinal) {
+				console.log(new Date() + event.results[i][0].transcript + "Confidence: " + event.results[i][0].confidence);
 				this.final_transcript += event.results[i][0].transcript;
 				this.transcriptionObserver.next(event.results[i][0].transcript);
 				//this.evts.publish('newResult', event.results[i][0].transcript);
@@ -67,12 +76,17 @@ export class TranscriptionService{
 	};
 	startHandler () {
 		this.recognizing = true;
+
+		clearTimeout(this.delay);
+		this.rebootServiceTimeOut();
+
 		this.evts.publish('recognizing', this.recognizing);
 		console.log(new Date() + "RECOGNITION STARTED");
 	};
 
 	errorHandler(event) {
 		console.log(new Date() + "RECOGNITION ERROR: " + event.error);
+		this.resetTimeOut;
 	};
 
 	endHandler() {
