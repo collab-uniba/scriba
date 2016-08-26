@@ -16,7 +16,7 @@
 
     <ion-buttons end>
       <button (click)="logout()">
-        <ion-icon name="log-out" > Esci</ion-icon>
+        <ion-icon name="log-out" ><span *ngIf="!mobile"> Esci</span></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
