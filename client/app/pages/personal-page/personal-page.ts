@@ -18,6 +18,7 @@ import {JoinedEventsPage} from '../joined-events-page/joined-events-page';
 })
 
 export class PersonalPage {
+  private mobile=window.localStorage.getItem("platform");
   private user = new User("","","","","");;
   
   private PersonalEventsPage = PersonalEventsPage;

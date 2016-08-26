@@ -19,7 +19,13 @@ export class MyApp {
     }else{
       this.rootPage = TabsPage;
     }
-
+    if(platform.is("android")){
+      window.localStorage.setItem("platform", "android");
+    }
+    if(platform.is("ios")){
+      window.localStorage.setItem("platform", "ios");
+    }
+    
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.

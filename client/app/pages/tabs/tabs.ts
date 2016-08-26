@@ -4,26 +4,25 @@ import {AboutPage} from '../about-page/about-page';
 import {ContactPage} from '../contact-page/contact-page';
 import{SignupPage} from '../modals/signup/signup-modal';
 import{LoginPage} from '../modals/login/login-modal';
-import {Platform, Modal, NavController} from 'ionic-angular';
+import {Modal, NavController} from 'ionic-angular';
 
 @Component({
   templateUrl: 'build/pages/tabs/tabs.html'
 })
 
 export class TabsPage {
+  private mobile=window.localStorage.getItem("platform");
 
   private tab1Root: any;
   private tab2Root: any;
   private tab3Root: any;
 
-  constructor(private nav: NavController, private platform: Platform) {
+  constructor(private nav: NavController) {
     // this tells the tabs component which Pages
     // should be each tab's root Page
     this.tab1Root = HomePage;
     this.tab2Root = AboutPage;
     this.tab3Root = ContactPage;
-    console.log(platform);
-    console.log(platform.is("android"));
   }
 
   login(){

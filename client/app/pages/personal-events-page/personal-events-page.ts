@@ -16,6 +16,7 @@ import {EventPage} from '../event-page/event-page';
   providers: [EventService]
 })
 export class PersonalEventsPage {
+  private mobile=window.localStorage.getItem("platform");
 	
   private events=[];
 

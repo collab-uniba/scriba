@@ -10,7 +10,7 @@
       </button>
 
       <button (click)="userData()" start>
-        <ion-icon name="person"> {{user.name}} {{user.surname}}</ion-icon>
+        <ion-icon name="person"> <span *ngIf="!mobile">{{user.name}} {{user.surname}}</span></ion-icon>
       </button>
     </ion-buttons>
 

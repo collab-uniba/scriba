@@ -6,10 +6,10 @@
 
     <ion-buttons end>
       <button (click)="login()">
-        <ion-icon name="log-in"> Accedi</ion-icon>
+        <ion-icon name="log-in"> <span *ngIf="!mobile">Accedi</span></ion-icon>
       </button>
       <button (click)="signUp()">
-        <ion-icon name="person-add"> Registrati</ion-icon>
+        <ion-icon name="person-add"> <span *ngIf="!mobile">Registrati</span></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>

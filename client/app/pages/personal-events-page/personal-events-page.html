@@ -30,7 +30,7 @@
                 </ion-title>
                 <ion-buttons end>
                     <button (click)="openEvent(event)">
-                        <ion-icon name="navigate"> Apri </ion-icon>
+                        <ion-icon name="navigate"><span *ngIf="!mobile"> Apri </span></ion-icon>
                     </button>
                     <!--
                     <button (click)="openEvent(event)">

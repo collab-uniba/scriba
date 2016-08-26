@@ -9,6 +9,7 @@ declare var io: any;
   templateUrl: 'build/pages/listen-intervent-page/listen-intervent-page.html',
 })
 export class ListenInterventPage {
+    private mobile=window.localStorage.getItem("platform");
     //GETS CURRENT USER
     private localUser=JSON.parse(window.localStorage.getItem("user"));
     private user= new User(this.localUser.name, this.localUser.surname, this.localUser.username, this.localUser.password, this.localUser.email);    

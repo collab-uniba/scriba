@@ -17,6 +17,7 @@ import {InterventPage} from '../intervent-page/intervent-page';
   providers: [EventService]
 })
 export class SessionPage {
+  private mobile=window.localStorage.getItem("platform");
   //GETS CURRENT USER
   private localUser=JSON.parse(window.localStorage.getItem("user"));
   private user= new User(this.localUser.name, this.localUser.surname, this.localUser.username, this.localUser.password, this.localUser.email);    

@@ -15,6 +15,7 @@ declare var io: any;
   providers: [EventService, UserService]
 })
 export class HomePage {
+  private mobile=window.localStorage.getItem("platform");
 	private events = [];
 
   constructor(private evts: Events, private nav: NavController, private es: EventService, private us: UserService) {

@@ -14,6 +14,7 @@ declare var io: any;
   providers: [EventService, UserService]
 })
 export class JoinedEventsPage {
+  private mobile=window.localStorage.getItem("platform");
 
   //GETS CURRENT USER
     private localUser;

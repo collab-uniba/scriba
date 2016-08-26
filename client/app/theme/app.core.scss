@@ -9,3 +9,10 @@
 
 @import "../pages/contact-page/contact-page";
 
+.toolbar-title {
+    display: block;
+    overflow: auto;
+    width: 100%;
+    text-overflow: inherit;
+    white-space: nowrap;
+}
