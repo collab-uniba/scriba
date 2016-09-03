@@ -49,7 +49,12 @@
               <ion-list *ngIf="session.expanded">
                 <ion-item text-wrap *ngFor="let intervent of session.intervents">
                   <p>
+                    <ion-icon *ngIf="!intervent.expanded" name="arrow-dropdown" (click)="intervent.expanded=!intervent.expanded"></ion-icon> 
+                    <ion-icon *ngIf="intervent.expanded" name="arrow-dropup" (click)="intervent.expanded=!intervent.expanded"></ion-icon> 
                     {{intervent.title}} - {{formatDate(intervent.date)}} --- {{intervent.status}}
+                  </p>
+                  <p *ngIf="intervent.expanded">
+                      {{intervent.text}}
                   </p>
                   
                 </ion-item>

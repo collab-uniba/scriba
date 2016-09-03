@@ -16,23 +16,97 @@ declare var io: any;
 })
 export class HomePage {
   private mobile=window.localStorage.getItem("platform");
-	private events = [];
+  private programmedEvents =[];
+  private ongoingEvents =[];
+  private passedEvents =[];
+	//private events = [];
+  private events = "programmed";
 
   constructor(private evts: Events, private nav: NavController, private es: EventService, private us: UserService) {
+    this.updateEvents();
+    //this.timingUpdate();
   }
-  
-  ionViewWillEnter(){
-	  this.updateEvents();
+/*
+  timingUpdate(){
+    setTimeout(()=>{
+      console.log("aggiorno");
+      this.updateEvents();
+      this.timingUpdate();
+    }, 5000);
   }
-
+*/
   updateEvents(){
-    let _events = [];
+    let _progEvents = [];
+    let _ongEvents = [];
+    let _passEvents = [];
 
     this.es.getPublicEvents().map(res=> res.json()).subscribe((data) => {
       data.data.forEach(event =>{
         event.expanded=false;
-        
-        //FINDS AND MERGES SESSIONS
+        if(event.status=="programmed"){
+          //FINDS AND MERGES SESSIONS
+          let _sessions = [];
+          this.es.getSessions(event._id).map(res=>res.json()).subscribe((data)=>{
+            data.data.forEach(session =>{
+              session.expanded=false;
+              //FINDS AND MERGES INTERVENTS
+              let _intervents = [];
+              this.es.getIntervents(session._id).map(res=>res.json()).subscribe((data)=>{
+                data.data.forEach(intervent =>{
+                  _intervents.push(intervent);
+                  session.intervents=_intervents;
+                })
+              });
+              _sessions.push(session);
+              event.sessions=_sessions;
+            })
+          })
+          _progEvents.push(event);
+          this.programmedEvents = _progEvents;
+        }
+        if(event.status=="ongoing"){
+          //FINDS AND MERGES SESSIONS
+          let _sessions = [];
+          this.es.getSessions(event._id).map(res=>res.json()).subscribe((data)=>{
+            data.data.forEach(session =>{
+              session.expanded=false;
+              //FINDS AND MERGES INTERVENTS
+              let _intervents = [];
+              this.es.getIntervents(session._id).map(res=>res.json()).subscribe((data)=>{
+                data.data.forEach(intervent =>{
+                  _intervents.push(intervent);
+                  session.intervents=_intervents;
+                })
+              });
+              _sessions.push(session);
+              event.sessions=_sessions;
+            })
+          })
+          _ongEvents.push(event);
+          this.ongoingEvents = _ongEvents;
+        }
+        if(event.status=="passed"){
+          //FINDS AND MERGES SESSIONS
+          let _sessions = [];
+          this.es.getSessions(event._id).map(res=>res.json()).subscribe((data)=>{
+            data.data.forEach(session =>{
+              session.expanded=false;
+              //FINDS AND MERGES INTERVENTS
+              let _intervents = [];
+              this.es.getIntervents(session._id).map(res=>res.json()).subscribe((data)=>{
+                data.data.forEach(intervent =>{
+                  _intervents.push(intervent);
+                  session.intervents=_intervents;
+                })
+              });
+              _sessions.push(session);
+              event.sessions=_sessions;
+            })
+          })
+          _passEvents.push(event);
+          this.passedEvents = _passEvents;
+        }
+        /*//FINDS AND MERGES SESSIONS
         let _sessions = [];
         this.es.getSessions(event._id).map(res=>res.json()).subscribe(data=>{
           data.data.forEach(session =>{
@@ -51,6 +125,7 @@ export class HomePage {
         })
         _events.push(event);
         this.events = _events;
+        */
       });
     });
   }

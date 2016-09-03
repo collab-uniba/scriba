@@ -17,43 +17,37 @@ export class EventService {
     getPublicEvents(): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         let options = new RequestOptions({ headers: headers });
-        let result = this.http.get(this.ServerWithApiUrl + '/publicevents', options);   
-        return result;
+        return this.http.get(this.ServerWithApiUrl + '/publicevents', options);   
     }
     getSessions(eventID): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         let body = "event=" + eventID;
         let options = new RequestOptions({ headers: headers });
-        let result = this.http.post(this.ServerWithApiUrl + '/sessions',body, options);   
-        return result;
+        return this.http.post(this.ServerWithApiUrl + '/sessions',body, options);   
     }
     getIntervents(sessionID): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         let body = "session=" + sessionID;
         let options = new RequestOptions({ headers: headers });
-        let result = this.http.post(this.ServerWithApiUrl + '/intervents',body, options);   
-        return result;
+        return this.http.post(this.ServerWithApiUrl + '/intervents',body, options);   
     }
     getPersonalEvents(): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        let result = this.http.get(this.ServerWithApiUrl + '/personalevents', options);   
-        return result;
+        return this.http.get(this.ServerWithApiUrl + '/personalevents', options);   
     }
     getObservedEvents(): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        let result = this.http.get(this.ServerWithApiUrl + '/observedevents', options);   
-        return result;
+        return this.http.get(this.ServerWithApiUrl + '/observedevents', options);   
     }
     getJoinedEvents(): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        let result = this.http.get(this.ServerWithApiUrl + '/joinedevents', options);   
-        return result;
+        return this.http.get(this.ServerWithApiUrl + '/joinedevents', options);   
     }
     createEvent(event): Observable<Response>{
         console.log(event);

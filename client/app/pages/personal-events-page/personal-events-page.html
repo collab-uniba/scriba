@@ -16,7 +16,7 @@
           </ion-title>
           <ion-buttons end>
             <button (click)="newEvent()">
-              <ion-icon name="add"> Nuovo Evento</ion-icon>
+              <ion-icon name="add"> <span *ngIf="!mobile">Nuovo Evento</span></ion-icon>
             </button>
           </ion-buttons>
       </ion-navbar>

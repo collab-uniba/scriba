@@ -54,7 +54,7 @@
             </ion-title>
             <ion-buttons end>
                 <button (click)="newSession()">
-                <ion-icon name="add"> Nuova Sessione</ion-icon>
+                <ion-icon name="add"><span *ngIf="!mobile"> Nuova Sessione</span></ion-icon>
                 </button>
             </ion-buttons>    
         </ion-toolbar>

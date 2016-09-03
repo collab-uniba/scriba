@@ -151,7 +151,6 @@ getToken = function (headers) {
 //NEW 
 
 apiRoutes.get('/publicevents', function(req, res) {
-
     Event.find({
       public: true
     }, function(err, eventsArray) {
@@ -162,8 +161,9 @@ apiRoutes.get('/publicevents', function(req, res) {
         } 
         
         res.json({success: true, data: eventsArray});
-    });
+    }).sort({startDate:-1});
 });
+
 apiRoutes.post('/sessions', function(req, res) {
     Session.find({
       event: req.body.event
@@ -175,8 +175,9 @@ apiRoutes.post('/sessions', function(req, res) {
         } 
         
         res.json({success: true, data: sessionsArray});
-    });
+    }).sort({startDate:-1});
 });
+
 apiRoutes.post('/intervents', function(req, res) {
 
     Intervent.find({
@@ -189,7 +190,7 @@ apiRoutes.post('/intervents', function(req, res) {
         } 
         
         res.json({success: true, data: interventsArray});
-    });
+    }).sort({date:-1});
 });
 
 apiRoutes.get('/personalevents', function(req, res) {
@@ -206,7 +207,7 @@ apiRoutes.get('/personalevents', function(req, res) {
             } 
 
             res.json({success: true, data: eventsArray});
-        });
+        }).sort({startDate:-1});
     }else{
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
@@ -233,7 +234,7 @@ apiRoutes.get('/observedevents', function(req, res) {
                   return res.send({success: false, msg: 'Errore nel recupero degli eventi osservati'});
                 }
                 res.json({success: true, data: eventsArray});
-            })
+            }).sort({startDate:-1});
         });
     }else{
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
@@ -261,7 +262,7 @@ apiRoutes.get('/joinedevents', function(req, res) {
                   return res.send({success: false, msg: 'Errore nel recupero degli eventi seguiti'});
                 }
                 res.json({success: true, data: eventsArray});
-            })
+            }).sort({startDate:-1});
         });
     }else{
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
@@ -868,6 +869,7 @@ apiRoutes.post('/saveinterventtext', function(req, res) {
           return res.send({success: false, msg: 'Intervento non trovato'});
         } else {
             intervent.text=req.body.text;
+            intervent.status="passed";
             intervent.save();
             
           res.json({success: true, data: intervent});
