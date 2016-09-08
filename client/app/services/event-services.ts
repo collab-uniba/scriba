@@ -2,10 +2,11 @@ import { Http, Response, Headers,RequestOptions  } from '@angular/http';
 import 'rxjs/add/operator/map'
 import { Observable } from 'rxjs/Observable';
 import {Injectable, Inject} from '@angular/core';
+import {Configuration} from './config';
 
 @Injectable() 
 export class EventService {
-    private ServerWithApiUrl = "http://192.168.0.44:8080/api";//http://localhost:
+    private config = new Configuration();
     static get parameters() {
         return [[Http]];
     }
@@ -17,37 +18,37 @@ export class EventService {
     getPublicEvents(): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(this.ServerWithApiUrl + '/publicevents', options);   
+        return this.http.get(this.config.getApiUrl() + '/publicevents', options);   
     }
     getSessions(eventID): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         let body = "event=" + eventID;
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/sessions',body, options);   
+        return this.http.post(this.config.getApiUrl() + '/sessions',body, options);   
     }
     getIntervents(sessionID): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         let body = "session=" + sessionID;
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/intervents',body, options);   
+        return this.http.post(this.config.getApiUrl() + '/intervents',body, options);   
     }
     getPersonalEvents(): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(this.ServerWithApiUrl + '/personalevents', options);   
+        return this.http.get(this.config.getApiUrl() + '/personalevents', options);   
     }
     getObservedEvents(): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(this.ServerWithApiUrl + '/observedevents', options);   
+        return this.http.get(this.config.getApiUrl() + '/observedevents', options);   
     }
     getJoinedEvents(): Observable<Response> {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(this.ServerWithApiUrl + '/joinedevents', options);   
+        return this.http.get(this.config.getApiUrl() + '/joinedevents', options);   
     }
     createEvent(event): Observable<Response>{
         console.log(event);
@@ -55,7 +56,7 @@ export class EventService {
         let body = "title="+ event.title + "&startDate="+  event.startDate + "&endDate="+  event.endDate + "&location=" + event.location + "&organizer=" + event.organizer + "&status=" + event.status;
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/createevent', body, options);
+        return this.http.post(this.config.getApiUrl() + '/createevent', body, options);
     }
     createSession(session): Observable<Response>{
         console.log(session);
@@ -64,7 +65,7 @@ export class EventService {
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/createsession', body, options);   
+        return this.http.post(this.config.getApiUrl() + '/createsession', body, options);   
     }
      createIntervent(intervent): Observable<Response>{
         console.log(intervent);
@@ -73,7 +74,7 @@ export class EventService {
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/createintervent', body, options);   
+        return this.http.post(this.config.getApiUrl() + '/createintervent', body, options);   
     }
     updateEvent(event): Observable<Response>{
         console.log(event);
@@ -82,7 +83,7 @@ export class EventService {
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/updateevent', body, options);   
+        return this.http.post(this.config.getApiUrl() + '/updateevent', body, options);   
     }
     updateSession(session): Observable<Response>{
         console.log(session);
@@ -91,7 +92,7 @@ export class EventService {
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/updatesession', body, options);   
+        return this.http.post(this.config.getApiUrl() + '/updatesession', body, options);   
     }
     updateIntervent(intervent): Observable<Response>{
         console.log(intervent);
@@ -100,7 +101,7 @@ export class EventService {
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/updateintervent', body, options);   
+        return this.http.post(this.config.getApiUrl() + '/updateintervent', body, options);   
     }
     deleteEvent(eventID): Observable<Response>{
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
@@ -108,7 +109,7 @@ export class EventService {
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/deleteevent', body, options);   
+        return this.http.post(this.config.getApiUrl() + '/deleteevent', body, options);   
     }
     deleteSession(sessionID): Observable<Response>{
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
@@ -116,7 +117,7 @@ export class EventService {
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/deletesession', body, options);   
+        return this.http.post(this.config.getApiUrl() + '/deletesession', body, options);   
     }
     deleteIntervent(interventID): Observable<Response>{
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
@@ -124,7 +125,7 @@ export class EventService {
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/deleteintervent', body, options);   
+        return this.http.post(this.config.getApiUrl() + '/deleteintervent', body, options);   
     }
     openServer(interventID): Observable<Response>{
        let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
@@ -132,7 +133,7 @@ export class EventService {
        console.log(body);
        headers.append("Authorization",window.localStorage.getItem("token"));
        let options = new RequestOptions({ headers: headers });
-       return this.http.post(this.ServerWithApiUrl + '/openserver', body, options);
+       return this.http.post(this.config.getApiUrl() + '/openserver', body, options);
     }
     saveInterventText(intervent): Observable<Response>{
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
@@ -140,7 +141,7 @@ export class EventService {
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/saveinterventtext', body, options);
+        return this.http.post(this.config.getApiUrl() + '/saveinterventtext', body, options);
     }
 
 

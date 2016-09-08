@@ -3,12 +3,13 @@ import 'rxjs/add/operator/map'
 import { Observable } from 'rxjs/Observable';
 import {User} from './models/user-model';
 import {Injectable, Inject} from '@angular/core';
+import {Configuration} from './config';
 
 
 @Injectable() 
 export class UserService {
     public isLoggedin;
-    private ServerWithApiUrl = "http://192.168.0.44:8080/api";
+    private config = new Configuration();
     static get parameters() {
         return [[Http]];
     }
@@ -22,7 +23,7 @@ export class UserService {
         console.log(body);
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         let options = new RequestOptions({ headers: headers });
-        let result = this.http.post(this.ServerWithApiUrl + '/authenticate', body, options);   
+        let result = this.http.post(this.config.getApiUrl() + '/authenticate', body, options);   
         return result;
     }
     
@@ -30,14 +31,14 @@ export class UserService {
         let body = "name="+ user.name + "&surname="+  user.surname + "&username=" + user.username + "&password="+ user.password + "&email=" + user.email;
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/signup', body, options);      
+        return this.http.post(this.config.getApiUrl() + '/signup', body, options);      
     }
 
     getUserData(): Observable<Response>{
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        let result = this.http.get(this.ServerWithApiUrl + '/memberinfo', options);
+        let result = this.http.get(this.config.getApiUrl() + '/memberinfo', options);
         return result;
     }
     updateUser(user: User): Observable<Response>{
@@ -45,7 +46,7 @@ export class UserService {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/updateuser', body, options);      
+        return this.http.post(this.config.getApiUrl() + '/updateuser', body, options);      
     }
 
     changePassword(oldPassword: string, newPassword: string): Observable<Response>{
@@ -53,7 +54,7 @@ export class UserService {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/updatepassword', body, options);
+        return this.http.post(this.config.getApiUrl() + '/updatepassword', body, options);
     }
 
     logout() {
@@ -67,7 +68,7 @@ export class UserService {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/addobservedevent', body, options);
+        return this.http.post(this.config.getApiUrl() + '/addobservedevent', body, options);
     }
     
     removeObservedEvent(eventID): Observable<Response>{
@@ -75,7 +76,7 @@ export class UserService {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/removeobservedevent', body, options);
+        return this.http.post(this.config.getApiUrl() + '/removeobservedevent', body, options);
     }
 
     addJoinedEvent(eventID): Observable<Response>{
@@ -83,7 +84,7 @@ export class UserService {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/addjoinedevent', body, options);
+        return this.http.post(this.config.getApiUrl() + '/addjoinedevent', body, options);
     }
     
     removeJoinedEvent(eventID): Observable<Response>{
@@ -91,6 +92,6 @@ export class UserService {
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.ServerWithApiUrl + '/removejoinedevent', body, options);
+        return this.http.post(this.config.getApiUrl() + '/removejoinedevent', body, options);
     }
 }

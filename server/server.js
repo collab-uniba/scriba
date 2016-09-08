@@ -6,7 +6,8 @@ var mongoose    = require('mongoose');
 var passport	= require('passport');
 var config      = require('./config/database'); // get db config file
 var User        = require('./app/models/user'); // get the mongoose model
-var port        = process.env.PORT || 8080;
+var port        = process.env.PORT || 8080; // SET PORT HERE
+var host        = '192.168.0.44'; //SET HOST HERE '0.0.0.0'
 var jwt         = require('jwt-simple');
 var Event = require('./app/models/event');
 var Session = require('./app/models/session');
@@ -51,8 +52,8 @@ app.use(morgan('dev'));
 app.use(passport.initialize());
 
 // Start the server
-app.listen(port, '192.168.0.44');
-console.log('There will be dragons: http://localhost:' + port);
+app.listen(port, host);
+console.log('There will be dragons: ' + host + ':' + port);
 
 // connect to database
 mongoose.connect(config.database);
