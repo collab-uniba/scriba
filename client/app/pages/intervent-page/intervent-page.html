@@ -73,12 +73,29 @@
         </ion-card-header>
 
         <ion-card-content id="text">
+            {{intervent.text}}
         </ion-card-content>
         <ion-item>
             <button *ngIf="room!=null" (click)="saveAndCloseRoom()" [disabled]="recognizing">
                 Salva e Chiudi
             </button>
         </ion-item>
+    </ion-card>
+    <ion-card >
+        <ion-card-header>
+            <ion-toolbar>
+                <ion-title>
+                    Domande
+                </ion-title>
+            </ion-toolbar>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-list>
+                <ion-item *ngFor="let quest of intervent.questions">
+                    {{quest}}
+                </ion-item>
+            </ion-list>
+        </ion-card-content>
     </ion-card>
     
 </ion-content>

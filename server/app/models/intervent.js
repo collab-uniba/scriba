@@ -35,6 +35,9 @@ var InterventSchema = new Schema({
     status: {
         type: String,
     },
+    questions: {
+        type: [String],
+    },
     port: {
         type: Number,
     }

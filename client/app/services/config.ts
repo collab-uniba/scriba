@@ -8,4 +8,7 @@ export class Configuration {
   getApiUrl(){
       return this.apiHost+":"+this.apiPORT+""+this.apiPath;
   }
+  getRoomUrl(){
+      return this.apiHost;
+  }
 }

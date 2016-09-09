@@ -4,6 +4,7 @@ import {User} from '../../services/models/user-model';
 import {Intervent} from '../../services/models/intervent-model';
 import {EventService} from '../../services/event-services';
 import {TranscriptionService} from '../../services/recognition-service';
+import {Configuration} from '../../services/config';
 
 declare var io: any;
 
@@ -12,6 +13,7 @@ declare var io: any;
   providers:[TranscriptionService, EventService]
 })
 export class InterventPage {
+    private config = new Configuration();
     private mobile=window.localStorage.getItem("platform");
     //GETS CURRENT USER
     private localUser=JSON.parse(window.localStorage.getItem("user"));
@@ -29,7 +31,7 @@ export class InterventPage {
     private room = null; 
     constructor(private es: EventService, private evts: Events, private np: NavParams, private nav: NavController, private ts: TranscriptionService) {
         this.text="";
-        this.intervent.text="";
+        //this.intervent.text="";
         this.newData = {_id: this.intervent._id, title:this.intervent.title, date: this.intervent.date, duration: this.intervent.duration, speaker: this.intervent.speaker};
     }
 
@@ -93,8 +95,17 @@ export class InterventPage {
         this.es.openServer(this.intervent._id).map(res=>res.json()).subscribe(data=>{
             if(data.success){
                 console.log(data.port);
-                this.room = io.connect('http://192.168.0.44:'+data.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
+                this.room = io.connect(this.config.getRoomUrl()+':'+data.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
                 this.room.emit('client_type', {text: "Speaker"});
+                this.room.on('question', (data) => {
+                    console.log("QUESTION: "+data.text);
+                    this.es.addQuestion(this.intervent, data.text).map(res=>res.json()).subscribe(data=>{
+                        console.log(data);
+                        if(data.success){
+                            this.intervent=data.data;
+                        }
+                    });
+                });
             }else{
                 alert(data.msg);
             }
@@ -150,7 +161,6 @@ export class InterventPage {
         this.ts.transcriptionChange$.subscribe(data=>{
             //console.log(new Date() + data);
             this.room.emit('client_message', {text: data});
-            //this.text+=data;
             document.getElementById('text').innerHTML += " " + data; //BRUTTISSIMO!!!
         });
     }

@@ -8,8 +8,25 @@
             <ion-title>
                 {{intervent.title}} - {{formatDate(intervent.date)}} Durata: {{intervent.duration}} minuti
             </ion-title>
+            <ion-buttons end>
+                <button (click)="questioning=!questioning">
+                    <ion-icon name="hand"> </ion-icon>
+                </button>
+            </ion-buttons>
         </ion-navbar>
     </ion-header>
+    <form *ngIf="questioning" (ngSubmit)="sendQuestion()" #questionForm="ngForm">
+        <ion-item >
+            <ion-label inline>La tua Domanda</ion-label>
+            <ion-input type="text" ngControl="questionControl" [(ngModel)]="question" class="form-control" required></ion-input>
+        </ion-item>
+        
+        <ion-item>
+            <button type="submit" item-right>
+                <ion-icon name="send"> </ion-icon>
+            </button>
+        </ion-item>
+    </form>
 
     <ion-card>
         <ion-card-header>

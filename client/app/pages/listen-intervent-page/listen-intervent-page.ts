@@ -2,27 +2,32 @@ import { Component } from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {User} from '../../services/models/user-model';
 import {Intervent} from '../../services/models/intervent-model';
+import {NgForm} from '@angular/forms';
+import {Configuration} from '../../services/config';
 
+    
 declare var io: any;
 
 @Component({
   templateUrl: 'build/pages/listen-intervent-page/listen-intervent-page.html',
 })
 export class ListenInterventPage {
+    private config = new Configuration();
     private mobile=window.localStorage.getItem("platform");
     //GETS CURRENT USER
     private localUser=JSON.parse(window.localStorage.getItem("user"));
     private user= new User(this.localUser.name, this.localUser.surname, this.localUser.username, this.localUser.password, this.localUser.email);    
 
     private intervent = this.np.get('intervent');
-
+    private questioning=false;
+    private question:string;
 
     private text:string;
     private room = null; 
     constructor(private np: NavParams, private nav: NavController) {
         this.text="";
         console.log(this.intervent);
-        this.room = io.connect('http://192.168.0.44:'+this.intervent.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
+        this.room = io.connect(this.config.getRoomUrl()+':'+this.intervent.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
         this.room.emit('client_type', {text: "Listener"});
         
         this.room.on('previous_text', (data) => {
@@ -68,5 +73,12 @@ export class ListenInterventPage {
     close() {
         this.room.disconnect();
         this.nav.pop();
+    }
+
+    sendQuestion(){
+        this.room.emit('client_question', {text: this.question});
+        console.log(this.question);
+        this.question='';
+        this.questioning=!this.questioning;
     }
 }

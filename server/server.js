@@ -7,7 +7,7 @@ var passport	= require('passport');
 var config      = require('./config/database'); // get db config file
 var User        = require('./app/models/user'); // get the mongoose model
 var port        = process.env.PORT || 8080; // SET PORT HERE
-var host        = '192.168.0.44'; //SET HOST HERE '0.0.0.0'
+var host        = '192.168.0.44'; //SET HOST HERE '0.0.0.0'192.168.0.44
 var jwt         = require('jwt-simple');
 var Event = require('./app/models/event');
 var Session = require('./app/models/session');
@@ -764,6 +764,10 @@ apiRoutes.post('/openserver', function(req, res) {
                 _transcription += data.text + " ";
                 socket.broadcast.emit('server_message',{text:data.text});
             });
+            socket.on('client_question',function(data){
+                console.log("QUESTION: "+data.text);
+                allClients[0].emit('question', {text:data.text});
+            });
             socket.on('close_room', function (data) {
                 socket.broadcast.emit('closing_room', {text:"La stanza è stata Chiusa!" });
                 //socket.disconnect();//HA LO STESSO EFFETTO DEL LATO CLIENT
@@ -927,6 +931,28 @@ apiRoutes.post('/removejoinedevent', function(req, res) {
             user.save();
             
           res.json({success: true, data: user});
+        }
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
+  }
+});
+
+apiRoutes.post('/addquestion', function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    Intervent.findOne({
+      _id: req.body.id
+    }, function(err, intervent) {
+        if (err) throw err;
+ 
+        if (!intervent) {
+          return res.send({success: false, msg: 'Intervento non trovato'});
+        } else {
+            intervent.questions.push(req.body.question);
+            intervent.save();
+            
+            res.json({success: true, data: intervent});
         }
     });
   } else {
