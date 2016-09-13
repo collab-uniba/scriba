@@ -22,23 +22,29 @@ export class ListenInterventPage {
     private questioning=false;
     private question:string;
 
-    private text:string;
+    private transcription:string;
     private room = null; 
     constructor(private np: NavParams, private nav: NavController) {
-        this.text="";
+        this.transcription="";
         console.log(this.intervent);
         this.room = io.connect(this.config.getRoomUrl()+':'+this.intervent.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
         this.room.emit('client_type', {text: "Listener"});
-        
+        /*this.room.emit('join_room', {text: "room"});
+        this.room.on('user_connection', (data) => {
+            console.log(data.text);
+        })*/
+
         this.room.on('previous_text', (data) => {
             //this.text += data.text;
-            document.getElementById('text').innerHTML += data.text;
-            console.log(this.text);
+            //document.getElementById('text').innerHTML += data.text;
+            this.transcription += data.text;
+            console.log(this.transcription);
         })
         this.room.on('server_message', (data) => {
             //this.text += data.text;
             console.log(new Date() + " " + data.text);
-            document.getElementById('text').innerHTML += data.text; //BRUTTISSIMO!!!
+            //document.getElementById('text').innerHTML += data.text;
+            this.transcription += " " +data.text;
             
         });
 

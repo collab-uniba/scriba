@@ -26,11 +26,11 @@ export class InterventPage {
     private updating=false;
     private overlapError = {status: false, intervent: null};
 
-    private text;
+    private transcription;
     private recognizing=this.ts.recognizing;
-    private room = null; 
+    private room = null;  
     constructor(private es: EventService, private evts: Events, private np: NavParams, private nav: NavController, private ts: TranscriptionService) {
-        this.text="";
+        this.transcription="";
         //this.intervent.text="";
         this.newData = {_id: this.intervent._id, title:this.intervent.title, date: this.intervent.date, duration: this.intervent.duration, speaker: this.intervent.speaker};
     }
@@ -97,6 +97,7 @@ export class InterventPage {
                 console.log(data.port);
                 this.room = io.connect(this.config.getRoomUrl()+':'+data.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
                 this.room.emit('client_type', {text: "Speaker"});
+                //this.room.emit('join_room', {text: "room"});
                 this.room.on('question', (data) => {
                     console.log("QUESTION: "+data.text);
                     this.es.addQuestion(this.intervent, data.text).map(res=>res.json()).subscribe(data=>{
@@ -157,12 +158,13 @@ export class InterventPage {
             this.updateText();
         });
         */
-
+        let _transcription=this.transcription;
         this.ts.transcriptionChange$.subscribe(data=>{
             //console.log(new Date() + data);
             this.room.emit('client_message', {text: data});
             document.getElementById('text').innerHTML += " " + data; //BRUTTISSIMO!!!
         });
+        
     }
 
     stopRecognizing(){
