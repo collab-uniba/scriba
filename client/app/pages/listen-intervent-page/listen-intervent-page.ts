@@ -28,11 +28,14 @@ export class ListenInterventPage {
         this.transcription="";
         console.log(this.intervent);
         this.room = io.connect(this.config.getRoomUrl()+':'+this.intervent.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
-        this.room.emit('client_type', {text: "Listener"});
-        /*this.room.emit('join_room', {text: "room"});
+        //this.room.emit('client_type', {text: "Listener"});
+        this.room.emit('join_room', {type: "Listener", room: this.intervent._id});
+
+        /*
         this.room.on('user_connection', (data) => {
             console.log(data.text);
-        })*/
+        })
+        */
 
         this.room.on('previous_text', (data) => {
             //this.text += data.text;
@@ -40,7 +43,8 @@ export class ListenInterventPage {
             this.transcription += data.text;
             console.log(this.transcription);
         })
-        this.room.on('server_message', (data) => {
+        
+        this.room.on('new_transcription', (data) => {
             //this.text += data.text;
             console.log(new Date() + " " + data.text);
             //document.getElementById('text').innerHTML += data.text;
@@ -48,7 +52,8 @@ export class ListenInterventPage {
             
         });
 
-        this.room.on('closing_room', (data) => {
+        this.room.on('disconnection', (data) => {
+            this.room.emit('leave_room', {room: this.intervent._id});
             this.room=null;
             alert(data.text);
         });
@@ -77,7 +82,11 @@ export class ListenInterventPage {
     }
 
     close() {
-        this.room.disconnect();
+        if(this.room!=null){
+            this.room.emit('leave_room', {room: this.intervent._id});
+            this.room.disconnect();
+            this.room=null;
+        }
         this.nav.pop();
     }
 

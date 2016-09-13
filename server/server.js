@@ -13,6 +13,78 @@ var Event = require('./app/models/event');
 var Session = require('./app/models/session');
 var Intervent = require('./app/models/intervent');
 var bcryptjs = require('bcryptjs');
+//DEPENDENCIES
+var server = require("http").Server(express);
+var io = require("socket.io")(server); 
+//TEST PORTS
+server.listen(8081);//0
+
+//LISTENER
+var allClients=[];
+var openRooms = {};
+io.on('connection', function (socket) {
+    console.log("User Connected");
+    allClients.push(socket);
+    
+    socket.on('client_type',function(data){
+        var msg="User Type: ";
+        msg += data.text;
+        console.log(msg);
+    });
+    //FOR SPEAKERS
+    socket.on('open_room', function(data){
+        socket.join(data.room);
+        openRooms[data.room]="";
+        console.log(openRooms);
+        console.log("Open Room: " + data.room);
+    });
+    socket.on('close_room', function(data){
+        socket.broadcast.to(data.room).emit('disconnection', {text: "La stanza è stata chiusa!"})
+        socket.leave(data.room);
+        //RIAGGIORNA LO STATO DI INTERVENTO; SESSIONE ED EVENTO
+        Intervent.findOne({ _id: data.room }, function (err, intervent){
+            if(err) throw err;
+
+            intervent.status= 'programmed';
+            intervent.save();
+
+            Session.findOne({ _id: intervent.session}, function (err, session){
+                if(err) throw err;
+
+                session.status= 'programmed';
+                session.save();
+
+                Event.findOne({ _id: session.event }, function (err, event){
+                    if(err) throw err;
+
+                    event.status= 'programmed';
+                    event.save();
+                });
+            });
+        });
+        console.log("Close Room: " + data.room);
+    });
+    socket.on('speaker_message',function(data){
+                console.log(new Date() + " " + data.text);
+                openRooms[data.room] += data.text + " ";
+                console.log(openRooms);
+                //_transcription += data.text + " ";
+                socket.broadcast.to(data.room).emit('new_transcription', {text:data.text});
+            });
+    //FOR LISTENERS
+    socket.on('join_room', function(data){
+        socket.join(data.room);
+        if(data.type=='Listener'){
+            console.log(openRooms[data.room]);
+            socket.emit('previous_text', {text: openRooms[data.room]});
+        }
+        console.log("User Joined Room: " + data.room);
+    });
+    socket.on('leave_room', function(data){
+        socket.leave(data.room);
+        console.log("User Leaved Room: " + data.room);
+    });
+});
 
 //MONGO CLIENT
 /*
@@ -714,17 +786,12 @@ apiRoutes.post('/updatepassword', passport.authenticate('jwt', { session: false}
 apiRoutes.post('/openserver', function(req, res) {
     var token = getToken(req.headers);
     if (token) {
-        //DEPENDENCIES
-        var server = require("http").Server(express);
-        var io = require("socket.io")(server); 
-        //TEST PORTS
-        server.listen(0);
         //SAVE PORT IN INTERVENT
         Intervent.findOne({ _id: req.body.id }, function (err, intervent){
             if(err) throw err;
             
             intervent.status= 'ongoing';
-            intervent.port= server.address().port;
+            //intervent.port= server.address().port;
             intervent.save();
             
             Session.findOne({ _id: intervent.session}, function (err, session){
@@ -741,14 +808,7 @@ apiRoutes.post('/openserver', function(req, res) {
                 });
             });
         });
-        
-        //LISTENER
-        var allClients=[];
-        var _transcription="";
-        io.on('connection', function (socket) {
-            console.log("User Connected");
-            allClients.push(socket);
-            
+        /*
             socket.on('client_type',function(data){
                 var msg="User Type: ";
                 msg += data.text;
@@ -758,49 +818,12 @@ apiRoutes.post('/openserver', function(req, res) {
                 console.log(msg);
             });
             
-            socket.on('client_message',function(data){
-                console.log(new Date() + " " + data.text);
-                _transcription += data.text + " ";
-                socket.broadcast.emit('server_message',{text:data.text});
-            });
+            
             socket.on('client_question',function(data){
                 console.log("QUESTION: "+data.text);
                 allClients[0].emit('question', {text:data.text});
             });
-            socket.on('close_room', function (data) {
-                socket.broadcast.emit('closing_room', {text:"La stanza è stata Chiusa!" });
-                //socket.disconnect();//HA LO STESSO EFFETTO DEL LATO CLIENT
-                allClients.forEach(function(s) {
-                    s.disconnect();
-                });
-                
-                console.log("Room Disconnected");
-                
-                //RIAGGIORNA LO STATO DI INTERVENTO; SESSIONE ED EVENTO
-                Intervent.findOne({ _id: req.body.id }, function (err, intervent){
-                    if(err) throw err;
-
-                    intervent.status= 'programmed';
-                    intervent.save();
-
-                    Session.findOne({ _id: intervent.session}, function (err, session){
-                        if(err) throw err;
-
-                        session.status= 'programmed';
-                        session.save();
-
-                        Event.findOne({ _id: session.event }, function (err, event){
-                            if(err) throw err;
-
-                            event.status= 'programmed';
-                            event.save();
-
-                        });
-                    });
-                });
-                io.close();
-            });
-        });
+            */
         
         res.send({success: true, port: server.address().port});
     } else {

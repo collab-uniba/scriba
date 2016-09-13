@@ -97,9 +97,11 @@ export class InterventPage {
                 console.log(data.port);
                 this.room = io.connect(this.config.getRoomUrl()+':'+data.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
                 this.room.emit('client_type', {text: "Speaker"});
-                //this.room.emit('join_room', {text: "room"});
+
+                this.room.emit('open_room', {room: this.intervent._id});
+
                 this.room.on('question', (data) => {
-                    console.log("QUESTION: "+data.text);
+                    console.log("QUESTION: " + data.text);
                     this.es.addQuestion(this.intervent, data.text).map(res=>res.json()).subscribe(data=>{
                         console.log(data);
                         if(data.success){
@@ -125,7 +127,7 @@ export class InterventPage {
             {
                 text: 'Chiudi senza Salvare',
                 handler: () => {
-                    this.room.emit('close_room');//CHIUDE IL SERVER
+                    this.room.emit('close_room', {room: this.intervent._id});//CHIUDE IL SERVER
                     this.room.disconnect();//DISCONNETTE IL SINGOLO CLIENT
                     this.room=null;
                 }
@@ -141,7 +143,7 @@ export class InterventPage {
         this.intervent.text=document.getElementById('text').innerHTML;
         this.es.saveInterventText(this.intervent).map(res=>res.json()).subscribe(data=>{
             if (data.success) {
-                this.room.emit('close_room');//CHIUDE IL SERVER
+                this.room.emit('close_room', {room: this.intervent._id});//CHIUDE IL SERVER
                 this.room.disconnect();//DISCONNETTE IL SINGOLO CLIENT
                 this.room=null;
             }else{
@@ -161,7 +163,7 @@ export class InterventPage {
         let _transcription=this.transcription;
         this.ts.transcriptionChange$.subscribe(data=>{
             //console.log(new Date() + data);
-            this.room.emit('client_message', {text: data});
+            this.room.emit('speaker_message', {text: data, room: this.intervent._id});
             document.getElementById('text').innerHTML += " " + data; //BRUTTISSIMO!!!
         });
         
