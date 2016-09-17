@@ -7,7 +7,7 @@ var passport	= require('passport');
 var config      = require('./config/database'); // get db config file
 var User        = require('./app/models/user'); // get the mongoose model
 var port        = process.env.PORT || 8080; // SET PORT HERE
-var host        = '192.168.0.32'; //SET HOST HERE '0.0.0.0'192.168.0.44
+var host        = '192.168.0.101'; //SET HOST HERE '0.0.0.0'192.168.0.44
 var jwt         = require('jwt-simple');
 var Event = require('./app/models/event');
 var Session = require('./app/models/session');
@@ -22,6 +22,7 @@ server.listen(8081);//0
 //LISTENER
 var allClients=[];
 var openRooms = {};
+var unsavedQuestions = {};
 io.on('connection', function (socket) {
     console.log("User Connected");
     allClients.push(socket);
@@ -35,6 +36,7 @@ io.on('connection', function (socket) {
     socket.on('open_room', function(data){
         socket.join(data.room);
         openRooms[data.room]="";
+        unsavedQuestions[data.room]=[];
         console.log(openRooms);
         console.log("Open Room: " + data.room);
     });
@@ -76,13 +78,18 @@ io.on('connection', function (socket) {
         socket.join(data.room);
         if(data.type=='Listener'){
             console.log(openRooms[data.room]);
-            socket.emit('previous_text', {text: openRooms[data.room]});
+            socket.emit('previous_text', {text: openRooms[data.room], questions: unsavedQuestions[data.room]});
         }
         console.log("User Joined Room: " + data.room);
     });
     socket.on('leave_room', function(data){
         socket.leave(data.room);
         console.log("User Leaved Room: " + data.room);
+    });
+    socket.on('client_question',function(data){
+        console.log("QUESTION: "+data.text);
+        unsavedQuestions[data.room].push({text:data.text, user: data.user});
+        socket.broadcast.to(data.room).emit('question', {text:data.text, user: data.user});
     });
 });
 
@@ -971,7 +978,7 @@ apiRoutes.post('/addquestion', function(req, res) {
         if (!intervent) {
           return res.send({success: false, msg: 'Intervento non trovato'});
         } else {
-            intervent.questions.push(req.body.question);
+            intervent.questions.push({text:req.body.question, user: req.body.user});
             intervent.save();
             
             res.json({success: true, data: intervent});

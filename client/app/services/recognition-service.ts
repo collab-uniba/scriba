@@ -35,7 +35,7 @@ export class TranscriptionService{
     this.final_transcript = "";
     this.recognition.lang = 'it-IT';
     this.recognition.start();
-		this.recognizing=true;
+		//this.recognizing=true;
   }
 	stopDictation(){
 		this.recognition.stop();
@@ -91,6 +91,7 @@ export class TranscriptionService{
 
 	endHandler() {
 		console.log(new Date() +"RECOGNITION STOPPED");
+		this.recognizing=false;
 		if(this.recognizing){
 			this.recognition.start();
 			console.log(new Date() +"RECOGNITION RESTARTED");

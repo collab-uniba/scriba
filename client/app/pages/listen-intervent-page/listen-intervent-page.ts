@@ -31,6 +31,10 @@ export class ListenInterventPage {
         //this.room.emit('client_type', {text: "Listener"});
         this.room.emit('join_room', {type: "Listener", room: this.intervent._id});
 
+        this.room.on('question', (data) => {
+            console.log("QUESTION: " + data.text);
+            this.intervent.questions.push(data);
+        });
         /*
         this.room.on('user_connection', (data) => {
             console.log(data.text);
@@ -41,6 +45,11 @@ export class ListenInterventPage {
             //this.text += data.text;
             //document.getElementById('text').innerHTML += data.text;
             this.transcription += data.text;
+            console.log(data.questions);
+            if(data.questions.length!=0){
+                this.intervent.questions=this.intervent.questions.concat(data.questions);
+                console.log(this.intervent.questions);
+            }
             console.log(this.transcription);
         })
         
@@ -91,7 +100,8 @@ export class ListenInterventPage {
     }
 
     sendQuestion(){
-        this.room.emit('client_question', {text: this.question});
+        this.room.emit('client_question', {text: this.question, user: this.user.username, room: this.intervent._id});
+        this.intervent.questions.push({text: this.question, user: this.user.username});
         console.log(this.question);
         this.question='';
         this.questioning=!this.questioning;

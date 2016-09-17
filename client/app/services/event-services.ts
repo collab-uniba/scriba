@@ -145,7 +145,7 @@ export class EventService {
     }
     addQuestion(intervent, question): Observable<Response>{
         let headers = new Headers({ 'Content-Type': ['application/x-www-form-urlencoded'] });//application/json
-        let body = "id=" + intervent._id + "&question="+ question;
+        let body = "id=" + intervent._id + "&question="+ question.text + "&user="+ question.user;
         console.log(body);
         headers.append("Authorization",window.localStorage.getItem("token"));
         let options = new RequestOptions({ headers: headers });

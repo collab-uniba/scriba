@@ -25,7 +25,7 @@ export class InterventPage {
     private newData;
     private updating=false;
     private overlapError = {status: false, intervent: null};
-
+    private newQuestions=[];
     private transcription;
     private recognizing=this.ts.recognizing;
     private room = null;  
@@ -102,12 +102,15 @@ export class InterventPage {
 
                 this.room.on('question', (data) => {
                     console.log("QUESTION: " + data.text);
-                    this.es.addQuestion(this.intervent, data.text).map(res=>res.json()).subscribe(data=>{
+                    this.intervent.questions.push(data);
+                    this.newQuestions.push(data);
+                    /*this.es.addQuestion(this.intervent, data.text).map(res=>res.json()).subscribe(data=>{
                         console.log(data);
                         if(data.success){
                             this.intervent=data.data;
                         }
                     });
+                    */
                 });
             }else{
                 alert(data.msg);
@@ -143,6 +146,14 @@ export class InterventPage {
         this.intervent.text=document.getElementById('text').innerHTML;
         this.es.saveInterventText(this.intervent).map(res=>res.json()).subscribe(data=>{
             if (data.success) {
+                this.newQuestions.forEach(quest => {
+                    this.es.addQuestion(this.intervent, quest).map(res=>res.json()).subscribe(data=>{
+                        console.log(data);
+                        if(data.success){
+                            this.intervent=data.data;
+                        }
+                    });
+                });
                 this.room.emit('close_room', {room: this.intervent._id});//CHIUDE IL SERVER
                 this.room.disconnect();//DISCONNETTE IL SINGOLO CLIENT
                 this.room=null;

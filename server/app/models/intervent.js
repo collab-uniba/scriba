@@ -36,7 +36,7 @@ var InterventSchema = new Schema({
         type: String,
     },
     questions: {
-        type: [String],
+        type: Array,
     },
     port: {
         type: Number,
