@@ -31,7 +31,18 @@
                     </button>
                 </ion-buttons>
             </ion-toolbar>
-            <ion-item text-wrap>Dal: {{formatDate(event.startDate)}} - Al: {{formatDate(event.endDate)}}</ion-item>
+            <ion-item>
+                <ion-row>
+                    <ion-col>
+                        Dal: {{formatDate(event.startDate)}}
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        Al: {{formatDate(event.endDate)}}
+                    </ion-col>
+                </ion-row>
+            </ion-item>
         </ion-card-header>
         <ion-card-content>
           <p>

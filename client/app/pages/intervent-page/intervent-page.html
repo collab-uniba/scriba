@@ -6,7 +6,7 @@
     <ion-header padding>
         <ion-navbar [hideBackButton]="recognizing || room!=null">
             <ion-title>
-                {{intervent.title}} - {{formatDate(intervent.date)}} Durata: {{intervent.duration}} minuti
+                {{intervent.title}}
             </ion-title>
             <ion-buttons *ngIf="!updating && intervent.status=='programmed'" end>
                 <button (click)="updating=!updating">
@@ -15,6 +15,18 @@
             </ion-buttons>
         </ion-navbar>
     </ion-header>
+    <ion-item>
+        <ion-row>
+            <ion-col>
+                Il: {{formatDate(intervent.date)}}
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                Durata: {{intervent.duration}} minuti
+            </ion-col>
+        </ion-row>
+    </ion-item>
     <form *ngIf="updating" (ngSubmit)="submit()" #interventForm="ngForm">
         <ion-item >
             <ion-label inline>Titolo</ion-label>

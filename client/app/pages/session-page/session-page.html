@@ -6,7 +6,7 @@
     <ion-header padding>
         <ion-navbar>
             <ion-title>
-                {{session.title}} - Dal: {{formatDate(session.startDate)}} - Al: {{formatDate(session.endDate)}}
+                {{session.title}}
             </ion-title>
             <ion-buttons *ngIf="!updating && session.status=='programmed'" end>
                 <button (click)="updating=!updating">
@@ -15,7 +15,18 @@
             </ion-buttons>
         </ion-navbar>
     </ion-header>
-
+    <ion-item>
+        <ion-row>
+            <ion-col>
+                Dal: {{formatDate(session.startDate)}}
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                Al: {{formatDate(session.endDate)}}
+            </ion-col>
+        </ion-row>
+    </ion-item>
     <form *ngIf="updating" (ngSubmit)="submit()" #sessionForm="ngForm">
         <ion-item >
             <ion-label inline>Titolo</ion-label>

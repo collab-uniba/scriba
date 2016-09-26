@@ -1,6 +1,6 @@
 export class Configuration {
   constructor(
-    public apiHost = 'http://192.168.0.101',
+    public apiHost = 'http://localhost',
     public apiPORT = 8080,
     public apiPath = '/api'
   ) {  }//http://scriba-deploy-pepponefx.c9users.io:8080/api
