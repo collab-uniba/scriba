@@ -35,6 +35,15 @@ export class InterventPage {
         this.newData = {_id: this.intervent._id, title:this.intervent.title, date: this.intervent.date, duration: this.intervent.duration, speaker: this.intervent.speaker};
     }
 
+    ionViewWillEnter(){
+        if(this.intervent.status=="ongoing"){
+            this.room = io.connect(this.config.getRoomUrl()+':'+this.config.socketPORT);
+        }
+    }
+    ionViewWillLeave(){
+        this.stopRecognizing();
+    }
+
     end(intervent): Date{
         let end = new Date(intervent.date);
         let hours = intervent.duration/60;
@@ -94,8 +103,8 @@ export class InterventPage {
     openRoom(){
         this.es.openServer(this.intervent._id).map(res=>res.json()).subscribe(data=>{
             if(data.success){
-                console.log(data.port);
-                this.room = io.connect(this.config.getRoomUrl()+':'+data.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
+                console.log(this.config.socketPORT);
+                this.room = io.connect(this.config.getRoomUrl()+':'+this.config.socketPORT);//"http://collab.di.uniba.it/~iaffaldano:48922"
                 this.room.emit('client_type', {text: "Speaker"});
 
                 this.room.emit('open_room', {room: this.intervent._id});
@@ -204,6 +213,9 @@ export class InterventPage {
         formattedDate += "." + minutes;
         }
         return formattedDate;
+    }
+    trunc(date: String): string{
+        return date.substring(0,15);
     }
     close() {
         this.nav.pop();

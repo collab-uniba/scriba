@@ -21,13 +21,23 @@ export class ObservedEventsPage {
     private user; 
 
 	private events = [];
-
+private tu;
   constructor(private evts: Events, private nav: NavController, private es: EventService, private us: UserService) {
     this.updateUser();
     console.log(this.localUser);
     console.log(this.user.observedEvents);
+    this.timingUpdate();
   }
-  
+ionViewWillLeave(){
+    clearTimeout(this.tu);
+  }
+  timingUpdate(){
+    this.tu=setTimeout(()=>{
+      console.log("aggiorno");
+      this.updateEvents();
+      this.timingUpdate();
+    }, 15000);
+  }
   ionViewWillEnter(){
 	  this.updateEvents();
       this.updateUser();

@@ -17,24 +17,28 @@ declare var io: any;
 export class HomePage {
   private mobile=window.localStorage.getItem("platform");
   private programmedEvents =[];
-  private ongoingEvents =[];
-  private passedEvents =[];
+  private ongoingEvents = [];
+  private passedEvents = [];
 	//private events = [];
   private events = "programmed";
-
+  private tu;
   constructor(private evts: Events, private nav: NavController, private es: EventService, private us: UserService) {
     this.updateEvents();
-    //this.timingUpdate();
+    console.log(this.programmedEvents.length);
+    this.timingUpdate();
   }
-/*
+
+  ionViewWillLeave(){
+    clearTimeout(this.tu);
+  }
   timingUpdate(){
-    setTimeout(()=>{
+    this.tu = setTimeout(()=>{
       console.log("aggiorno");
       this.updateEvents();
       this.timingUpdate();
-    }, 5000);
+    }, 15000);
   }
-*/
+
   updateEvents(){
     let _progEvents = [];
     let _ongEvents = [];
@@ -62,7 +66,7 @@ export class HomePage {
             })
           })
           _progEvents.push(event);
-          this.programmedEvents = _progEvents;
+          
         }
         if(event.status=="ongoing"){
           //FINDS AND MERGES SESSIONS
@@ -83,7 +87,7 @@ export class HomePage {
             })
           })
           _ongEvents.push(event);
-          this.ongoingEvents = _ongEvents;
+          
         }
         if(event.status=="passed"){
           //FINDS AND MERGES SESSIONS
@@ -104,8 +108,11 @@ export class HomePage {
             })
           })
           _passEvents.push(event);
-          this.passedEvents = _passEvents;
+          
         }
+        this.programmedEvents = _progEvents;
+        this.ongoingEvents = _ongEvents;
+        this.passedEvents = _passEvents;
         /*//FINDS AND MERGES SESSIONS
         let _sessions = [];
         this.es.getSessions(event._id).map(res=>res.json()).subscribe(data=>{

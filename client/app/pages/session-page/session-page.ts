@@ -191,6 +191,9 @@ export class SessionPage {
     }
     return formattedDate;
   }
+  trunc(date: String): string{
+      return date.substring(0,15);
+  }
   close() {
       this.nav.pop();
   }

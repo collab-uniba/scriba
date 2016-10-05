@@ -6,8 +6,8 @@ var mongoose    = require('mongoose');
 var passport	= require('passport');
 var config      = require('./config/database'); // get db config file
 var User        = require('./app/models/user'); // get the mongoose model
-var port        = process.env.PORT || 8080; // SET PORT HERE
-var host        = 'localhost'; //SET HOST HERE '0.0.0.0'192.168.0.44
+var port        = process.env.PORT || 9091; // SET PORT HERE 8080
+var host        = config.host;
 var jwt         = require('jwt-simple');
 var Event = require('./app/models/event');
 var Session = require('./app/models/session');
@@ -17,7 +17,7 @@ var bcryptjs = require('bcryptjs');
 var server = require("http").Server(express);
 var io = require("socket.io")(server); 
 //TEST PORTS
-server.listen(8081);//0
+server.listen(9092);//0
 
 //LISTENER
 var allClients=[];
@@ -76,10 +76,8 @@ io.on('connection', function (socket) {
     //FOR LISTENERS
     socket.on('join_room', function(data){
         socket.join(data.room);
-        if(data.type=='Listener'){
-            console.log(openRooms[data.room]);
-            socket.emit('previous_text', {text: openRooms[data.room], questions: unsavedQuestions[data.room]});
-        }
+        console.log(openRooms[data.room]);
+        socket.emit('previous_text', {text: openRooms[data.room], questions: unsavedQuestions[data.room]});
         console.log("User Joined Room: " + data.room);
     });
     socket.on('leave_room', function(data){

@@ -13,8 +13,8 @@
         <ion-label inline>Inizio</ion-label>
         <ion-input type="datetime-local" ngControl="timeControl" [(ngModel)]="intervent.date" #date="ngForm" required></ion-input>
     </ion-item>
-    <div *ngIf="date.value<=now && date.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
-    <div *ngIf="(date.value<session.startDate || date.value>session.endDate) && date.touched">La data di Inizio deve cadere durante la Sessione!</div>
+    <div *ngIf="date.value<now && date.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
+    <div *ngIf="(date.value<trunc(session.startDate) || date.value>trunc(session.endDate)) && date.touched">La data di Inizio deve cadere durante la Sessione!</div>
 
     <ion-item >
         <ion-label inline>Durata (minuti)</ion-label>
@@ -31,8 +31,8 @@
 
     <ion-item>
         <button type="submit" class="btn btn-standard" [disabled]="!interventForm.valid ||
-                                                                    (date.value<=now && date.touched) ||
-                                                                    ((date.value<session.startDate || date.value>session.endDate) && date.touched) ||
+                                                                    (date.value<now && date.touched) ||
+                                                                    ((date.value<trunc(session.startDate) || date.value>trunc(session.endDate)) && date.touched) ||
                                                                     (((date.value+duration.value)>session.endDate) && duration.touched)">Salva</button>
         <button type="reset" (click)="close()">Annulla</button>
     </ion-item>

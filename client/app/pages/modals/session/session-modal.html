@@ -13,23 +13,23 @@
         <ion-label inline>Data Inizio</ion-label>
         <ion-input type="datetime-local" ngControl="startDateControl" #sd="ngForm" [(ngModel)]="session.startDate" required></ion-input>
     </ion-item>
-    <div *ngIf="sd.value<=now && sd.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
-    <div *ngIf="(sd.value<event.startDate || sd.value>event.endDate) && sd.touched">La data di Inizio deve cadere durante l'Evento!</div>
+    <div *ngIf="sd.value<now && sd.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
+    <div *ngIf="(sd.value<trunc(event.startDate) || sd.value>trunc(event.endDate)) && sd.touched">La data di Inizio deve cadere durante l'Evento!</div>
     
     <ion-item>
         <ion-label inline>Data Termine</ion-label>
         <ion-input type="datetime-local" ngControl="endDateControl" #ed="ngForm" [(ngModel)]="session.endDate" required></ion-input>
     </ion-item>
-    <div *ngIf="sd.value>=ed.value && ed.touched">La Data di Termine deve essere POSTERIORE a quella di Inizio!</div>
-    <div *ngIf="(ed.value<event.startDate || ed.value>event.endDate) && ed.touched">La data di Termine deve cadere durante l'Evento!</div>
+    <div *ngIf="sd.value>ed.value && ed.touched">La Data di Termine deve essere POSTERIORE a quella di Inizio!</div>
+    <div *ngIf="(ed.value<trunc(event.startDate) || ed.value>trunc(event.endDate)) && ed.touched">La data di Termine deve cadere durante l'Evento!</div>
 
     <!--<div *ngIf="overlapError.status">La Sessione si sovrappone con "{{overlapError.session.title}}" programmata dal {{overlapError.session.startDate}} al {{overlapError.session.endDate}}</div>-->
     <ion-item>
         <button type="submit" class="btn btn-standard" [disabled]="!sessionForm.valid ||
-                                                                        (sd.value<=now && sd.touched) ||
-                                                                        (sd.value>=ed.value && ed.touched) ||
-                                                                        ((sd.value<event.startDate || sd.value>event.endDate) && sd.touched) ||
-                                                                        ((ed.value<event.startDate || ed.value>event.endDate) && ed.touched)">Salva</button>
+                                                                        (sd.value<now && sd.touched) ||
+                                                                        (sd.value>ed.value && ed.touched) ||
+                                                                        ((sd.value<trunc(event.startDate) || sd.value>trunc(event.endDate)) && sd.touched) ||
+                                                                        ((ed.value<trunc(event.startDate) || ed.value>trunc(event.endDate)) && ed.touched)">Salva</button>
         <button type="reset" (click)="close()">Annulla</button>
     </ion-item>
 </form>

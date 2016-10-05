@@ -27,7 +27,7 @@ export class ListenInterventPage {
     constructor(private np: NavParams, private nav: NavController) {
         this.transcription="";
         console.log(this.intervent);
-        this.room = io.connect(this.config.getRoomUrl()+':'+this.intervent.port);//"http://collab.di.uniba.it/~iaffaldano:48922"
+        this.room = io.connect(this.config.getRoomUrl()+':'+this.config.socketPORT);//"http://collab.di.uniba.it/~iaffaldano:48922"
         //this.room.emit('client_type', {text: "Listener"});
         this.room.emit('join_room', {type: "Listener", room: this.intervent._id});
 

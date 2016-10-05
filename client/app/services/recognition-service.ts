@@ -91,7 +91,6 @@ export class TranscriptionService{
 
 	endHandler() {
 		console.log(new Date() +"RECOGNITION STOPPED");
-		this.recognizing=false;
 		if(this.recognizing){
 			this.recognition.start();
 			console.log(new Date() +"RECOGNITION RESTARTED");

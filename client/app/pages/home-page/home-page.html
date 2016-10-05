@@ -17,6 +17,9 @@
 <ion-content padding>
     <div [ngSwitch]="events">
         <ion-list *ngSwitchCase="'programmed'">
+            <ion-card *ngIf="programmedEvents.length==0">
+                Nessun Evento disponibile!
+            </ion-card>
             <ion-card *ngFor="let event of programmedEvents">
                 <ion-card-header>
                     <ion-toolbar>
@@ -63,6 +66,9 @@
         </ion-list>
 
         <ion-list *ngSwitchCase="'ongoing'">
+            <ion-card *ngIf="ongoingEvents.length==0">
+                Nessun Evento disponibile!
+            </ion-card>
             <ion-card *ngFor="let event of ongoingEvents">
                 <ion-card-header>
                     <ion-toolbar>
@@ -109,6 +115,9 @@
         </ion-list>
 
         <ion-list *ngSwitchCase="'passed'">
+            <ion-card *ngIf="passedEvents.length==0">
+                Nessun Evento disponibile!
+            </ion-card>
             <ion-card *ngFor="let event of passedEvents">
                 <ion-card-header>
                     <ion-toolbar>

@@ -40,13 +40,13 @@
             <ion-label inline>Data Inizio</ion-label>
             <ion-input type="datetime-local" ngControl="startDateControl" #sd="ngForm" [(ngModel)]="newData.startDate"></ion-input>
         </ion-item>
-        <div *ngIf="sd.value<=now && sd.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
+        <div *ngIf="sd.value<now && sd.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
         
         <ion-item>
             <ion-label inline>Data Termine</ion-label>
             <ion-input type="datetime-local" ngControl="endDateControl" #ed="ngForm" [(ngModel)]="newData.endDate"></ion-input>
         </ion-item>
-        <div *ngIf="sd.value>=ed.value && ed.touched">La Data di Termine deve essere POSTERIORE a quella di Inizio!</div>
+        <div *ngIf="sd.value>ed.value && ed.touched">La Data di Termine deve essere POSTERIORE a quella di Inizio!</div>
 
         <ion-item >
             <ion-label inline>Luogo</ion-label>
@@ -55,8 +55,8 @@
         
         <ion-item>
             <button type="submit" class="btn btn-standard" [disabled]="!eventForm.valid ||
-                                                                        (sd.value<=now && sd.touched) ||
-                                                                        (sd.value>=ed.value && ed.touched)">Salva</button>
+                                                                        (sd.value<now && sd.touched) ||
+                                                                        (sd.value>ed.value && ed.touched)">Salva</button>
             <button type="reset" (click)="reset()">Annulla</button>
         </ion-item>
     </form>
@@ -71,6 +71,9 @@
                 </button>
             </ion-buttons>    
         </ion-toolbar>
+        <ion-card *ngIf="sessions.length==0">
+            Nessuna Sessione disponibile. Crea una sessione!
+        </ion-card>
         <ion-card *ngFor="let session of sessions">
             <ion-card-header>
                 <ion-toolbar>

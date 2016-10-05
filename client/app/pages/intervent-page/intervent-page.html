@@ -38,7 +38,7 @@
             <ion-input type="datetime-local" ngControl="timeControl" [(ngModel)]="newData.date" #date="ngForm" ></ion-input>
         </ion-item>
         <div *ngIf="date.value<=now && date.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
-        <div *ngIf="(date.value<session.startDate || date.value>session.endDate) && date.touched">La data di Inizio deve cadere durante la Sessione!</div>
+        <div *ngIf="(date.value<trunc(session.startDate) || date.value>trunc(session.endDate)) && date.touched">La data di Inizio deve cadere durante la Sessione!</div>
 
         <ion-item >
             <ion-label inline>Durata (minuti)</ion-label>
@@ -56,7 +56,7 @@
         <ion-item>
             <button type="submit" class="btn btn-standard" [disabled]="!interventForm.valid ||
                                                                     (date.value<=now && date.touched) ||
-                                                                    ((date.value<session.startDate || date.value>session.endDate) && date.touched) ||
+                                                                    ((date.value<trunc(session.startDate) || date.value>trunc(session.endDate)) && date.touched) ||
                                                                     (((date.value+duration.value)>session.endDate) && duration.touched)">Salva</button>
             <button type="reset" (click)="reset()">Annulla</button>
         </ion-item>
@@ -67,18 +67,18 @@
             <ion-toolbar>
                 <ion-buttons begin>
                     <button *ngIf="room==null" (click)="openRoom()">
-                        <ion-icon name="play"> </ion-icon>
+                        <ion-icon name="play"><span *ngIf="!mobile"> Apri Stanza </span></ion-icon>
                     </button>
                     <button *ngIf="room!=null" (click)="closeRoom()" [disabled]="recognizing">
-                        <ion-icon name="pause"> </ion-icon>
+                        <ion-icon name="pause"><span *ngIf="!mobile"> Chiudi Stanza </span></ion-icon>
                     </button>
                 </ion-buttons>
                 <ion-buttons *ngIf="room!=null" end>
                     <button *ngIf="!recognizing" (click)="startRecognizing()">
-                        <ion-icon name="mic"> </ion-icon>
+                        <ion-icon name="mic"><span *ngIf="!mobile"> Avvia Trascrizione </span> </ion-icon>
                     </button>
                     <button *ngIf="recognizing" (click)="stopRecognizing()">
-                        <ion-icon name="mic-off"> </ion-icon>
+                        <ion-icon name="mic-off"><span *ngIf="!mobile"> Ferma Trascrizione </span> </ion-icon>
                     </button>
                 </ion-buttons>
             </ion-toolbar>

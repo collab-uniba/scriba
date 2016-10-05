@@ -16,6 +16,9 @@
       </ion-navbar>
     </ion-header>
 
+    <ion-card *ngIf="events.length==0">
+        Nessun Evento disponibile!
+    </ion-card>
     <ion-card *ngFor="let event of events">
         <ion-card-header>
             <ion-toolbar>
