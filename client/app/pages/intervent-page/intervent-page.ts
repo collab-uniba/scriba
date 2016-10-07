@@ -33,11 +33,23 @@ export class InterventPage {
         this.transcription="";
         //this.intervent.text="";
         this.newData = {_id: this.intervent._id, title:this.intervent.title, date: this.intervent.date, duration: this.intervent.duration, speaker: this.intervent.speaker};
-    }
+    }  
 
     ionViewWillEnter(){
         if(this.intervent.status=="ongoing"){
             this.room = io.connect(this.config.getRoomUrl()+':'+this.config.socketPORT);
+            this.room.emit('join_room', {type: "Speaker", room: this.intervent._id});
+            this.room.on('previous_text', (data) => {
+                //this.text += data.text;
+                //document.getElementById('text').innerHTML += data.text;
+                this.transcription += data.text;
+                console.log(data.questions);
+                if(data.questions.length!=0){
+                    this.intervent.questions=this.intervent.questions.concat(data.questions);
+                    console.log(this.intervent.questions);
+                }
+                console.log(this.transcription);
+            })
         }
     }
     ionViewWillLeave(){
@@ -101,12 +113,13 @@ export class InterventPage {
 
 
     openRoom(){
+        this.room = io.connect(this.config.getRoomUrl()+':'+this.config.socketPORT);//"http://collab.di.uniba.it/~iaffaldano:48922"
+        this.room.emit('client_type', {text: "Speaker"});
+
         this.es.openServer(this.intervent._id).map(res=>res.json()).subscribe(data=>{
             if(data.success){
                 console.log(this.config.socketPORT);
-                this.room = io.connect(this.config.getRoomUrl()+':'+this.config.socketPORT);//"http://collab.di.uniba.it/~iaffaldano:48922"
-                this.room.emit('client_type', {text: "Speaker"});
-
+                
                 this.room.emit('open_room', {room: this.intervent._id});
 
                 this.room.on('question', (data) => {
@@ -121,6 +134,7 @@ export class InterventPage {
                     });
                     */
                 });
+                
             }else{
                 alert(data.msg);
             }

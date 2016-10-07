@@ -85,7 +85,7 @@
         </ion-card-header>
         <span padding>Lo Speaker dice:</span>
         <ion-card-content id="text">
-            {{intervent.text}} {{transcription}}
+            {{transcription}}
         </ion-card-content>
         <ion-item>
             <button *ngIf="room!=null" (click)="saveAndCloseRoom()" [disabled]="recognizing">
