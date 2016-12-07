@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var Session = require('./session')
  
 // Thanks to http://blog.matoski.com/articles/jwt-express-node-mongoose/
  
@@ -15,13 +16,30 @@ var InterventSchema = new Schema({
         unique: false,
         required: true
     },
+    duration: {
+        type: Number,
+        required: true,
+    },
     speaker: {
         type: String,
-        required: false
+        required: true
     },
     text: {
         type: String,
         required: false
+    },
+    session: {
+        type: String,
+        required: true
+    },
+    status: {
+        type: String,
+    },
+    questions: {
+        type: Array,
+    },
+    port: {
+        type: Number,
     }
 });
 

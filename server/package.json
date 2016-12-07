@@ -13,10 +13,12 @@
     "body-parser": "^1.15.1",
     "express": "^4.14.0",
     "jwt-simple": "^0.5.0",
+    "mongodb": "^2.2.1",
     "mongoose": "^4.5.0",
     "morgan": "^1.7.0",
     "node-bcrypt": "0.0.1",
     "passport": "^0.3.2",
-    "passport-jwt": "^2.0.0"
+    "passport-jwt": "^2.0.0",
+    "socket.io": "^1.4.8"
   }
 }

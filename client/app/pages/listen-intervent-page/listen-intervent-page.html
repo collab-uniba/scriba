@@ -1,0 +1,73 @@
+<ion-toolbar>
+    
+</ion-toolbar>
+
+<ion-content padding>
+    <ion-header padding>
+        <ion-navbar>
+            <ion-title>
+                {{intervent.title}}
+            </ion-title>
+            <ion-buttons end>
+                <button (click)="questioning=!questioning">
+                    <ion-icon name="hand"> </ion-icon>
+                </button>
+            </ion-buttons>
+        </ion-navbar>
+    </ion-header>
+    <ion-item>
+        <ion-row>
+            <ion-col>
+                Il: {{formatDate(intervent.date)}}
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                Durata: {{intervent.duration}} minuti
+            </ion-col>
+        </ion-row>
+    </ion-item>
+    <form *ngIf="questioning" (ngSubmit)="sendQuestion()" #questionForm="ngForm">
+        <ion-item >
+            <ion-label inline>La tua Domanda</ion-label>
+            <ion-input type="text" ngControl="questionControl" [(ngModel)]="question" class="form-control" required></ion-input>
+        </ion-item>
+        
+        <ion-item>
+            <button type="submit" item-right>
+                <ion-icon name="send"> </ion-icon>
+            </button>
+        </ion-item>
+    </form>
+
+    <ion-card>
+        <ion-card-header>
+            <ion-item>
+                <button (click)="close()">
+                    Chiudi
+                </button>
+            </ion-item>
+        </ion-card-header>
+        <span padding>Lo Speaker dice:</span>
+        <ion-card-content id="text">
+            {{transcription}}
+        </ion-card-content>
+    </ion-card>
+    <ion-card >
+        <ion-card-header>
+            <ion-toolbar>
+                <ion-title>
+                    Domande
+                </ion-title>
+            </ion-toolbar>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-list>
+                <ion-item *ngFor="let quest of intervent.questions">
+                    {{quest.user}}: {{quest.text}}
+                </ion-item>
+            </ion-list>
+        </ion-card-content>
+    </ion-card>
+    
+</ion-content>

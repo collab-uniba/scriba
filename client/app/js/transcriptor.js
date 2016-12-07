@@ -1,32 +1,34 @@
 var final_transcript = '';
 var recognizing = false;
-	  console.log("ciao");
-//var socket = io.connect('http://localhost:48922');//"http://collab.di.uniba.it:48922"
+
+//var socket = io.connect('http://collab.di.uniba.it:48922');//"http://collab.di.uniba.it/~iaffaldano:48922"
+//socket.emit('client_type', {text: "Speaker"});
 
 if ('webkitSpeechRecognition' in window) {
-
+	
 	var recognition = new webkitSpeechRecognition();
-
+	
 	recognition.continuous = true;
 	recognition.interimResults = true;
+	console.log("MAX ALTERNATIVES = "+ recognition.maxAlternatives);
 
 	recognition.onstart = function () {
 		recognizing = true;
-		log_span.innerHTML += "RECOGNITION STARTED";
+		console.log("RECOGNITION STARTED");
 	};
 
 	recognition.onerror = function (event) {
-		console.log(event.error);
-		log_span.innerHTML += "RECOGNITION ERROR";
+		console.log("RECOGNITION ERROR: " + event.error);
+		recognition.start();
 	};
 
 	recognition.onend = function () {
-		log_span.innerHTML += "RECOGNITION STOPPED";
+		console.log("RECOGNITION STOPPED");
 		if(recognizing){
 			recognition.start();
-			log_span.innerHTML += "RECOGNITION RESTARTED";
+			console.log("RECOGNITION RESTARTED");
 		}
-
+		 
 	};
 
 	recognition.onresult = function (event) {
@@ -34,9 +36,10 @@ if ('webkitSpeechRecognition' in window) {
 		for (var i = event.resultIndex; i < event.results.length; ++i) {
 			if (event.results[i].isFinal) {
 				final_transcript += event.results[i][0].transcript;
+				console.log("CONFIDENCE (" + event.results[i][0].transcript + ") = " + event.results[i][0].confidence);
 				//recognition.stop();
-				//recognition.start();
-			//	socket.emit('client_message', {text: event.results[i][0].transcript});
+				//recognition.start(); 
+				socket.emit('client_message', {text: event.results[i][0].transcript});
 			} else {
 				interim_transcript += event.results[i][0].transcript;
 			}
@@ -45,6 +48,27 @@ if ('webkitSpeechRecognition' in window) {
 		final_span.innerHTML = linebreak(final_transcript);
 		interim_span.innerHTML = linebreak(interim_transcript);
 	};
+	recognition.onaudiostart= function (event) {
+		console.log("AUDIO START");
+	};
+		
+    recognition.onsoundstart= function (event) {
+		console.log("SOUND START");
+	};
+    recognition.onspeechstart= function (event) {	
+		console.log("SPEECH START");
+	};
+	
+    recognition.onspeechend= function (event) {
+		console.log("SPEECH END");
+	};
+    recognition.onsoundend= function (event) {
+		console.log("SOUND END");	
+	};
+    recognition.onnomatch= function (event) {
+		console.log("NO MATCH");	
+	};
+		
 }
 
 var two_line = /\n\n/g;
@@ -67,11 +91,9 @@ function startDictation(event) {
 		return;
 	}
 	final_transcript = '';
-
 	recognition.lang = 'it-IT';
 	recognition.start();
 	start_button.innerHTML = "STOP"
 	final_span.innerHTML = '';
 	interim_span.innerHTML = '';
-
 }

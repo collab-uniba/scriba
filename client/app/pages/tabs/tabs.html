@@ -1,15 +1,15 @@
 <ion-header>
   <ion-navbar>
-    <ion-title (click)="openModal()">
-      Scriba
-    </ion-title>
+    <ion-nav-title>
+      <h1>Scriba</h1>
+    </ion-nav-title>
 
     <ion-buttons end>
-      <button (click)="openModal('login')" class="solid">
-        <ion-icon name="log-in"> Login</ion-icon>
+      <button (click)="login()">
+        <ion-icon name="log-in"> <span *ngIf="!mobile">Accedi</span></ion-icon>
       </button>
-      <button (click)="openModal('signup')">
-        <ion-icon name="person-add"> SignUp</ion-icon>
+      <button (click)="signUp()">
+        <ion-icon name="person-add"> <span *ngIf="!mobile">Registrati</span></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -20,6 +20,6 @@
 
 <ion-tabs>
   <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
-  <ion-tab [root]="tab2Root" tabTitle="About" tabIcon="information-circle"></ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="Contact" tabIcon="contacts"></ion-tab>
+  <ion-tab [root]="tab2Root" tabTitle="Informazioni" tabIcon="information-circle"></ion-tab>
+  <ion-tab [root]="tab3Root" tabTitle="Contatti" tabIcon="contacts"></ion-tab>
 </ion-tabs>

@@ -1,19 +1,15 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcryptjs = require('bcryptjs');
- 
-// Thanks to http://blog.matoski.com/articles/jwt-express-node-mongoose/
- 
+
 // set up a mongoose model
 var UserSchema = new Schema({
     name: {
         type: String,
-        unique: false,
         required: true
     },
     surname: {
         type: String,
-        unique: false,
         required: true
     },
     username: {
@@ -27,13 +23,20 @@ var UserSchema = new Schema({
     },
     email: {
         type: String,
+        required: true
+    },
+    observedEvents: {
+        type: Array,
+        required: false
+    },
+    joinedEvents: {
+        type: Array,
         required: false
     }
 });
  
 UserSchema.pre('save', function (next) {
     var user = this;
-
     if (this.isModified('password') || this.isNew) {
         bcryptjs.genSalt(10, function (err, salt) {
             if (err) {
@@ -51,6 +54,7 @@ UserSchema.pre('save', function (next) {
         return next();
     }
 });
+
 
 UserSchema.methods.comparePassword = function (passw, cb) {
     bcryptjs.compare(passw, this.password, function (err, isMatch) {
