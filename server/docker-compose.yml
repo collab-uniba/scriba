@@ -1,0 +1,16 @@
+db:
+  container_name: scribaDB
+  image: mongo:2.2
+  ports:
+    - "27017:27017"
+    - "28017:28017"
+web:
+  container_name: scriba
+  build: .
+  command: node server.js
+  volumes:
+    - .:/scriba
+  ports:
+    - "8081:8080"
+  links:
+    - db
