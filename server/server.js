@@ -41,7 +41,7 @@ io.on('connection', function (socket) {
         console.log("Open Room: " + data.room);
     });
     socket.on('close_room', function(data){
-        socket.broadcast.to(data.room).emit('disconnection', {text: "La stanza è stata chiusa!"})
+        socket.broadcast.to(data.room).emit('disconnection', {text: "La stanza è stata chiusa!"});
         socket.leave(data.room);
         //RIAGGIORNA LO STATO DI INTERVENTO; SESSIONE ED EVENTO
         Intervent.findOne({ _id: data.room }, function (err, intervent){
@@ -529,7 +529,7 @@ apiRoutes.post('/deletesession', function(req, res) {
                     }else{
                         res.json({success: true, msg: "Eliminazione Sessione e relativi Interventi eseguita"});
                     }
-                })
+                });
             }
         });
     } else {
@@ -581,11 +581,11 @@ apiRoutes.post('/deleteevent', function(req, res) {
                             }else{
                                 res.json({success: true, msg: "Eliminazione Evento e relative Sessioni e Interventi eseguita"});
                             }
-                        })
+                        });
                     }
                 });
             }
-        })
+        });
     } else {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
@@ -760,7 +760,7 @@ apiRoutes.post('/updatepassword', passport.authenticate('jwt', { session: false}
                                     return (err);
                                 }
                                 newPassword = hash;
-                                console.log("ECCOLA NUOVA "+newPassword)
+                                console.log("ECCOLA NUOVA "+newPassword);
                                 User.update({
                                   _id: decoded._id
                                 },{ $set: { 

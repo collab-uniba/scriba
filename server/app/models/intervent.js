@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Session = require('./session')
+var Session = require('./session');
  
 // Thanks to http://blog.matoski.com/articles/jwt-express-node-mongoose/
  
