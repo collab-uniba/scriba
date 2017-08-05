@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar>
+    <button menuToggle><ion-icon name="menu"></ion-icon></button>
+    
+    <ion-buttons begin>
+      <ion-title>Scriba</ion-title>
+      <!--<button>
+        <ion-nav-title>
+          <h3>Scriba</h3>
+        </ion-nav-title>>
+      </button>-->
+
+      <button (click)="userData()" start>
+        <ion-icon name="person"> <span *ngIf="!mobile">{{user.name}} {{user.surname}}</span></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <ion-buttons end>
+      <button (click)="logout()">
+        <ion-icon name="log-out" ><span *ngIf="!mobile"> Esci</span></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-menu [content]="menuContent">
+  <ion-toolbar>
+    <button menuClose ion-item><ion-icon name="menu" item-right></ion-icon><ion-title>Menu</ion-title></button>
+  </ion-toolbar>
+  <ion-content>
+    <ion-list>
+      <button (click)="openPage(EventsPage)" ion-item>Tutti gli Eventi</button>
+      <button (click)="openPage(PersonalEventsPage)" ion-item>I miei Eventi</button>
+      <button (click)="openPage(ObservedEventsPage)" ion-item>Eventi Osservati</button>
+      <button (click)="openPage(JoinedEventsPage)" ion-item>Eventi Seguiti</button>
+      <button (click)="openPage(AboutPage)" ion-item>Informazioni</button>
+      <button (click)="openPage(ContactPage)" ion-item>Contatti</button><!--detail-none-->
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-nav #menuContent [root]="rootPage"></ion-nav>
