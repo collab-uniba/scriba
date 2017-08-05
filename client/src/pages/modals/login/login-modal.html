@@ -1,0 +1,21 @@
+<ion-toolbar>
+    <ion-title>
+        Accedi
+    </ion-title>
+</ion-toolbar>
+<form #loginForm="ngForm" (ngSubmit)="submit()">
+    <ion-item>
+        <ion-label floating>Username</ion-label>
+        <ion-input type="text" ngModel name="usernameControl" [(ngModel)]="username" minlength="4" pattern="[a-zA-z]+[0-9]*" required></ion-input>
+    </ion-item> 
+    
+    <ion-item>
+        <ion-label floating>Password</ion-label>
+        <ion-input type="password" ngModel name="passwordControl" [(ngModel)]="password" minlength="8" #pwd="ngModel" required></ion-input>
+    </ion-item>   
+
+    <ion-item>
+        <button type="submit" [disabled]="!loginForm.valid" class="btn btn-standard">Accedi</button>
+        <button type="reset" (click)="close()">Annulla</button>
+    </ion-item>
+</form>
