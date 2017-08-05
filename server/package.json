@@ -2,11 +2,11 @@
   "name": "scribaserver",
   "version": "1.0.0",
   "description": "Server per Scriba con Node JS, Express, NoSQL DB",
+  "author": "Giuseppe Iaffaldano",
   "main": "server.js",
   "scripts": {
-    "test": "node server.js"
+    "start": "node server.js"
   },
-  "author": "Giuseppe Iaffaldano",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.3.0",
