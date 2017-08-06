@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:8
 
 # Create Scriba directory
 RUN mkdir -p /usr/src/scriba

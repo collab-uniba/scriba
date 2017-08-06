@@ -20,3 +20,11 @@ web:
     - SCRIBA_MONGODB_URI=mongodb://db:27017/scribaDB
   links:
     - db
+ionic:
+  container_name: ionic
+  build: client\ .
+  ports:
+    - "8100:8100"
+    - "35729:35729"
+  links:
+    - web
