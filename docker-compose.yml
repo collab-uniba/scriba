@@ -1,0 +1,30 @@
+db:
+  container_name: db
+  image: mongo:latest
+  ports:
+    - "27017:27017"
+web:
+  container_name: node
+  build: server\ .
+  command: node server.js
+  volumes:
+    - .:/scriba
+  ports:
+    - "9091:9091"
+    - "9092:9092"
+  environment:
+    - SCRIBA_SECRET_CODE=InformaticiSenzaFrontiere&COLLAB
+    - SCRIBA_SERVER_HOST=0.0.0.0
+    - SCRIBA_SERVER_PORT=9091
+    - SCRIBA_SOCKET_PORT=9092
+    - SCRIBA_MONGODB_URI=mongodb://db:27017/scribaDB
+  links:
+    - db
+ionic:
+  container_name: ionic
+  build: client\ .
+  ports:
+    - "8100:8100"
+    - "35729:35729"
+  links:
+    - web

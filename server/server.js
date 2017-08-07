@@ -4,20 +4,21 @@ var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
 var passport	= require('passport');
-var config      = require('./config/database'); // get db config file
-var User        = require('./app/models/user'); // get the mongoose model
-var port        = process.env.PORT || 9091; // SET PORT HERE 8080
-var host        = config.host;
+var config      = require('./config/configurator'); // get config file
 var jwt         = require('jwt-simple');
-var Event = require('./app/models/event');
-var Session = require('./app/models/session');
-var Intervent = require('./app/models/intervent');
-var bcryptjs = require('bcryptjs');
+var bcryptjs    = require('bcryptjs');
+
+// get the mongoose model
+var User        = require('./app/models/user');
+var Event       = require('./app/models/event');
+var Session     = require('./app/models/session');
+var Intervent   = require('./app/models/intervent');
+
 //DEPENDENCIES
 var server = require("http").Server(express);
 var io = require("socket.io")(server); 
 //TEST PORTS
-server.listen(9092);//0
+server.listen(config.socketPort);//0
 
 //LISTENER
 var allClients=[];
@@ -129,11 +130,12 @@ app.use(morgan('dev'));
 app.use(passport.initialize());
 
 // Start the server
-app.listen(port, host);
-console.log('There will be dragons: ' + host + ':' + port);
+app.listen(config.serverPort, config.host);
+console.log('There will be dragons: ' + config.host + ':' + config.serverPort);
 
 // connect to database
 mongoose.connect(config.database);
+console.log('Connect to DB: ' + config.database);
  
 // pass passport for configuration
 require('./config/passport')(passport);
