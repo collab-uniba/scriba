@@ -4,20 +4,21 @@ var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
 var passport	= require('passport');
-var config      = require('./config/database'); // get db config file
-var User        = require('./app/models/user'); // get the mongoose model
-var port        = process.env.PORT || 9091; // SET PORT HERE 8080
-var host        = config.host;
+var config      = require('./config/configurator'); // get config file
 var jwt         = require('jwt-simple');
-var Event = require('./app/models/event');
-var Session = require('./app/models/session');
-var Intervent = require('./app/models/intervent');
-var bcryptjs = require('bcryptjs');
+var bcryptjs    = require('bcryptjs');
+
+// get the mongoose model
+var User        = require('./app/models/user');
+var Event       = require('./app/models/event');
+var Session     = require('./app/models/session');
+var Intervent   = require('./app/models/intervent');
+
 //DEPENDENCIES
 var server = require("http").Server(express);
 var io = require("socket.io")(server); 
 //TEST PORTS
-server.listen(9092);//0
+server.listen(config.socketPort);//0
 
 //LISTENER
 var allClients=[];
@@ -41,7 +42,7 @@ io.on('connection', function (socket) {
         console.log("Open Room: " + data.room);
     });
     socket.on('close_room', function(data){
-        socket.broadcast.to(data.room).emit('disconnection', {text: "La stanza è stata chiusa!"})
+        socket.broadcast.to(data.room).emit('disconnection', {text: "La stanza è stata chiusa!"});
         socket.leave(data.room);
         //RIAGGIORNA LO STATO DI INTERVENTO; SESSIONE ED EVENTO
         Intervent.findOne({ _id: data.room }, function (err, intervent){
@@ -129,11 +130,12 @@ app.use(morgan('dev'));
 app.use(passport.initialize());
 
 // Start the server
-app.listen(port, host);
-console.log('There will be dragons: ' + host + ':' + port);
+app.listen(config.serverPort, config.host);
+console.log('There will be dragons: ' + config.host + ':' + config.serverPort);
 
 // connect to database
 mongoose.connect(config.database);
+console.log('Connect to DB: ' + config.database);
  
 // pass passport for configuration
 require('./config/passport')(passport);
@@ -529,7 +531,7 @@ apiRoutes.post('/deletesession', function(req, res) {
                     }else{
                         res.json({success: true, msg: "Eliminazione Sessione e relativi Interventi eseguita"});
                     }
-                })
+                });
             }
         });
     } else {
@@ -581,11 +583,11 @@ apiRoutes.post('/deleteevent', function(req, res) {
                             }else{
                                 res.json({success: true, msg: "Eliminazione Evento e relative Sessioni e Interventi eseguita"});
                             }
-                        })
+                        });
                     }
                 });
             }
-        })
+        });
     } else {
         return res.status(403).send({success: false, msg: 'Nessun token ricevuto'});
     }
@@ -760,7 +762,7 @@ apiRoutes.post('/updatepassword', passport.authenticate('jwt', { session: false}
                                     return (err);
                                 }
                                 newPassword = hash;
-                                console.log("ECCOLA NUOVA "+newPassword)
+                                console.log("ECCOLA NUOVA "+newPassword);
                                 User.update({
                                   _id: decoded._id
                                 },{ $set: { 
