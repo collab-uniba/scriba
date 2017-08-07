@@ -5,7 +5,7 @@
   "author": "Giuseppe Iaffaldano",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
     "test": "mocha ./test --recursive && jshint ."
   },
   "license": "MIT",
