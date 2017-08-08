@@ -36,7 +36,7 @@
     </ion-item>
          
     <ion-item>
-        <button type="submit" [disabled]="!signupForm.valid || (pwd.value!=cpwd.value && cpwd.touched)" class="btn btn-standard">Registrati</button>
-        <button type="reset" (click)="close()">Annulla</button>
+        <button ion-button type="submit" [disabled]="!signupForm.valid || (pwd.value!=cpwd.value && cpwd.touched)" class="btn btn-standard">Registrati</button>
+        <button ion-button type="reset" (click)="close()">Annulla</button>
     </ion-item>
 </form>
