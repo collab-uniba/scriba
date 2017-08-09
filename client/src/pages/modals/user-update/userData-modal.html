@@ -1,54 +1,59 @@
-<ion-toolbar>
-    <ion-title>
-        <ion-icon name="person"> Il Mio Profilo - {{user.username}}</ion-icon> <span *ngIf="editingPassword"> - Cambio Password</span>
-    </ion-title>
-</ion-toolbar>
-<form *ngIf="!editingPassword" #updateUserForm="ngForm" (ngSubmit)="submit()">
-    <ion-item>
-        <ion-label inline>Nome</ion-label>
-        <ion-input type="text" ngModel name="nameControl" [(ngModel)]="user.name" pattern="[a-zA-Z ]*" required></ion-input>
-    </ion-item>
+<ion-header>
+  <ion-toolbar>
+      <ion-title>
+          <ion-icon name="person"> Il Mio Profilo - {{user.username}}</ion-icon> <span *ngIf="editingPassword"> - Cambio Password</span>
+      </ion-title>
+  </ion-toolbar>
+</ion-header>
 
-    <ion-item>
-        <ion-label inline>Cognome</ion-label>
-        <ion-input type="text" ngModel name="surnameControl" [(ngModel)]="user.surname" pattern="[a-zA-Z ]*" required></ion-input>
-    </ion-item>
+<ion-content padding>
+  <form *ngIf="!editingPassword" #updateUserForm="ngForm" (ngSubmit)="submit()">
+      <ion-item>
+          <ion-label inline>Nome</ion-label>
+          <ion-input type="text" ngModel name="nameControl" [(ngModel)]="user.name" pattern="[a-zA-Z ]*" required></ion-input>
+      </ion-item>
 
-    <ion-item>
-        <ion-label inline>e-Mail</ion-label>
-        <ion-input type="email" ngModel name="emailControl" [(ngModel)]="user.email" required></ion-input>
-    </ion-item>
-         
-    <ion-item>
-        <button type="submit" [disabled]="!updateUserForm.valid" class="btn btn-standard">Salva</button>
-        <button type="reset" (click)="close()">Annulla</button>
+      <ion-item>
+          <ion-label inline>Cognome</ion-label>
+          <ion-input type="text" ngModel name="surnameControl" [(ngModel)]="user.surname" pattern="[a-zA-Z ]*" required></ion-input>
+      </ion-item>
 
-        <button type="button" (click)="editingPassword=!editingPassword" item-right>Cambia Password</button>
-    </ion-item>
-</form>
+      <ion-item>
+          <ion-label inline>e-Mail</ion-label>
+          <ion-input type="email" ngModel name="emailControl" [(ngModel)]="user.email" required></ion-input>
+      </ion-item>
 
-<form *ngIf="editingPassword" #passwordForm="ngForm" (ngSubmit)="submitPassword()">
-    <ion-item>
-        <ion-label inline>Vecchia Password</ion-label>
-        <ion-input type="password" ngModel name="oldPasswordControl" [(ngModel)]="oldPassword" minlength="8" #opwd="ngModel" required></ion-input>
-    </ion-item>  
+      <ion-item>
+          <button type="submit" [disabled]="!updateUserForm.valid" class="btn btn-standard">Salva</button>
+          <button type="reset" (click)="close()">Annulla</button>
 
-    <ion-item>
-        <ion-label inline>Nuova Password</ion-label>
-        <ion-input type="password" ngModel name="newPasswordControl" [(ngModel)]="newPassword" minlength="8" #npwd="ngModel" required></ion-input>
-    </ion-item>   
+          <button type="button" (click)="editingPassword=!editingPassword" item-right>Cambia Password</button>
+      </ion-item>
+  </form>
 
-    <ion-item>
-        <ion-label inline>Conferma Password</ion-label>
-        <ion-input type="password" ngModel name="confirmPasswordControl" minlength="8" #cpwd="ngModel" required></ion-input>
-    </ion-item> 
-    <div *ngIf="opwd.value==npwd.value && npwd.touched" class="error-box">Non puoi utilizzare la vecchia Password come Nuova</div>  
-    <div *ngIf="npwd.value!=cpwd.value && cpwd.touched" class="error-box">Le password non corrispondono</div>           
-    
-    <ion-item>
-        <button type="submit" class="btn btn-standard" [disabled]="!passwordForm.valid 
-                                                            || (opwd.value==npwd.value && npwd.touched)
-                                                            || (npwd.value!=cpwd.value && cpwd.touched)" >Salva</button>
-        <button type="reset" (click)="editingPassword=!editingPassword">Annulla</button>
-    </ion-item>
-</form>
+  <form *ngIf="editingPassword" #passwordForm="ngForm" (ngSubmit)="submitPassword()">
+      <ion-item>
+          <ion-label inline>Vecchia Password</ion-label>
+          <ion-input type="password" ngModel name="oldPasswordControl" [(ngModel)]="oldPassword" minlength="8" #opwd="ngModel" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-label inline>Nuova Password</ion-label>
+          <ion-input type="password" ngModel name="newPasswordControl" [(ngModel)]="newPassword" minlength="8" #npwd="ngModel" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-label inline>Conferma Password</ion-label>
+          <ion-input type="password" ngModel name="confirmPasswordControl" minlength="8" #cpwd="ngModel" required></ion-input>
+      </ion-item>
+      <div *ngIf="opwd.value==npwd.value && npwd.touched" class="error-box">Non puoi utilizzare la vecchia Password come Nuova</div>
+      <div *ngIf="npwd.value!=cpwd.value && cpwd.touched" class="error-box">Le password non corrispondono</div>
+
+      <ion-item>
+          <button type="submit" class="btn btn-standard" [disabled]="!passwordForm.valid
+                                                              || (opwd.value==npwd.value && npwd.touched)
+                                                              || (npwd.value!=cpwd.value && cpwd.touched)" >Salva</button>
+          <button type="reset" (click)="editingPassword=!editingPassword">Annulla</button>
+      </ion-item>
+  </form>
+</ion-content>
