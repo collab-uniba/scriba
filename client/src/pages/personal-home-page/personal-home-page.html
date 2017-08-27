@@ -8,31 +8,29 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-header padding>
       <ion-navbar>
           <ion-title>
               Tutti Gli Eventi Pubblici
           </ion-title>
       </ion-navbar>
-    </ion-header>
 
-    <ion-card *ngIf="events.length==0">
+    <ion-card padding *ngIf="events.length==0">
         Nessun Evento disponibile!
     </ion-card>
-    <ion-card *ngFor="let event of events">
+    <ion-card padding *ngFor="let event of events">
         <ion-card-header>
             <ion-toolbar>
                 <ion-title>
                     {{event.title}} (@{{event.location}})
                 </ion-title>
                 <ion-buttons end>
-                    <button *ngIf="event.status=='ongoing'" (click)="openEvent(event)">
+                    <button ion-button large *ngIf="event.status=='ongoing'" (click)="openEvent(event)">
                         <ion-icon name="play"> </ion-icon>
                     </button>
-                    <button *ngIf="user.observedEvents.indexOf(event._id) == -1" (click)="observe(event)">
+                    <button ion-button large *ngIf="user.observedEvents.indexOf(event._id) == -1" (click)="observe(event)">
                         <ion-icon name="eye"> </ion-icon>
                     </button>
-                    <button *ngIf="user.observedEvents.indexOf(event._id) != -1" (click)="unobserve(event)">
+                    <button ion-button large *ngIf="user.observedEvents.indexOf(event._id) != -1" (click)="unobserve(event)">
                         <ion-icon name="eye-off"> </ion-icon>
                     </button>
                 </ion-buttons>
@@ -52,28 +50,28 @@
         </ion-card-header>
         <ion-card-content>
           <p>
-            <ion-icon *ngIf="!event.expanded" name="arrow-dropdown" (click)="event.expanded=!event.expanded"></ion-icon> 
-            <ion-icon *ngIf="event.expanded" name="arrow-dropup" (click)="event.expanded=!event.expanded"></ion-icon> 
-            Sessioni 
+            <ion-icon *ngIf="!event.expanded" name="arrow-dropdown" (click)="event.expanded=!event.expanded"></ion-icon>
+            <ion-icon *ngIf="event.expanded" name="arrow-dropup" (click)="event.expanded=!event.expanded"></ion-icon>
+            Sessioni
           </p>
           <ion-list *ngIf="event.expanded">
             <ion-item text-wrap *ngFor="let session of event.sessions">
               <p>
-                <ion-icon *ngIf="!session.expanded" name="arrow-dropdown" (click)="session.expanded=!session.expanded"></ion-icon> 
-                <ion-icon *ngIf="session.expanded" name="arrow-dropup" (click)="session.expanded=!session.expanded"></ion-icon> 
+                <ion-icon *ngIf="!session.expanded" name="arrow-dropdown" (click)="session.expanded=!session.expanded"></ion-icon>
+                <ion-icon *ngIf="session.expanded" name="arrow-dropup" (click)="session.expanded=!session.expanded"></ion-icon>
                   {{session.title}} - {{formatDate(session.startDate)}}
               </p>
               <ion-list *ngIf="session.expanded">
                 <ion-item text-wrap *ngFor="let intervent of session.intervents">
                   <p>
-                    <ion-icon *ngIf="!intervent.expanded" name="arrow-dropdown" (click)="intervent.expanded=!intervent.expanded"></ion-icon> 
-                    <ion-icon *ngIf="intervent.expanded" name="arrow-dropup" (click)="intervent.expanded=!intervent.expanded"></ion-icon> 
+                    <ion-icon *ngIf="!intervent.expanded" name="arrow-dropdown" (click)="intervent.expanded=!intervent.expanded"></ion-icon>
+                    <ion-icon *ngIf="intervent.expanded" name="arrow-dropup" (click)="intervent.expanded=!intervent.expanded"></ion-icon>
                     {{intervent.title}} - {{formatDate(intervent.date)}} --- {{intervent.status}}
                   </p>
                   <p *ngIf="intervent.expanded">
                       {{intervent.text}}
                   </p>
-                  
+
                 </ion-item>
               </ion-list>
             </ion-item>

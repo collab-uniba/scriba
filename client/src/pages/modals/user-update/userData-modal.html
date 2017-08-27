@@ -24,10 +24,10 @@
       </ion-item>
 
       <ion-item>
-          <button type="submit" [disabled]="!updateUserForm.valid" class="btn btn-standard">Salva</button>
-          <button type="reset" (click)="close()">Annulla</button>
+          <button ion-button type="submit" [disabled]="!updateUserForm.valid" class="btn btn-standard">Salva</button>
+          <button ion-button type="reset" (click)="close()">Annulla</button>
 
-          <button type="button" (click)="editingPassword=!editingPassword" item-right>Cambia Password</button>
+          <button ion-button type="button" (click)="editingPassword=!editingPassword" item-right>Cambia Password</button>
       </ion-item>
   </form>
 
@@ -50,10 +50,10 @@
       <div *ngIf="npwd.value!=cpwd.value && cpwd.touched" class="error-box">Le password non corrispondono</div>
 
       <ion-item>
-          <button type="submit" class="btn btn-standard" [disabled]="!passwordForm.valid
+          <button ion-button type="submit" class="btn btn-standard" [disabled]="!passwordForm.valid
                                                               || (opwd.value==npwd.value && npwd.touched)
                                                               || (npwd.value!=cpwd.value && cpwd.touched)" >Salva</button>
-          <button type="reset" (click)="editingPassword=!editingPassword">Annulla</button>
+          <button ion-button type="reset" (click)="editingPassword=!editingPassword">Annulla</button>
       </ion-item>
   </form>
 </ion-content>
