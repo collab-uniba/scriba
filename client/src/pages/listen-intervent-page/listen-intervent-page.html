@@ -9,7 +9,7 @@
                 {{intervent.title}}
             </ion-title>
             <ion-buttons end>
-                <button (click)="questioning=!questioning">
+                <button ion-button icon-start (click)="questioning=!questioning">
                     <ion-icon name="hand"> </ion-icon>
                 </button>
             </ion-buttons>
@@ -34,7 +34,7 @@
         </ion-item>
         
         <ion-item>
-            <button type="submit" item-right>
+            <button ion-button icon-start type="submit" item-right>
                 <ion-icon name="send"> </ion-icon>
             </button>
         </ion-item>
@@ -43,7 +43,7 @@
     <ion-card>
         <ion-card-header>
             <ion-item>
-                <button (click)="close()">
+                <button ion-button icon-start (click)="close()">
                     Chiudi
                 </button>
             </ion-item>

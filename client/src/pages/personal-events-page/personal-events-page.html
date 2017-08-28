@@ -15,7 +15,7 @@
               Eventi Creati
           </ion-title>
           <ion-buttons end>
-            <button (click)="newEvent()">
+            <button ion-button icon-start (click)="newEvent()">
               <ion-icon name="add"> <span *ngIf="!mobile">Nuovo Evento</span></ion-icon>
             </button>
           </ion-buttons>
@@ -31,7 +31,7 @@
                     {{event.title}}
                 </ion-title>
                 <ion-buttons end>
-                    <button (click)="openEvent(event)">
+                    <button ion-button icon-start (click)="openEvent(event)">
                         <ion-icon name="navigate"><span *ngIf="!mobile"> Apri </span></ion-icon>
                     </button>
                     <!--
@@ -39,7 +39,7 @@
                         <ion-icon name="create"> </ion-icon>
                     </button>
                     -->
-                    <button (click)="deleteEvent(event)">
+                    <button ion-button icon-start (click)="deleteEvent(event)">
                         <ion-icon name="trash"> </ion-icon>
                     </button>
                 </ion-buttons>
