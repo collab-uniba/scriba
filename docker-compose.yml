@@ -28,3 +28,10 @@ ionic:
     - "35729:35729"
   links:
     - web
+proxy:
+  container_name: goproxy
+  build: goProxy\ .
+  ports:
+    - "9090:9090"
+  links:
+    - ionic
