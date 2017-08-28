@@ -34,11 +34,11 @@
       </ion-item>
 
       <ion-item>
-          <button type="submit" class="btn btn-standard" [disabled]="!interventForm.valid ||
+          <button ion-button type="submit" class="btn btn-standard" [disabled]="!interventForm.valid ||
                                                                       (date.value<now && date.touched) ||
                                                                       ((date.value<trunc(session.startDate) || date.value>trunc(session.endDate)) && date.touched) ||
                                                                       (((date.value+duration.value)>session.endDate) && duration.touched)">Salva</button>
-          <button type="reset" (click)="close()">Annulla</button>
+          <button ion-button type="reset" (click)="close()">Annulla</button>
       </ion-item>
   </form>
 </ion-content>

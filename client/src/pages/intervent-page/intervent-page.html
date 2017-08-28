@@ -9,7 +9,7 @@
                 {{intervent.title}}
             </ion-title>
             <ion-buttons *ngIf="!updating && intervent.status=='programmed'" end>
-                <button (click)="updating=!updating">
+                <button ion-button icon-start (click)="updating=!updating">
                     <ion-icon name="create"> </ion-icon>
                 </button>
             </ion-buttons>
@@ -54,11 +54,11 @@
         </ion-item>
 
         <ion-item>
-            <button type="submit" class="btn btn-standard" [disabled]="!interventForm.valid ||
+            <button ion-button type="submit" class="btn btn-standard" [disabled]="!interventForm.valid ||
                                                                     (date.value<=now && date.touched) ||
                                                                     ((date.value<trunc(session.startDate) || date.value>trunc(session.endDate)) && date.touched) ||
                                                                     (((date.value+duration.value)>session.endDate) && duration.touched)">Salva</button>
-            <button type="reset" (click)="reset()">Annulla</button>
+            <button ion-button type="reset" (click)="reset()">Annulla</button>
         </ion-item>
     </form>
     
@@ -66,18 +66,18 @@
         <ion-card-header>
             <ion-toolbar>
                 <ion-buttons begin>
-                    <button *ngIf="room==null" (click)="openRoom()">
+                    <button ion-button icon-start *ngIf="room==null" (click)="openRoom()">
                         <ion-icon name="play"><span *ngIf="!mobile"> Apri Stanza </span></ion-icon>
                     </button>
-                    <button *ngIf="room!=null" (click)="closeRoom()" [disabled]="recognizing">
+                    <button ion-button icon-start *ngIf="room!=null" (click)="closeRoom()" [disabled]="recognizing">
                         <ion-icon name="pause"><span *ngIf="!mobile"> Chiudi Stanza </span></ion-icon>
                     </button>
                 </ion-buttons>
                 <ion-buttons *ngIf="room!=null" end>
-                    <button *ngIf="!recognizing" (click)="startRecognizing()">
+                    <button ion-button icon-start *ngIf="!recognizing" (click)="startRecognizing()">
                         <ion-icon name="mic"><span *ngIf="!mobile"> Avvia Trascrizione </span> </ion-icon>
                     </button>
-                    <button *ngIf="recognizing" (click)="stopRecognizing()">
+                    <button ion-button icon-start *ngIf="recognizing" (click)="stopRecognizing()">
                         <ion-icon name="mic-off"><span *ngIf="!mobile"> Ferma Trascrizione </span> </ion-icon>
                     </button>
                 </ion-buttons>
@@ -88,7 +88,7 @@
             {{transcription}}
         </ion-card-content>
         <ion-item>
-            <button *ngIf="room!=null" (click)="saveAndCloseRoom()" [disabled]="recognizing">
+            <button ion-button icon-start *ngIf="room!=null" (click)="saveAndCloseRoom()" [disabled]="recognizing">
                 Salva e Chiudi
             </button>
         </ion-item>

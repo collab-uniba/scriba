@@ -23,10 +23,10 @@
                     {{event.title}} (@{{event.location}})
                 </ion-title>
                 <ion-buttons end>
-                    <button *ngIf="event.status=='ongoing'" (click)="openEvent(event)">
+                    <button ion-button icon-start *ngIf="event.status=='ongoing'" (click)="openEvent(event)">
                         <ion-icon name="play"> </ion-icon>
                     </button>
-                    <button  (click)="delete(event)">
+                    <button ion-button icon-start (click)="delete(event)">
                         <ion-icon name="trash"> </ion-icon>
                     </button>
                 </ion-buttons>

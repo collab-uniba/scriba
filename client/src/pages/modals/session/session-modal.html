@@ -29,12 +29,12 @@
 
       <!--<div *ngIf="overlapError.status">La Sessione si sovrappone con "{{overlapError.session.title}}" programmata dal {{overlapError.session.startDate}} al {{overlapError.session.endDate}}</div>-->
       <ion-item>
-          <button type="submit" class="btn btn-standard" [disabled]="!sessionForm.valid ||
+          <button ion-button type="submit" class="btn btn-standard" [disabled]="!sessionForm.valid ||
                                                                           (sd.value<now && sd.touched) ||
                                                                           (sd.value>ed.value && ed.touched) ||
                                                                           ((sd.value<trunc(event.startDate) || sd.value>trunc(event.endDate)) && sd.touched) ||
                                                                           ((ed.value<trunc(event.startDate) || ed.value>trunc(event.endDate)) && ed.touched)">Salva</button>
-          <button type="reset" (click)="close()">Annulla</button>
+          <button ion-button type="reset" (click)="close()">Annulla</button>
       </ion-item>
   </form>
   <ion-card *ngIf="overlapError.status">
@@ -46,8 +46,8 @@
           prevista dal {{formatDate(overlapError.session.startDate)}}
           al {{formatDate(overlapError.session.endDate)}}
           <ion-item>
-              <button (click)="saveSession()">Salva</button>
-              <button (click)="reset()">Modifica</button>
+              <button ion-button (click)="saveSession()">Salva</button>
+              <button ion-button (click)="reset()">Modifica</button>
           </ion-item>
       </ion-card-content>
   </ion-card>
