@@ -24,3 +24,4 @@ COPY . /usr/src/app
 # RUN go run httpsproxy.go
 
 EXPOSE 9090
+CMD ["go", "run", "httpsproxy.go"]
