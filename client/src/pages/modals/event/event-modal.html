@@ -1,68 +1,72 @@
-<ion-toolbar>
-    <ion-title>
-        Dati Nuovo Evento
-    </ion-title>
-</ion-toolbar>
+<ion-header>
+  <ion-toolbar>
+      <ion-title>
+          Dati Nuovo Evento
+      </ion-title>
+  </ion-toolbar>
+</ion-header>
 
-<form (ngSubmit)="submit()" #eventForm="ngForm">
-    <ion-item >
-        <ion-label inline>Titolo</ion-label>
-        <ion-input type="text" ngModel name="titleControl" [(ngModel)]="event.title" required></ion-input>
-    </ion-item>
+<ion-content padding>
+  <form (ngSubmit)="submit()" #eventForm="ngForm">
+      <ion-item >
+          <ion-label inline>Titolo</ion-label>
+          <ion-input type="text" ngModel name="titleControl" [(ngModel)]="event.title" required></ion-input>
+      </ion-item>
 
-    <ion-item>
-        <ion-label inline>Data Inizio</ion-label>
-        <ion-input type="datetime-local" ngModel name="startDateControl" #sd="ngModel" [(ngModel)]="event.startDate" required></ion-input>
-    </ion-item>
-    <div *ngIf="sd.value<now && sd.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
-    
-    <ion-item>
-        <ion-label inline>Data Termine</ion-label>
-        <ion-input type="datetime-local" ngModel name="endDateControl" #ed="ngModel" [(ngModel)]="event.endDate" required></ion-input>
-    </ion-item>
-    <div *ngIf="sd.value>ed.value && ed.touched">La Data di Termine deve essere POSTERIORE a quella di Inizio!</div>
+      <ion-item>
+          <ion-label inline>Data Inizio</ion-label>
+          <ion-input type="datetime-local" ngModel name="startDateControl" #sd="ngModel" [(ngModel)]="event.startDate" required></ion-input>
+      </ion-item>
+      <div *ngIf="sd.value<now && sd.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
 
-    <ion-item >
-        <ion-label inline>Luogo</ion-label>
-        <ion-input type="text" ngModel name="locationControl" class="form-control" [(ngModel)]="event.location" required></ion-input>
-    </ion-item>
-    
-    <ion-item>
-        <button type="submit" class="btn btn-standard" [disabled]="!eventForm.valid ||
-                                                                    (sd.value<now && sd.touched) ||
-                                                                    (sd.value>ed.value && ed.touched)">Salva</button>
-        <button type="reset" (click)="close()">Annulla</button>
-    </ion-item>
-</form>
+      <ion-item>
+          <ion-label inline>Data Termine</ion-label>
+          <ion-input type="datetime-local" ngModel name="endDateControl" #ed="ngModel" [(ngModel)]="event.endDate" required></ion-input>
+      </ion-item>
+      <div *ngIf="sd.value>ed.value && ed.touched">La Data di Termine deve essere POSTERIORE a quella di Inizio!</div>
 
-<!--
-    <ion-row>
-        <ion-col width-50>
-            <ion-item>
-                <ion-label inline>Data Inizio</ion-label>
-                <ion-datetime ngControl="startDateControl" displayFormat="DD-MM-YYYY" pickerFormat="DD MM YYYY" min={{options.minStartDate}} max={{options.maxStartDate}} [(ngModel)]="event.startDate"></ion-datetime>
-            </ion-item>
-        </ion-col>
-        <ion-col width-50>
-            <ion-item>
-                <ion-label inline>Ora Inizio</ion-label>
-                <ion-datetime ngControl="startTimeControl" displayFormat="HH:MM" pickerFormat="HH MM" min={{options.minStartTime}} max={{options.maxStartTime}} [(ngModel)]="event.startTime"></ion-datetime>
-            </ion-item>
-        </ion-col>
-    </ion-row>
+      <ion-item >
+          <ion-label inline>Luogo</ion-label>
+          <ion-input type="text" ngModel name="locationControl" class="form-control" [(ngModel)]="event.location" required></ion-input>
+      </ion-item>
 
-    <ion-row>
-        <ion-col width-50>
-            <ion-item>
-                <ion-label inline>Data Termine</ion-label>
-                <ion-datetime ngControl="endDateControl" displayFormat="DD-MM-YYYY" pickerFormat="DD MM YYYY" min={{options.minEndDate}} max={{options.maxEndDate}} [(ngModel)]="event.endDate"></ion-datetime>
-            </ion-item>
-        </ion-col>
-        <ion-col width-50>
-            <ion-item>
-                <ion-label inline>Ora Termine</ion-label>
-                <ion-datetime ngControl="endTimeControl" displayFormat="HH:MM" pickerFormat="HH MM" min={{options.minEndTime}} max={{options.maxEndTime}} [(ngModel)]="event.endTime"></ion-datetime>
-            </ion-item>
-        </ion-col>
-    </ion-row>
--->
+      <ion-item>
+          <button ion-button type="submit" class="btn btn-standard" [disabled]="!eventForm.valid ||
+                                                                      (sd.value<now && sd.touched) ||
+                                                                      (sd.value>ed.value && ed.touched)">Salva</button>
+          <button ion-button type="reset" (click)="close()">Annulla</button>
+      </ion-item>
+  </form>
+
+  <!--
+      <ion-row>
+          <ion-col width-50>
+              <ion-item>
+                  <ion-label inline>Data Inizio</ion-label>
+                  <ion-datetime ngControl="startDateControl" displayFormat="DD-MM-YYYY" pickerFormat="DD MM YYYY" min={{options.minStartDate}} max={{options.maxStartDate}} [(ngModel)]="event.startDate"></ion-datetime>
+              </ion-item>
+          </ion-col>
+          <ion-col width-50>
+              <ion-item>
+                  <ion-label inline>Ora Inizio</ion-label>
+                  <ion-datetime ngControl="startTimeControl" displayFormat="HH:MM" pickerFormat="HH MM" min={{options.minStartTime}} max={{options.maxStartTime}} [(ngModel)]="event.startTime"></ion-datetime>
+              </ion-item>
+          </ion-col>
+      </ion-row>
+
+      <ion-row>
+          <ion-col width-50>
+              <ion-item>
+                  <ion-label inline>Data Termine</ion-label>
+                  <ion-datetime ngControl="endDateControl" displayFormat="DD-MM-YYYY" pickerFormat="DD MM YYYY" min={{options.minEndDate}} max={{options.maxEndDate}} [(ngModel)]="event.endDate"></ion-datetime>
+              </ion-item>
+          </ion-col>
+          <ion-col width-50>
+              <ion-item>
+                  <ion-label inline>Ora Termine</ion-label>
+                  <ion-datetime ngControl="endTimeControl" displayFormat="HH:MM" pickerFormat="HH MM" min={{options.minEndTime}} max={{options.maxEndTime}} [(ngModel)]="event.endTime"></ion-datetime>
+              </ion-item>
+          </ion-col>
+      </ion-row>
+  -->
+</ion-content>

@@ -8,8 +8,6 @@ import {ListenInterventPage} from '../listen-intervent-page/listen-intervent-pag
 import {LoginPage} from '../modals/login/login-modal';
 import {SignupPage} from '../modals/signup/signup-modal';
 
-declare var io: any;
-
 @Component({
   templateUrl: 'home-page.html',
   providers: [EventService, UserService]

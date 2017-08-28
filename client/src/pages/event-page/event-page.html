@@ -9,7 +9,7 @@
                 {{event.title}} 
             </ion-title>
             <ion-buttons *ngIf="!updating && event.status=='programmed'" end>
-                <button (click)="updating=!updating">
+                <button ion-button icon-start (click)="updating=!updating">
                     <ion-icon name="create"> </ion-icon>
                 </button>
             </ion-buttons>
@@ -54,10 +54,10 @@
         </ion-item>
         
         <ion-item>
-            <button type="submit" class="btn btn-standard" [disabled]="!eventForm.valid ||
+            <button ion-button type="submit" class="btn btn-standard" [disabled]="!eventForm.valid ||
                                                                         (sd.value<now && sd.touched) ||
                                                                         (sd.value>ed.value && ed.touched)">Salva</button>
-            <button type="reset" (click)="reset()">Annulla</button>
+            <button ion-button type="reset" (click)="reset()">Annulla</button>
         </ion-item>
     </form>
     <ion-list>
@@ -66,8 +66,8 @@
                 SESSIONI
             </ion-title>
             <ion-buttons end>
-                <button (click)="newSession()">
-                <ion-icon name="add"><span *ngIf="!mobile"> Nuova Sessione</span></ion-icon>
+                <button ion-button icon-start (click)="newSession()">
+                    <ion-icon name="add"><span *ngIf="!mobile"> Nuova Sessione</span></ion-icon>
                 </button>
             </ion-buttons>    
         </ion-toolbar>
@@ -81,7 +81,7 @@
                         {{session.title}}
                     </ion-title>
                     <ion-buttons end>
-                        <button (click)="openSession(session)">
+                        <button ion-button icon-start (click)="openSession(session)">
                             <ion-icon name="navigate"> Apri </ion-icon>
                         </button>
                         <!--
@@ -89,7 +89,7 @@
                             <ion-icon name="create"> </ion-icon>
                         </button>
                         -->
-                        <button (click)="deleteSession(session)">
+                        <button ion-button icon-start (click)="deleteSession(session)">
                             <ion-icon name="trash"> </ion-icon>
                         </button>
                     </ion-buttons>

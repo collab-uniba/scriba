@@ -1,22 +1,18 @@
-<ion-header>
+<ion-header no-shadow no-border>
   <ion-navbar>
-    <button menuToggle><ion-icon name="menu"></ion-icon></button>
-    
-    <ion-buttons begin>
-      <ion-title>Scriba</ion-title>
-      <!--<button>
-        <ion-nav-title>
-          <h3>Scriba</h3>
-        </ion-nav-title>>
-      </button>-->
+    <button ion-button large icon-start menuToggle><ion-icon name="menu"></ion-icon></button>
+    <ion-title>
+      Scriba
+    </ion-title>
 
-      <button (click)="userData()" start>
+    <ion-buttons begin>
+      <button ion-button large icon-start (click)="userData()" start>
         <ion-icon name="person"> <span *ngIf="!mobile">{{user.name}} {{user.surname}}</span></ion-icon>
       </button>
     </ion-buttons>
 
     <ion-buttons end>
-      <button (click)="logout()">
+      <button ion-button large icon-start (click)="logout()">
         <ion-icon name="log-out" ><span *ngIf="!mobile"> Esci</span></ion-icon>
       </button>
     </ion-buttons>

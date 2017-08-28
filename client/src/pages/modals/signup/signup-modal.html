@@ -1,42 +1,45 @@
-<ion-toolbar>
-    <ion-title>
-        Registrati
-    </ion-title>
-</ion-toolbar>
-<form #signupForm="ngForm" (ngSubmit)="submit()">
-    <ion-item>
-        <ion-label floating>Nome</ion-label>
-        <ion-input type="text" ngModel name="nameControl" [(ngModel)]="user.name" pattern="[a-zA-Z ]*" required></ion-input>
-    </ion-item>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registrati</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-    <ion-item>
-        <ion-label floating>Cognome</ion-label>
-        <ion-input type="text" ngModel name="surnameControl" [(ngModel)]="user.surname" pattern="[a-zA-Z ]*" required></ion-input>
-    </ion-item>
+<ion-content padding>
+  <form #signupForm="ngForm" (ngSubmit)="submit()">
+      <ion-item>
+          <ion-label floating>Nome</ion-label>
+          <ion-input type="text" ngModel name="nameControl" [(ngModel)]="user.name" pattern="[a-zA-Z ]*" required></ion-input>
+      </ion-item>
 
-    <ion-item>
-        <ion-label floating>Username</ion-label>
-        <ion-input type="text" ngModel name="usernameControl" [(ngModel)]="user.username" minlength="4" pattern="[a-zA-z]+[0-9]*" required></ion-input>
-    </ion-item> 
-    
-    <ion-item>
-        <ion-label floating>Password</ion-label>
-        <ion-input type="password" ngModel name="passwordControl" [(ngModel)]="user.password" minlength="8" #pwd="ngModel" required></ion-input>
-    </ion-item>   
+      <ion-item>
+          <ion-label floating>Cognome</ion-label>
+          <ion-input type="text" ngModel name="surnameControl" [(ngModel)]="user.surname" pattern="[a-zA-Z ]*" required></ion-input>
+      </ion-item>
 
-    <ion-item>
-        <ion-label floating>Conferma Password</ion-label>
-        <ion-input type="password" ngModel name="confirmPasswordControl" minlength="8" #cpwd="ngModel" required></ion-input>
-    </ion-item> 
-    <div *ngIf="pwd.value!=cpwd.value && cpwd.touched" class="error-box">Le password non corrispondono</div>  
-    
-    <ion-item>
-        <ion-label floating>e-Mail</ion-label>
-        <ion-input type="email" ngModel name="emailControl" [(ngModel)]="user.email" required></ion-input>
-    </ion-item>
-         
-    <ion-item>
-        <button type="submit" [disabled]="!signupForm.valid || (pwd.value!=cpwd.value && cpwd.touched)" class="btn btn-standard">Registrati</button>
-        <button type="reset" (click)="close()">Annulla</button>
-    </ion-item>
-</form>
+      <ion-item>
+          <ion-label floating>Username</ion-label>
+          <ion-input type="text" ngModel name="usernameControl" [(ngModel)]="user.username" minlength="4" pattern="[a-zA-z]+[0-9]*" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-label floating>Password</ion-label>
+          <ion-input type="password" ngModel name="passwordControl" [(ngModel)]="user.password" minlength="8" #pwd="ngModel" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-label floating>Conferma Password</ion-label>
+          <ion-input type="password" ngModel name="confirmPasswordControl" minlength="8" #cpwd="ngModel" required></ion-input>
+      </ion-item>
+      <div *ngIf="pwd.value!=cpwd.value && cpwd.touched" class="error-box">Le password non corrispondono</div>
+
+      <ion-item>
+          <ion-label floating>e-Mail</ion-label>
+          <ion-input type="email" ngModel name="emailControl" [(ngModel)]="user.email" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <button ion-button type="submit" [disabled]="!signupForm.valid || (pwd.value!=cpwd.value && cpwd.touched)" class="btn btn-standard">Registrati</button>
+          <button ion-button type="reset" (click)="close()">Annulla</button>
+      </ion-item>
+  </form>
+</ion-content>
