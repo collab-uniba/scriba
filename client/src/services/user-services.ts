@@ -2,7 +2,7 @@ import { Http, Response, Headers,RequestOptions  } from '@angular/http';
 import 'rxjs/add/operator/map'
 import { Observable } from 'rxjs/Observable';
 import {User} from './models/user-model';
-import {Injectable, Inject} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Configuration} from './config';
 
 
@@ -14,7 +14,7 @@ export class UserService {
         return [[Http]];
     }
     
-    constructor(private http: Http, private usrData: User) {
+    constructor(private http: Http) {
         this.isLoggedin = false
     }
     
