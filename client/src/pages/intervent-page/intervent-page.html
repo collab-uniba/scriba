@@ -1,20 +1,22 @@
-<ion-toolbar>
-    
-</ion-toolbar>
+<ion-header>
+    <ion-navbar>
+
+    </ion-navbar>
+</ion-header>
 
 <ion-content padding>
-    <ion-header padding>
-        <ion-navbar [hideBackButton]="recognizing || room!=null">
-            <ion-title>
-                {{intervent.title}}
-            </ion-title>
-            <ion-buttons *ngIf="!updating && intervent.status=='programmed'" end>
-                <button ion-button icon-start (click)="updating=!updating">
+
+    <ion-navbar [hideBackButton]="recognizing || room!=null">
+        <ion-title>
+            {{intervent.title}}
+        </ion-title>
+        <ion-buttons *ngIf="!updating && intervent.status=='programmed'" end>
+            <button ion-button icon-start (click)="updating=!updating">
                     <ion-icon name="create"> </ion-icon>
                 </button>
-            </ion-buttons>
-        </ion-navbar>
-    </ion-header>
+        </ion-buttons>
+    </ion-navbar>
+
     <ion-item>
         <ion-row>
             <ion-col>
@@ -28,27 +30,29 @@
         </ion-row>
     </ion-item>
     <form *ngIf="updating" (ngSubmit)="submit()" #interventForm="ngForm">
-        <ion-item >
+        <ion-item>
             <ion-label inline>Titolo</ion-label>
             <ion-input type="text" ngControl="titleControl" [(ngModel)]="newData.title"></ion-input>
         </ion-item>
 
-        <ion-item >
+        <ion-item>
             <ion-label inline>Inizio</ion-label>
-            <ion-input type="datetime-local" ngControl="timeControl" [(ngModel)]="newData.date" #date="ngForm" ></ion-input>
+            <ion-input type="datetime-local" ngControl="timeControl" [(ngModel)]="newData.date" #date="ngForm"></ion-input>
         </ion-item>
         <div *ngIf="date.value<=now && date.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
         <div *ngIf="(date.value<trunc(session.startDate) || date.value>trunc(session.endDate)) && date.touched">La data di Inizio deve cadere durante la Sessione!</div>
 
-        <ion-item >
+        <ion-item>
             <ion-label inline>Durata (minuti)</ion-label>
-            <ion-input type="number" ngControl="durationControl" min="0" max="180" step="1" value="0" [(ngModel)]="newData.duration" #duration="ngForm" required></ion-input>
+            <ion-input type="number" ngControl="durationControl" min="0" max="180" step="1" value="0" [(ngModel)]="newData.duration"
+                #duration="ngForm" required></ion-input>
         </ion-item>
         <div *ngIf="((date.value+duration.value)>session.endDate) && duration.touched">L'Intervento deve terminare durante la Sessione!</div>
 
-        <div *ngIf="overlapError.status">L'Intervento si sovrappone con "{{overlapError.intervent.title}}" programmato il {{formatDate(overlapError.intervent.date)}}, durata {{overlapError.intervent.duration}} minuti</div>
+        <div *ngIf="overlapError.status">L'Intervento si sovrappone con "{{overlapError.intervent.title}}" programmato il {{formatDate(overlapError.intervent.date)}},
+            durata {{overlapError.intervent.duration}} minuti</div>
 
-        <ion-item >
+        <ion-item>
             <ion-label inline>Speaker (username)</ion-label>
             <ion-input type="text" ngControl="speakerControl" class="form-control" [(ngModel)]="newData.speaker" required></ion-input>
         </ion-item>
@@ -61,7 +65,7 @@
             <button ion-button type="reset" (click)="reset()">Annulla</button>
         </ion-item>
     </form>
-    
+
     <ion-card>
         <ion-card-header>
             <ion-toolbar>
@@ -93,7 +97,7 @@
             </button>
         </ion-item>
     </ion-card>
-    <ion-card >
+    <ion-card>
         <ion-card-header>
             <ion-toolbar>
                 <ion-title>
@@ -109,5 +113,5 @@
             </ion-list>
         </ion-card-content>
     </ion-card>
-    
+
 </ion-content>
