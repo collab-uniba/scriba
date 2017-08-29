@@ -1,7 +1,7 @@
 FROM node:8
 
 RUN npm install -g cordova@7.0.1
-RUN npm install -g ionic@3.7.0
+RUN npm install -g ionic@3.9.2
 RUN npm install -g ionic-angular@3.6.0
 
 # Create app directory
