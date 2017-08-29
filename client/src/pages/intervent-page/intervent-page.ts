@@ -5,8 +5,9 @@ import {Intervent} from '../../services/models/intervent-model';
 import {EventService} from '../../services/event-services';
 import {TranscriptionService} from '../../services/recognition-service';
 import {Configuration} from '../../services/config';
+import * as io from 'socket.io-client';
 
-declare var io: any;
+//declare var io: any;
 
 @Component({
   templateUrl: 'intervent-page.html',

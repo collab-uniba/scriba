@@ -48,7 +48,8 @@ import { UserDataPage } from "../pages/modals/user-update/userData-modal";
     LoginPage,
     NewSessionPage,
     SignupPage,
-    UserDataPage
+    UserDataPage,
+    InterventPage
   ],
   imports: [
     BrowserModule,
@@ -80,7 +81,8 @@ import { UserDataPage } from "../pages/modals/user-update/userData-modal";
     LoginPage,
     NewSessionPage,
     SignupPage,
-    UserDataPage
+    UserDataPage,
+    InterventPage
   ],
   providers: [
     StatusBar,

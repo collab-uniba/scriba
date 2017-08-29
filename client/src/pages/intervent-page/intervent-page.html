@@ -32,20 +32,20 @@
     <form *ngIf="updating" (ngSubmit)="submit()" #interventForm="ngForm">
         <ion-item>
             <ion-label inline>Titolo</ion-label>
-            <ion-input type="text" ngControl="titleControl" [(ngModel)]="newData.title"></ion-input>
+            <ion-input type="text" ngModel name="titleControl" [(ngModel)]="newData.title"></ion-input>
         </ion-item>
 
         <ion-item>
             <ion-label inline>Inizio</ion-label>
-            <ion-input type="datetime-local" ngControl="timeControl" [(ngModel)]="newData.date" #date="ngForm"></ion-input>
+            <ion-input type="datetime-local" ngModel name="timeControl" [(ngModel)]="newData.date" #date="ngModel"></ion-input>
         </ion-item>
         <div *ngIf="date.value<=now && date.touched">La data di Inizio deve essere POSTERIORE a questo momento!</div>
         <div *ngIf="(date.value<trunc(session.startDate) || date.value>trunc(session.endDate)) && date.touched">La data di Inizio deve cadere durante la Sessione!</div>
 
         <ion-item>
             <ion-label inline>Durata (minuti)</ion-label>
-            <ion-input type="number" ngControl="durationControl" min="0" max="180" step="1" value="0" [(ngModel)]="newData.duration"
-                #duration="ngForm" required></ion-input>
+            <ion-input type="number" ngModel name="durationControl" min="0" max="180" step="1" value="0" [(ngModel)]="newData.duration"
+                #duration="ngModel" required></ion-input>
         </ion-item>
         <div *ngIf="((date.value+duration.value)>session.endDate) && duration.touched">L'Intervento deve terminare durante la Sessione!</div>
 
@@ -54,7 +54,7 @@
 
         <ion-item>
             <ion-label inline>Speaker (username)</ion-label>
-            <ion-input type="text" ngControl="speakerControl" class="form-control" [(ngModel)]="newData.speaker" required></ion-input>
+            <ion-input type="text" ngModel name="speakerControl" class="form-control" [(ngModel)]="newData.speaker" required></ion-input>
         </ion-item>
 
         <ion-item>
