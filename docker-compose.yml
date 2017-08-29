@@ -3,9 +3,9 @@ db:
   image: mongo:latest
   ports:
     - "27017:27017"
-web:
-  container_name: node
-  build: server\ .
+nodeserver:
+  container_name: nodeserver
+  build: server
   command: node server.js
   volumes:
     - .:/scriba
@@ -20,18 +20,15 @@ web:
     - SCRIBA_MONGODB_URI=mongodb://db:27017/scribaDB
   links:
     - db
-ionic:
-  container_name: ionic
-  build: client\ .
-  ports:
-    - "8100:8100"
-    - "35729:35729"
+ionicserver:
+  container_name: ionicserver
+  build: client
   links:
-    - web
-proxy:
+    - nodeserver
+goproxy:
   container_name: goproxy
-  build: goProxy\ .
+  build: goProxy
   ports:
     - "9090:9090"
   links:
-    - ionic
+    - ionicserver
