@@ -4,9 +4,10 @@ import {User} from '../../services/models/user-model';
 import {Intervent} from '../../services/models/intervent-model';
 import {NgForm} from '@angular/forms';
 import {Configuration} from '../../services/config';
+import * as io from 'socket.io-client';
 
     
-declare var io: any;
+//declare var io: any;
 
 @Component({
   templateUrl: 'listen-intervent-page.html',

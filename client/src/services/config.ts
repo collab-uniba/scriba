@@ -1,6 +1,6 @@
 export class Configuration {
   constructor(
-    public apiHost = 'http://localhost',
+    public apiHost = 'http://90.147.102.74',
     public apiPORT = 9091,
     public socketPORT = 9092,
     public apiPath = '/api'

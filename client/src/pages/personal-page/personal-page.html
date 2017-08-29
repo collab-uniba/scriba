@@ -20,17 +20,20 @@
 </ion-header>
 
 <ion-menu [content]="menuContent">
-  <ion-toolbar>
-    <button menuClose ion-item><ion-icon name="menu" item-right></ion-icon><ion-title>Menu</ion-title></button>
-  </ion-toolbar>
-  <ion-content>
+  <ion-header>
+    <ion-toolbar>
+      <button menuClose ion-item><ion-icon name="menu" item-right></ion-icon><ion-title>Menu</ion-title></button>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content padding>
     <ion-list>
       <button (click)="openPage(EventsPage)" ion-item>Tutti gli Eventi</button>
       <button (click)="openPage(PersonalEventsPage)" ion-item>I miei Eventi</button>
       <button (click)="openPage(ObservedEventsPage)" ion-item>Eventi Osservati</button>
       <button (click)="openPage(JoinedEventsPage)" ion-item>Eventi Seguiti</button>
       <button (click)="openPage(AboutPage)" ion-item>Informazioni</button>
-      <button (click)="openPage(ContactPage)" ion-item>Contatti</button><!--detail-none-->
+      <button (click)="openPage(ContactPage)" ion-item>Contatti</button>
+      <!--detail-none-->
     </ion-list>
   </ion-content>
 </ion-menu>
