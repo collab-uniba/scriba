@@ -144,8 +144,8 @@ export class InterventPage {
     }
     closeRoom(){
         let confirm = this.alertCtrl.create({
-            title: 'Chiudere la Stanza?',
-            message: 'Chiudendo la stanza in questo momento perderai tutto il testo trascritto. Si consiglia di Salvare il testo prima di chiudere questa Stanza!',
+            title: 'Chiudere l\'aula?',
+            message: 'Chiudendo l\'aula in questo momento perderai tutto il testo trascritto. Si consiglia di Salvare il testo prima di chiudere questa Aula!',
             buttons: [
             {
                 text: 'Salva e Chiudi',

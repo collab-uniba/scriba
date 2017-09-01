@@ -71,10 +71,10 @@
             <ion-toolbar>
                 <ion-buttons begin>
                     <button ion-button icon-start *ngIf="room==null" (click)="openRoom()">
-                        <ion-icon name="play"><span *ngIf="!mobile"> Apri Stanza </span></ion-icon>
+                        <ion-icon name="play"><span *ngIf="!mobile"> Apri Aula </span></ion-icon>
                     </button>
                     <button ion-button icon-start *ngIf="room!=null" (click)="closeRoom()" [disabled]="recognizing">
-                        <ion-icon name="pause"><span *ngIf="!mobile"> Chiudi Stanza </span></ion-icon>
+                        <ion-icon name="pause"><span *ngIf="!mobile"> Chiudi Aula </span></ion-icon>
                     </button>
                 </ion-buttons>
                 <ion-buttons *ngIf="room!=null" end>
