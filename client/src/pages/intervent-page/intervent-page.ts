@@ -43,9 +43,11 @@ export class InterventPage {
             this.room.on('previous_text', (data) => {
                 //this.text += data.text;
                 //document.getElementById('text').innerHTML += data.text;
-                this.transcription += data.text;
+                if (data.text) {
+                    this.transcription += data.text;
+                }
                 console.log(data.questions);
-                if(data.questions.length!=0){
+                if(data.questions && data.questions.length!=0){
                     this.intervent.questions=this.intervent.questions.concat(data.questions);
                     console.log(this.intervent.questions);
                 }
@@ -205,8 +207,10 @@ export class InterventPage {
     }
 
     stopRecognizing(){
-        this.recognizing=!this.recognizing;
-        this.ts.stopDictation();
+        if (this.recognizing) {
+            this.recognizing=!this.recognizing;
+            this.ts.stopDictation();
+        }
     }
     formatDate(date: string): string{
         let formattedDate = "";
