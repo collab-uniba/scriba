@@ -31,7 +31,7 @@
     <form *ngIf="questioning" (ngSubmit)="sendQuestion()" #questionForm="ngForm">
         <ion-item>
             <ion-label inline>La tua Domanda</ion-label>
-            <ion-input type="text" ngControl="questionControl" [(ngModel)]="question" class="form-control" required></ion-input>
+            <ion-input type="text" ngModel name="questionControl" [(ngModel)]="question" class="form-control" required></ion-input>
         </ion-item>
 
         <ion-item>
