@@ -23,10 +23,10 @@
                 </ion-title>
                 <ion-buttons end>
                     <button ion-button icon-start *ngIf="event.status=='ongoing'" (click)="openEvent(event)">
-                        <ion-icon name="play"> </ion-icon>
+                        <ion-icon name="play"></ion-icon>
                     </button>
                     <button ion-button icon-start *ngIf="user.observedEvents.indexOf(event._id) == -1" (click)="observe(event)">
-                        <ion-icon name="eye"> </ion-icon>
+                        <ion-icon name="eye"></ion-icon>
                     </button>
                     <button ion-button icon-start *ngIf="user.observedEvents.indexOf(event._id) != -1" (click)="unobserve(event)">
                         <ion-icon name="eye-off"></ion-icon>
