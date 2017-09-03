@@ -71,18 +71,18 @@
             <ion-toolbar>
                 <ion-buttons begin>
                     <button ion-button icon-start *ngIf="room==null" (click)="openRoom()">
-                        <ion-icon name="play"><span *ngIf="!mobile"> Apri Stanza </span></ion-icon>
+                        <ion-icon name="play"><span *ngIf="!mobile">Apri Stanza</span></ion-icon>
                     </button>
                     <button ion-button icon-start *ngIf="room!=null" (click)="closeRoom()" [disabled]="recognizing">
-                        <ion-icon name="pause"><span *ngIf="!mobile"> Chiudi Stanza </span></ion-icon>
+                        <ion-icon name="pause"><span *ngIf="!mobile">Chiudi Stanza</span></ion-icon>
                     </button>
                 </ion-buttons>
                 <ion-buttons *ngIf="room!=null" end>
                     <button ion-button icon-start *ngIf="!recognizing" (click)="startRecognizing()">
-                        <ion-icon name="mic"><span *ngIf="!mobile"> Avvia Trascrizione </span> </ion-icon>
+                        <ion-icon name="mic"><span *ngIf="!mobile">Avvia Trascrizione</span></ion-icon>
                     </button>
                     <button ion-button icon-start *ngIf="recognizing" (click)="stopRecognizing()">
-                        <ion-icon name="mic-off"><span *ngIf="!mobile"> Ferma Trascrizione </span> </ion-icon>
+                        <ion-icon name="mic-off"><span *ngIf="!mobile">Ferma Trascrizione</span></ion-icon>
                     </button>
                 </ion-buttons>
             </ion-toolbar>
