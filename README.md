@@ -2,6 +2,17 @@
 
 # scriba
 
+## Online Demo
+
+1. Open Google Chrome web browser and digit 'https://90.147.102.74:9090/'
+
+2. Click 'AVANZATE' then 'Procedi su 90.147.102.74 (non sicuro)'
+
+3. Click the 'shield' icon on the left of the address bar 
+
+4. Enjoy
+
+To use the Android app download and install from https://www.dropbox.com/s/gjyx05qw256uieh/android-debug.apk?dl=0
 
 ## Installation
 
@@ -17,9 +28,9 @@
 
   `docker-compose up --build`
 
-## Utilization
+## Usage
 
-Open a web browser and digit `http://localhost:8100`
+Open Google Chrome web browser and digit `http://localhost:8100`
 
 ## Configuration
 
@@ -32,5 +43,6 @@ Thank you!
 * [@PepponeFX](https://github.com/PepponeFX)
 * [@lanubile](https://github.com/lanubile)
 * [@bateman](https://github.com/bateman)
+* [@flippolis](https://github.com/flippolis)
 * [@gaetanoziri](https://github.com/gaetanoziri)
 * [@fastluca](https://github.com/fastluca)

@@ -39,7 +39,9 @@ export class PersonalPage {
         this.user = new User(data.data.name, data.data.surname, data.data.username, data.data.password, data.data.email, data.data.observedEvents);
         window.localStorage.setItem("user", JSON.stringify(this.user));
         console.log(this.user.name);
-        this.openPage(this.EventsPage);
+        // Reset the nav controller to have just this page
+        // we wouldn't want the back button to show in this scenario
+        this.rootPage = this.EventsPage;
       }else{
         this.nav.setRoot(TabsPage);
         let modal = this.modalCtrl.create(LoginPage);
@@ -61,10 +63,7 @@ export class PersonalPage {
   }
 
   openPage(page) {
-    // Reset the nav controller to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.rootPage = page;
-
+    this.nav.push(page);
     // close the menu when clicking a link from the menu
     this.menu.close();
   }
