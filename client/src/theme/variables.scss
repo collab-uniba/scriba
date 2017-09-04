@@ -86,3 +86,9 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+
+ion-icon > span {
+  font-family: "Roboto", "Helvetica Neue", sans-serif;
+  padding-left: 6px;
+  font-size: 2rem;
+}

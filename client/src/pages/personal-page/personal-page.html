@@ -7,13 +7,13 @@
 
     <ion-buttons begin>
       <button ion-button large icon-start (click)="userData()" start>
-        <ion-icon name="person"> <span *ngIf="!mobile">{{user.name}} {{user.surname}}</span></ion-icon>
+        <ion-icon name="person"><span *ngIf="!mobile">{{user.name}} {{user.surname}}</span></ion-icon>
       </button>
     </ion-buttons>
 
     <ion-buttons end>
       <button ion-button large icon-start (click)="logout()">
-        <ion-icon name="log-out" ><span *ngIf="!mobile"> Esci</span></ion-icon>
+        <ion-icon name="log-out" ><span *ngIf="!mobile">Esci</span></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
