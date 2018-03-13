@@ -46,3 +46,6 @@ Thank you!
 * [@flippolis](https://github.com/flippolis)
 * [@gaetanoziri](https://github.com/gaetanoziri)
 * [@fastluca](https://github.com/fastluca)
+
+## MSc Thesis
+https://goo.gl/2BifTP
