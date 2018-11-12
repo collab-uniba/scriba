@@ -12,7 +12,7 @@
 
 4. Enjoy
 
-To use the Android app download and install from https://www.dropbox.com/s/gjyx05qw256uieh/android-debug.apk?dl=0
+To use the Android app download and install **"android-debug.apk"**
 
 ## Installation
 
